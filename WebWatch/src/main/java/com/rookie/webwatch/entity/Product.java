@@ -1,5 +1,6 @@
 package com.rookie.webwatch.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -24,14 +25,21 @@ public class Product {
     @Column(name = "product_qty")
     private long productQty;
 
-    @JsonManagedReference
+    //@JsonManagedReference
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "product")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "product_image")
     private Set<ProductImage> productImages;
+
+    @JsonManagedReference
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "product_detail")
+    private Set<OrderDetail> orderDetails;
+
+    //thiếu quan hệ với rating
 
     public Product() {
     }

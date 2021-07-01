@@ -1,5 +1,6 @@
 package com.rookie.webwatch.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -12,7 +13,8 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long category_id;
-    @JsonManagedReference
+
+    @JsonManagedReference(value = "category-product")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "category")
     private Set<Product> products;
 

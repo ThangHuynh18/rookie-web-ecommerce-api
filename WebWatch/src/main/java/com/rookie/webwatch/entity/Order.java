@@ -1,8 +1,10 @@
 package com.rookie.webwatch.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "order")
@@ -12,18 +14,22 @@ public class Order {
     private long order_id;
 
     @Column(name = "total_qty")
-    private String totalQty;
+    private int totalQty;
 
     @Column(name = "total_price")
-    private String totalPrice;
+    private float totalPrice;
 
-    @JsonManagedReference
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @JsonManagedReference
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "status_id")
     private Status status;
+
+    @JsonManagedReference(value = "order-detail")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "order")
+    private Set<OrderDetail> orderDetails;
 }

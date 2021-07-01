@@ -20,7 +20,7 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("")
-    public List<Product> getAllEmployee(){
+    public List<Product> getAllProduct(){
         List<Product> products = productService.retrieveProducts();
         return products;
     }
