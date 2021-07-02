@@ -1,5 +1,6 @@
 package com.rookie.webwatch.service;
 
+import com.rookie.webwatch.dto.CategoryDTO;
 import com.rookie.webwatch.entity.Category;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 import com.rookie.webwatch.repository.CategoryRepository;

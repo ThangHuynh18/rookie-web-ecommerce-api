@@ -24,10 +24,6 @@ public class Category {
     public Category() {
     }
 
-//    public Category(long category_id, String categoryName) {
-//        this.category_id = category_id;
-//        this.categoryName = categoryName;
-//    }
     public Category(long category_id, Set<Product> products, String categoryName) {
         this.category_id = category_id;
         this.products = products;

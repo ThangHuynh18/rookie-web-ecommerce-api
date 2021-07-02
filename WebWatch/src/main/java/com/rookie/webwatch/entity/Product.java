@@ -32,19 +32,21 @@ public class Product {
     private Category category;
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "product_image")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "product")
     private Set<ProductImage> productImages;
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "product_detail")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "product")
     private Set<OrderDetail> orderDetails;
 
-    //thiếu quan hệ với rating
+    @JsonManagedReference
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "product")
+    private Set<ProductRating> productRatings;
 
     public Product() {
     }
 
-    public Product(long product_id, String productName, float productPrice, String productDesciption, long productQty, Category category, Set<ProductImage> productImages) {
+    public Product(long product_id, String productName, float productPrice, String productDesciption, long productQty, Category category, Set<ProductImage> productImages, Set<OrderDetail> orderDetails, Set<ProductRating> productRatings) {
         this.product_id = product_id;
         this.productName = productName;
         this.productPrice = productPrice;
@@ -52,6 +54,24 @@ public class Product {
         this.productQty = productQty;
         this.category = category;
         this.productImages = productImages;
+        this.orderDetails = orderDetails;
+        this.productRatings = productRatings;
+    }
+
+    public Set<OrderDetail> getOrderDetails() {
+        return orderDetails;
+    }
+
+    public void setOrderDetails(Set<OrderDetail> orderDetails) {
+        this.orderDetails = orderDetails;
+    }
+
+    public Set<ProductRating> getProductRatings() {
+        return productRatings;
+    }
+
+    public void setProductRatings(Set<ProductRating> productRatings) {
+        this.productRatings = productRatings;
     }
 
     public Set<ProductImage> getProductImages() {

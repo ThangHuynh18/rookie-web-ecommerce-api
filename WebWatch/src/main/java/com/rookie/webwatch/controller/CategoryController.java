@@ -1,5 +1,7 @@
 package com.rookie.webwatch.controller;
 
+import com.rookie.webwatch.convert.CategoryConvert;
+import com.rookie.webwatch.dto.CategoryDTO;
 import com.rookie.webwatch.entity.Category;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 import com.rookie.webwatch.service.CategoryService;
@@ -11,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -18,11 +21,14 @@ public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
+    private CategoryConvert categoryConvert;
 
     @GetMapping("")
-    public List<Category> getAllEmployee(){
+    public List<Category> getAllCategory(){
         List<Category> categories = categoryService.retrieveCategories();
         return categories;
+        //return categoryService.retrieveCategories().stream().map(CategoryDTO::new).collect(Collectors.toList());
+
     }
 
     @GetMapping("/{category_id}")
@@ -35,7 +41,7 @@ public class CategoryController {
 
     //save employee
     @PostMapping("/category")
-    public Category createCategory(@RequestBody Category category){
+    public Category createCategory(@RequestBody  Category category){
         return categoryService.saveCategory(category);
     }
     //
