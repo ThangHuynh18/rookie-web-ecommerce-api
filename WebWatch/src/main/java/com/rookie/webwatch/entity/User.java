@@ -6,10 +6,11 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "user")
+@Table(name = "user", schema = "public")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "uid")
     private long user_id;
 
     @Column(name = "user_name")
@@ -24,11 +25,15 @@ public class User {
     @Column(name = "user_role")
     private String userRole;
 
-    @JsonManagedReference
+    @JsonManagedReference(value = "userDetail")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    private Set<UserDetail> userDetails;
+
+    @JsonManagedReference(value = "userOrder")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     private Set<Order> orders;
 
-    @JsonManagedReference
+    @JsonManagedReference(value = "userRating")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     private Set<ProductRating> ratings;
 
@@ -90,5 +95,13 @@ public class User {
 
     public void setRatings(Set<ProductRating> ratings) {
         this.ratings = ratings;
+    }
+
+    public Set<UserDetail> getUserDetails() {
+        return userDetails;
+    }
+
+    public void setUserDetails(Set<UserDetail> userDetails) {
+        this.userDetails = userDetails;
     }
 }

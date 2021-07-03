@@ -14,12 +14,12 @@ public class ProductRating {
     @Column(name = "rating")
     private int ratingNumber;
 
-    @JsonBackReference
+    @JsonBackReference(value = "userRating")
     @ManyToOne(fetch = FetchType.LAZY )
     @JoinColumn(name = "user_id")
     private User user;
 
-    @JsonBackReference
+    @JsonBackReference(value = "productRating")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     private Product product;

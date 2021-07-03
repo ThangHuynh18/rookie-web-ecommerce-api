@@ -14,7 +14,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long category_id;
 
-    @JsonManagedReference(value = "category-product")
+    @JsonManagedReference(value = "categoryProduct")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "category")
     private Set<Product> products;
 

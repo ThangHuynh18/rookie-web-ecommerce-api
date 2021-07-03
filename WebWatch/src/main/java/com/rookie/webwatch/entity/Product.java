@@ -20,26 +20,26 @@ public class Product {
     private float productPrice;
 
     @Column(name = "product_description")
-    private String productDesciption;
+    private String productDescription;
 
     @Column(name = "product_qty")
     private long productQty;
 
     //@JsonManagedReference
-    @JsonBackReference
+    @JsonBackReference(value = "categoryProduct")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @JsonManagedReference
+    @JsonManagedReference(value = "productImage")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "product")
     private Set<ProductImage> productImages;
 
-    @JsonManagedReference
+    @JsonManagedReference(value = "productOdetail")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "product")
     private Set<OrderDetail> orderDetails;
 
-    @JsonManagedReference
+    @JsonManagedReference(value = "productRating")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "product")
     private Set<ProductRating> productRatings;
 
@@ -50,7 +50,7 @@ public class Product {
         this.product_id = product_id;
         this.productName = productName;
         this.productPrice = productPrice;
-        this.productDesciption = productDesciption;
+        this.productDescription = productDesciption;
         this.productQty = productQty;
         this.category = category;
         this.productImages = productImages;
@@ -106,12 +106,12 @@ public class Product {
         this.productPrice = productPrice;
     }
 
-    public String getProductDesciption() {
-        return productDesciption;
+    public String getProductDescription() {
+        return productDescription;
     }
 
-    public void setProductDesciption(String productDesciption) {
-        this.productDesciption = productDesciption;
+    public void setProductDescription(String productDescription) {
+        this.productDescription = productDescription;
     }
 
     public long getProductQty() {

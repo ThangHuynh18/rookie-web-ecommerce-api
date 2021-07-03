@@ -17,12 +17,12 @@ public class OrderDetail {
     @Column(name = "detail_price")
     private float detailPrice;
 
-    @JsonBackReference
+    @JsonBackReference(value = "orderDetail")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @JsonBackReference
+    @JsonBackReference(value = "productOdetail")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     private Product product;

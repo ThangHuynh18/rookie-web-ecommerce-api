@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "order")
+@Table(name = "order", schema = "public")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,17 +19,17 @@ public class Order {
     @Column(name = "total_price")
     private float totalPrice;
 
-    @JsonBackReference
+    @JsonBackReference(value = "userOrder")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @JsonBackReference
+    @JsonBackReference(value = "statusOrder")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "status_id")
     private Status status;
 
-    @JsonManagedReference()
+    @JsonManagedReference(value = "orderDetail")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "order")
     private Set<OrderDetail> orderDetails;
 

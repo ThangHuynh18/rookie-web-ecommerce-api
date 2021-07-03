@@ -1,5 +1,7 @@
 package com.rookie.webwatch.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -15,7 +17,8 @@ public class UserDetail {
     @Column(name = "udetail_address")
     private String udetailAddress;
 
-    @OneToOne
+    @JsonBackReference(value = "userDetail")
+    @ManyToOne(fetch = FetchType.LAZY )
     @JoinColumn(name = "user_id")
     private User user;
 

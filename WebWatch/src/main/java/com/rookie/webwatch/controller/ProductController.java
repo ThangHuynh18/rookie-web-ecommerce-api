@@ -27,7 +27,7 @@ public class ProductController {
 
     @GetMapping("/{product_id}")
     public Optional<Product> findProduct(@PathVariable("product_id") Long productId) throws ResourceNotFoundException {
-        Optional<Product> category = Optional.ofNullable(productService.getProduct(productId)
+        Optional<Product> product = Optional.ofNullable(productService.getProduct(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found for this id: " + productId)));
 
         return productService.getProduct(productId);
@@ -47,7 +47,7 @@ public class ProductController {
 
         product.setProductName(productDetail.getProductName());
         product.setProductPrice(productDetail.getProductPrice());
-        product.setProductDesciption(productDetail.getProductDesciption());
+        product.setProductDescription(productDetail.getProductDescription());
         product.setProductQty(productDetail.getProductQty());
         product.setCategory(productDetail.getCategory());
 

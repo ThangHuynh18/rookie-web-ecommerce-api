@@ -15,7 +15,7 @@ public class ProductImage {
     @Column(name = "image_link")
     private String imageLink;
 
-    @JsonBackReference
+    @JsonBackReference(value = "productImage")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     private Product product;

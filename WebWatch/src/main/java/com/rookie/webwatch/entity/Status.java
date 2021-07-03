@@ -18,7 +18,7 @@ public class Status {
     @Column(name = "status_name")
     private String statusName;
 
-    @JsonManagedReference
+    @JsonManagedReference(value = "statusOrder")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "status")
     private Set<Order> orders;
 
