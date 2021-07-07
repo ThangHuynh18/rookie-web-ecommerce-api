@@ -1,6 +1,5 @@
 package com.rookie.webwatch.service;
 
-import com.rookie.webwatch.dto.CategoryDTO;
 import com.rookie.webwatch.entity.Category;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 import com.rookie.webwatch.repository.CategoryRepository;
@@ -48,4 +47,9 @@ public class CategoryServiceImpl implements CategoryService{
     public Category updateCategory(Category category) {
         return categoryRepository.save(category);
     }
+
+//    @Override
+//    public Optional<Category> getCateById(Long id) {
+//        return categoryRepository.findById(id);
+//    }
 }

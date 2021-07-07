@@ -6,6 +6,9 @@ public class CategoryDTO {
     private long category_id;
     private String categoryName;
 
+    public CategoryDTO() {
+    }
+
     public CategoryDTO(Category category) {
         this.setCategory_id(category.getCategory_id());
         this.setCategoryName(category.getCategoryName());

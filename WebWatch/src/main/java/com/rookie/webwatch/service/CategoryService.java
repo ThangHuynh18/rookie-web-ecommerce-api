@@ -1,7 +1,6 @@
 package com.rookie.webwatch.service;
 
 
-import com.rookie.webwatch.dto.CategoryDTO;
 import com.rookie.webwatch.entity.Category;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 
@@ -18,4 +17,6 @@ public interface CategoryService {
     public void deleteCategory(Long categoryId) throws ResourceNotFoundException;
 
     public Category updateCategory(Category category);
+
+    //public Optional<Category> getCateById(Long id);
 }
