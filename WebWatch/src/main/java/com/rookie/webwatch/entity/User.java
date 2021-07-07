@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -24,8 +25,12 @@ public class User {
     @Column(name = "user_password")
     private String userPassword;
 
-    @Column(name = "user_role")
-    private String userRole;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
+
 
     @JsonManagedReference(value = "userDetail")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
@@ -42,6 +47,12 @@ public class User {
     public User() {
     }
 
+    public User(String userName, String userEmail, String userPassword) {
+        this.userName = userName;
+        this.userEmail = userEmail;
+        this.userPassword = userPassword;
+
+    }
 
     public long getUser_id() {
         return user_id;
@@ -75,12 +86,12 @@ public class User {
         this.userPassword = userPassword;
     }
 
-    public String getUserRole() {
-        return userRole;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setUserRole(String userRole) {
-        this.userRole = userRole;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     public Set<Order> getOrders() {

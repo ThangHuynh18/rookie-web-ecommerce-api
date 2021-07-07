@@ -16,4 +16,6 @@ public interface UserService {
     public void deleteUser(Long userId) throws ResourceNotFoundException;
 
     public User updateUser(User user);
+
+
 }

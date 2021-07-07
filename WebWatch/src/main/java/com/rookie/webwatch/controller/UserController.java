@@ -48,7 +48,7 @@ public class UserController {
         user.setUserName(userDetail.getUserName());
         user.setUserEmail(userDetail.getUserEmail());
         user.setUserPassword(userDetail.getUserPassword());
-        user.setUserRole(userDetail.getUserRole());
+        user.setRoles(userDetail.getRoles());
 
 //        user.setOrders(userDetail.getOrders());
 //        user.setRatings(userDetail.getRatings());
