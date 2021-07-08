@@ -18,5 +18,5 @@ public interface CategoryService {
 
     public Category updateCategory(Category category);
 
-    //public Optional<Category> getCateById(Long id);
+    public Category getCateById(Long id) throws ResourceNotFoundException;
 }

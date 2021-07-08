@@ -17,4 +17,5 @@ public interface ProductService {
     public void deleteProduct(Long productId) throws ResourceNotFoundException;
 
     public Product updateProduct(Product product);
+
 }
