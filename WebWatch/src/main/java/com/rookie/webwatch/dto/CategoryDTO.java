@@ -1,6 +1,10 @@
 package com.rookie.webwatch.dto;
 
 import com.rookie.webwatch.entity.Category;
+import com.rookie.webwatch.entity.Order;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CategoryDTO {
     private long category_id;
@@ -9,10 +13,37 @@ public class CategoryDTO {
     public CategoryDTO() {
     }
 
-    public CategoryDTO(Category category) {
-        this.setCategory_id(category.getCategory_id());
-        this.setCategoryName(category.getCategoryName());
+    public CategoryDTO convertToDto(Category category) {
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setCategory_id(category.getCategory_id());
+        categoryDTO.setCategoryName(category.getCategoryName());
+
+        return categoryDTO;
     }
+
+    public Category convertToEti(CategoryDTO categoryDTO) {
+        Category category = new Category();
+
+        category.setCategory_id(categoryDTO.getCategory_id());
+        category.setCategoryName(categoryDTO.getCategoryName());
+
+        return category;
+    }
+
+
+    public List<CategoryDTO> toListDto(List<Category> listEntity) {
+        List<CategoryDTO> listDto = new ArrayList<>();
+
+        listEntity.forEach(e->{
+            listDto.add(this.convertToDto(e));
+        });
+        return listDto;
+    }
+
+//    public CategoryDTO(Category category) {
+//        this.setCategory_id(category.getCategory_id());
+//        this.setCategoryName(category.getCategoryName());
+//    }
 
     public long getCategory_id() {
         return category_id;

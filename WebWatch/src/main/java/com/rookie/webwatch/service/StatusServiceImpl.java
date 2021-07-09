@@ -1,5 +1,6 @@
 package com.rookie.webwatch.service;
 
+import com.rookie.webwatch.dto.StatusDTO;
 import com.rookie.webwatch.entity.Status;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 import com.rookie.webwatch.repository.StatusRepository;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 @Transactional
@@ -17,24 +18,23 @@ public class StatusServiceImpl implements StatusService{
     @Autowired
     private StatusRepository statusRepository;
 
-    public void setStatusRepository(StatusRepository statusRepository) {
-        this.statusRepository = statusRepository;
-    }
-
     @Override
-    public List<Status> retrieveStatuses() {
+    public List<StatusDTO> retrieveStatuses() {
         List<Status> statuses = statusRepository.findAll();
-        return statuses;
+        return new StatusDTO().toListDto(statuses);
     }
 
     @Override
-    public Optional<Status> getStatus(Long statusId) {
-        return statusRepository.findById(statusId);
+    public StatusDTO getStatus(Long statusId) throws ResourceNotFoundException {
+        Status status = statusRepository.findById(statusId).orElseThrow(() -> new ResourceNotFoundException("status not found for this id: "+statusId));
+        return new StatusDTO().convertToDto(status);
     }
 
     @Override
-    public Status saveStatus(Status status) {
-        return statusRepository.save(status);
+    public StatusDTO saveStatus(StatusDTO statusDTO) {
+        Status status = new StatusDTO().convertToEti(statusDTO);
+
+        return new StatusDTO().convertToDto(statusRepository.save(status));
     }
 
     @Override
@@ -44,7 +44,16 @@ public class StatusServiceImpl implements StatusService{
     }
 
     @Override
-    public Status updatestatus(Status status) {
-        return statusRepository.save(status);
+    public StatusDTO updateStatus(Long id, StatusDTO statusDTO) throws ResourceNotFoundException {
+        Status staExist = statusRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("status not found for this id: "+id));
+
+        staExist.setStatus(statusDTO.getStatus());
+        staExist.setStatusName(statusDTO.getStatusName());
+
+        Status status = new Status();
+        status = statusRepository.save(staExist);
+        return new StatusDTO().convertToDto(status);
     }
+
 }

@@ -1,19 +1,19 @@
 package com.rookie.webwatch.service;
 
-import com.rookie.webwatch.entity.Status;
+import com.rookie.webwatch.dto.StatusDTO;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 
 import java.util.List;
-import java.util.Optional;
+
 
 public interface StatusService {
-    public List<Status> retrieveStatuses();
+    public List<StatusDTO> retrieveStatuses();
 
-    public Optional<Status> getStatus(Long statusId);
+    public StatusDTO getStatus(Long statusId) throws ResourceNotFoundException;
 
-    public Status saveStatus(Status status);
+    public StatusDTO saveStatus(StatusDTO statusDTO);
 
     public void deleteStatus(Long statusId) throws ResourceNotFoundException;
 
-    public Status updatestatus(Status status);
+    public StatusDTO updateStatus(Long id, StatusDTO statusDTO) throws ResourceNotFoundException;
 }

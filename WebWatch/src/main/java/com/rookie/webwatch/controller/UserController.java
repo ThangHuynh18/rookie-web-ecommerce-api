@@ -1,16 +1,18 @@
 package com.rookie.webwatch.controller;
 
-import com.rookie.webwatch.entity.User;
+import com.rookie.webwatch.dto.UserDTO;
+
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 import com.rookie.webwatch.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -20,42 +22,33 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("")
-    public List<User> getAllUser(){
-        List<User> users = userService.retrieveUsers();
-        return users;
+    public List<UserDTO> getAllUser(){
+        List<UserDTO> userDTOS = userService.retrieveUsers();
+        return userDTOS;
     }
 
     @GetMapping("/{user_id}")
-    public Optional<User> findUser(@PathVariable("user_id") Long userId) throws ResourceNotFoundException {
-        Optional<User> user = Optional.ofNullable(userService.getUser(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("user not found for this id: " + userId)));
+    public ResponseEntity<UserDTO> findUser(@PathVariable("user_id") Long userId) throws ResourceNotFoundException {
+        UserDTO userDTO = userService.getUser(userId);
 
-        return userService.getUser(userId);
+        return ResponseEntity.ok(userDTO);
     }
 
-    //save employee
     @PostMapping("/user")
-    public User createUser(@RequestBody User user){
-        return userService.saveUser(user);
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO){
+        UserDTO dto = userService.saveUser(userDTO);
+        return ResponseEntity.ok(dto);
     }
-    //
+
 //    //update
     @PutMapping("/user/{user_id}")
-    public ResponseEntity<User> updateUser(@PathVariable(value = "user_id") Long userId,
-                                                 @RequestBody User userDetail) throws ResourceNotFoundException{
-        User user = userService.getUser(userId).orElseThrow(() -> new ResourceNotFoundException("user not found for this id: " +userId));
+    public ResponseEntity<UserDTO> updateUser(@PathVariable(value = "user_id") Long userId,
+                                                 @RequestBody UserDTO userDTO) throws ResourceNotFoundException{
+        UserDTO updateUser = userService.updateUser(userId, userDTO);
 
-        user.setUserName(userDetail.getUserName());
-        user.setUserEmail(userDetail.getUserEmail());
-        user.setUserPassword(userDetail.getUserPassword());
-        user.setRoles(userDetail.getRoles());
-
-//        user.setOrders(userDetail.getOrders());
-//        user.setRatings(userDetail.getRatings());
-
-        return ResponseEntity.ok(userService.updateUser(user));
+        return new ResponseEntity<>(updateUser, HttpStatus.OK);
     }
-    //
+
 //    //delete
     @DeleteMapping("/user/{user_id}")
     public Map<String, Boolean> deleteUser(@PathVariable(value = "user_id") Long userId)
@@ -66,4 +59,5 @@ public class UserController {
 
         return reponse;
     }
+
 }

@@ -1,6 +1,9 @@
 package com.rookie.webwatch.service;
 
+import com.rookie.webwatch.dto.CategoryDTO;
+
 import com.rookie.webwatch.entity.Category;
+
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 import com.rookie.webwatch.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,24 +20,22 @@ public class CategoryServiceImpl implements CategoryService{
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public void setCategoryRepository(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
-
     @Override
-    public List<Category> retrieveCategories() {
+    public List<CategoryDTO> retrieveCategories() {
         List<Category> categories = categoryRepository.findAll();
-        return categories;
+        return new CategoryDTO().toListDto(categories);
     }
 
     @Override
-    public Optional<Category> getCategory(Long categoryId) {
-        return categoryRepository.findById(categoryId);
+    public CategoryDTO getCate(Long cateId) throws ResourceNotFoundException {
+        Category category = categoryRepository.findById(cateId).orElseThrow(() -> new ResourceNotFoundException("category not found for this id: "+cateId));
+        return new CategoryDTO().convertToDto(category);
     }
 
     @Override
-    public Category saveCategory(Category category) {
-        return categoryRepository.save(category);
+    public CategoryDTO saveCategory(CategoryDTO categoryDTO) {
+        Category category = new CategoryDTO().convertToEti(categoryDTO);
+        return new CategoryDTO().convertToDto(categoryRepository.save(category));
     }
 
     @Override
@@ -44,18 +45,15 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public Category updateCategory(Category category) {
-        return categoryRepository.save(category);
+    public CategoryDTO updateCategory(Long categoryId, CategoryDTO categoryDTO) throws ResourceNotFoundException {
+        Category cateExist = categoryRepository.findById(categoryId).orElseThrow(() ->
+                new ResourceNotFoundException("category not found for this id: "+categoryId));
+
+        cateExist.setCategoryName(categoryDTO.getCategoryName());
+
+        Category category = new Category();
+        category = categoryRepository.save(cateExist);
+        return new CategoryDTO().convertToDto(category);
     }
 
-    @Override
-    public Category getCateById(Long id) throws ResourceNotFoundException {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("category not found for this id: " + id));
-        return category;
-    }
-
-//    @Override
-//    public Optional<Category> getCateById(Long id) {
-//        return categoryRepository.findById(id);
-//    }
 }

@@ -1,22 +1,22 @@
 package com.rookie.webwatch.service;
 
 
-import com.rookie.webwatch.entity.Category;
+import com.rookie.webwatch.dto.CategoryDTO;
+
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 
 import java.util.List;
-import java.util.Optional;
+
 
 public interface CategoryService {
-    public List<Category> retrieveCategories();
+    public List<CategoryDTO> retrieveCategories();
 
-    public Optional<Category> getCategory(Long categoryId);
+    public CategoryDTO getCate(Long categoryId) throws ResourceNotFoundException;
 
-    public Category saveCategory(Category category);
+    public CategoryDTO saveCategory(CategoryDTO categoryDTO);
 
     public void deleteCategory(Long categoryId) throws ResourceNotFoundException;
 
-    public Category updateCategory(Category category);
+    public CategoryDTO updateCategory(Long categoryId,CategoryDTO categoryDTO) throws ResourceNotFoundException;
 
-    public Category getCateById(Long id) throws ResourceNotFoundException;
 }

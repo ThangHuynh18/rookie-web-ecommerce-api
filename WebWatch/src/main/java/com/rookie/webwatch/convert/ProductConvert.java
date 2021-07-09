@@ -2,7 +2,6 @@ package com.rookie.webwatch.convert;
 
 import com.rookie.webwatch.dto.request.ProductDtoRequest;
 import com.rookie.webwatch.dto.response.ProductDtoResponse;
-import com.rookie.webwatch.entity.Category;
 import com.rookie.webwatch.entity.Product;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,24 +1,21 @@
 package com.rookie.webwatch.controller;
 
-import com.rookie.webwatch.convert.ProductConvert;
-import com.rookie.webwatch.dto.CategoryDTO;
-import com.rookie.webwatch.dto.request.ProductDtoRequest;
-import com.rookie.webwatch.dto.response.ProductDtoResponse;
-import com.rookie.webwatch.entity.Category;
-import com.rookie.webwatch.entity.Product;
+
+import com.rookie.webwatch.dto.ProductDTO;
+
 import com.rookie.webwatch.exception.ResourceNotFoundException;
-import com.rookie.webwatch.service.CategoryService;
+
 import com.rookie.webwatch.service.ProductService;
-import org.modelmapper.ModelMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/api/products")
@@ -26,51 +23,33 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @Autowired
-    private CategoryService categoryService;
-    @Autowired
-    private ModelMapper modelMapper;
-
-    @Autowired
-    private ProductConvert productConvert;
-
     @GetMapping("")
-    public List<ProductDtoResponse> getAllProduct(){
-        List<Product> products = productService.retrieveProducts();
-        return products.stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+    public List<ProductDTO> getAllProduct(){
+        List<ProductDTO> productDTOS = productService.retrieveProducts();
+
+        return productDTOS;
     }
 
     @GetMapping("/{product_id}")
-    public ProductDtoResponse getPro(@PathVariable("product_id") Long id) throws ResourceNotFoundException {
-        Product product = productService.getProduct(id).orElseThrow(() -> new ResourceNotFoundException("product not found for this id: " +id));
+    public ResponseEntity<ProductDTO> getPro(@PathVariable("product_id") Long id) throws ResourceNotFoundException {
+        ProductDTO productDTO = productService.getProduct(id);
 
-        return productConvert.convertToDto(productService.getProduct(id));
+        return ResponseEntity.ok(productDTO);
     }
 
-    //save employee
+    //insert
     @PostMapping("/product")
-    public ProductDtoResponse createPro(@RequestBody ProductDtoRequest dtoRequest) throws ResourceNotFoundException {
-        Product product = productConvert.convertToEntity(dtoRequest);
-
-        long cateIdReq = dtoRequest.getCategory_id();
-        product.setCategory(categoryService.getCateById(cateIdReq));
-
-        Product proCreate = productService.saveProduct(product);
-        return productConvert.convertToDto(Optional.ofNullable(proCreate));
+    public ResponseEntity<ProductDTO> createPro(@RequestBody ProductDTO dtoRequest) throws ResourceNotFoundException {
+        ProductDTO dto = productService.saveProduct(dtoRequest);
+        return ResponseEntity.ok(dto);
     }
 
 //    //update
     @PutMapping("/product/{product_id}")
-    public ResponseEntity<ProductDtoResponse> updatePro(@PathVariable(value = "product_id") Long id, @RequestBody ProductDtoRequest dtoRequest) throws ResourceNotFoundException {
-        Product product = productService.getProduct(id).orElseThrow(() -> new ResourceNotFoundException("product not found for this id: " +id));
-        product.setProductName(dtoRequest.getProductName());
-        product.setProductPrice(dtoRequest.getProductPrice());
-        product.setProductDescription(dtoRequest.getProductDescription());
-        product.setProductQty(dtoRequest.getProductQty());
+    public ResponseEntity<ProductDTO> updatePro(@PathVariable(value = "product_id") Long id, @RequestBody ProductDTO dtoRequest) throws ResourceNotFoundException {
+        ProductDTO updatePro = productService.updateProduct(id, dtoRequest);
 
-        return ResponseEntity.ok(productConvert.convertToDtoForUpdate(productService.updateProduct(product)));
+        return new ResponseEntity<>(updatePro, HttpStatus.OK);
     }
 
 //    //delete
@@ -82,10 +61,5 @@ public class ProductController {
         reponse.put("deleted", Boolean.TRUE);
 
         return reponse;
-    }
-
-    private ProductDtoResponse convertToDto(Product product) {
-
-        return modelMapper.map(product, ProductDtoResponse.class);
     }
 }
