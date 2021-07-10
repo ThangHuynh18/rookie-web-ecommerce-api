@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class OrderDetailController {
 
     //save
     @PostMapping("/odetail")
-    public ResponseEntity<OrderDetailDTO> createOrderDetail(@RequestBody OrderDetailDTO detailDTO) throws ResourceNotFoundException {
+    public ResponseEntity<OrderDetailDTO> createOrderDetail(@Valid @RequestBody OrderDetailDTO detailDTO) throws ResourceNotFoundException {
         OrderDetailDTO dto = detailService.saveOrderDetail(detailDTO);
         return ResponseEntity.ok(dto);
     }
@@ -42,7 +43,7 @@ public class OrderDetailController {
 //    //update
     @PutMapping("/odetail/{detail_id}")
     public ResponseEntity<OrderDetailDTO> updateOrderDetail(@PathVariable(value = "detail_id") Long detailId,
-                                             @RequestBody OrderDetailDTO detailDTO) throws ResourceNotFoundException{
+                                             @Valid @RequestBody OrderDetailDTO detailDTO) throws ResourceNotFoundException{
         OrderDetailDTO updateDetail = detailService.updateOrderDetail(detailId, detailDTO);
 
         return new ResponseEntity<>(updateDetail, HttpStatus.OK);

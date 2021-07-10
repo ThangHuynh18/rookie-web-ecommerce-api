@@ -3,6 +3,7 @@ package com.rookie.webwatch.dto;
 import com.rookie.webwatch.entity.Order;
 import com.rookie.webwatch.entity.Product;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -10,9 +11,17 @@ import java.util.Set;
 
 public class ProductDTO {
     private long product_id;
+
+    @NotNull
     private String productName;
+
+    @NotNull
     private float productPrice;
+
+    @NotNull
     private String productDescription;
+
+    @NotNull
     private long productQty;
     private long category_id;
     private Set<String> productImages;

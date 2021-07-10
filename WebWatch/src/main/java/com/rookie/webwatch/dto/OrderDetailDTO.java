@@ -2,12 +2,18 @@ package com.rookie.webwatch.dto;
 
 import com.rookie.webwatch.entity.OrderDetail;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDetailDTO {
+    @NotNull
     private long detail_id;
+
+    @NotNull
     private int detailQty;
+
+    @NotNull
     private float detailPrice;
     private long order_id;
     private long product_id;

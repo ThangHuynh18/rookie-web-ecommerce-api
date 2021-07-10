@@ -11,7 +11,7 @@ public interface UserDetailService {
 
     public UserDetailDTO getUserDetail(Long udetailId) throws ResourceNotFoundException;
 
-    public UserDetailDTO saveUserDetail(UserDetailDTO detailDTO);
+    public UserDetailDTO saveUserDetail(UserDetailDTO detailDTO) throws ResourceNotFoundException;
 
     public void deleteUserDetail(Long udetailId) throws ResourceNotFoundException;
 

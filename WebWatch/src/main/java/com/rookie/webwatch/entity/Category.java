@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,6 +20,7 @@ public class Category {
     private Set<Product> products;
 
     @Column(name = "category_name")
+    @NotNull
     private String categoryName;
 
     public Category() {

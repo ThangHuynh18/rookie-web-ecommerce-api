@@ -2,12 +2,17 @@ package com.rookie.webwatch.dto;
 
 import com.rookie.webwatch.entity.UserDetail;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserDetailDTO {
     private long udetail_id;
+
+    @NotNull
     private long udetailPhone;
+
+    @NotNull
     private String udetailAddress;
     private long user_id;
 

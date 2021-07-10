@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.*;
 
 @RestController
@@ -38,7 +39,7 @@ public class UserController {
     }
 
     @PostMapping("/user")
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
         UserDTO dto = userService.saveUser(userDTO);
 
         return ResponseEntity.ok(dto);
@@ -47,7 +48,7 @@ public class UserController {
 //    //update
     @PutMapping("/user/{user_id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable(value = "user_id") Long userId,
-                                                 @RequestBody UserDTO userDTO) throws ResourceNotFoundException{
+                                                 @Valid @RequestBody UserDTO userDTO) throws ResourceNotFoundException{
         UserDTO updateUser = userService.updateUser(userId, userDTO);
 
         return new ResponseEntity<>(updateUser, HttpStatus.OK);

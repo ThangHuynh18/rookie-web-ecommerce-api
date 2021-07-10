@@ -3,11 +3,14 @@ package com.rookie.webwatch.dto;
 import com.rookie.webwatch.entity.Category;
 import com.rookie.webwatch.entity.Order;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryDTO {
     private long category_id;
+
+    @NotNull
     private String categoryName;
 
     public CategoryDTO() {

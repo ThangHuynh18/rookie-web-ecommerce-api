@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,14 +40,14 @@ public class ProductController {
 
     //insert
     @PostMapping("/product")
-    public ResponseEntity<ProductDTO> createPro(@RequestBody ProductDTO dtoRequest) throws ResourceNotFoundException {
+    public ResponseEntity<ProductDTO> createPro(@Valid @RequestBody ProductDTO dtoRequest) throws ResourceNotFoundException {
         ProductDTO dto = productService.saveProduct(dtoRequest);
         return ResponseEntity.ok(dto);
     }
 
 //    //update
     @PutMapping("/product/{product_id}")
-    public ResponseEntity<ProductDTO> updatePro(@PathVariable(value = "product_id") Long id, @RequestBody ProductDTO dtoRequest) throws ResourceNotFoundException {
+    public ResponseEntity<ProductDTO> updatePro(@PathVariable(value = "product_id") Long id, @Valid @RequestBody ProductDTO dtoRequest) throws ResourceNotFoundException {
         ProductDTO updatePro = productService.updateProduct(id, dtoRequest);
 
         return new ResponseEntity<>(updatePro, HttpStatus.OK);

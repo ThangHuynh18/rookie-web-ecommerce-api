@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class UserDetailController {
 
     //save
     @PostMapping("/udetail")
-    public ResponseEntity<UserDetailDTO> createUserDetail(@RequestBody UserDetailDTO detailDTO){
+    public ResponseEntity<UserDetailDTO> createUserDetail(@Valid @RequestBody UserDetailDTO detailDTO) throws ResourceNotFoundException {
         UserDetailDTO dto = detailService.saveUserDetail(detailDTO);
         return ResponseEntity.ok(dto);
     }
@@ -42,7 +43,7 @@ public class UserDetailController {
 //    //update
     @PutMapping("/udetail/{udetail_id}")
     public ResponseEntity<UserDetailDTO> updateUserDetail(@PathVariable(value = "udetail_id") Long udetailId,
-                                           @RequestBody UserDetailDTO detailDTO) throws ResourceNotFoundException{
+                                           @Valid @RequestBody UserDetailDTO detailDTO) throws ResourceNotFoundException{
         UserDetailDTO updateDetail = detailService.updateUserDetail(udetailId, detailDTO);
 
         return new ResponseEntity<>(updateDetail, HttpStatus.OK);

@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class OrderController {
     }
 
     @PostMapping("/order")
-    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) throws ResourceNotFoundException {
+    public ResponseEntity<OrderDTO> createOrder(@Valid @RequestBody OrderDTO orderDTO) throws ResourceNotFoundException {
         OrderDTO dto = orderService.saveOrder(orderDTO);
         return ResponseEntity.ok(dto);
     }
@@ -50,7 +51,7 @@ public class OrderController {
 ////    //update
     @PutMapping("/order/{order_id}")
     public ResponseEntity<OrderDTO> updateOrder(@PathVariable(value = "order_id") Long orderId,
-                                                 @RequestBody OrderDTO orderDTO) throws ResourceNotFoundException{
+                                                 @Valid @RequestBody OrderDTO orderDTO) throws ResourceNotFoundException{
         OrderDTO updateOrder = orderService.updateOrder(orderId, orderDTO);
 
         return new ResponseEntity<>(updateOrder, HttpStatus.OK);

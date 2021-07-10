@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class StatusController {
     }
 
     @PostMapping("/status")
-    public ResponseEntity<StatusDTO> createStatus(@RequestBody StatusDTO statusDTO) {
+    public ResponseEntity<StatusDTO> createStatus(@Valid @RequestBody StatusDTO statusDTO) {
         StatusDTO dto = statusService.saveStatus(statusDTO);
         return ResponseEntity.ok(dto);
     }
@@ -42,7 +43,7 @@ public class StatusController {
 //    //update
     @PutMapping("/status/{status_id}")
     public ResponseEntity<StatusDTO> updateStatus(@PathVariable(value = "status_id") Long statusId,
-                                                   @RequestBody StatusDTO statusDTO) throws ResourceNotFoundException{
+                                                   @Valid @RequestBody StatusDTO statusDTO) throws ResourceNotFoundException{
         StatusDTO updateSta = statusService.updateStatus(statusId, statusDTO);
 
         return new ResponseEntity<>(updateSta, HttpStatus.OK);

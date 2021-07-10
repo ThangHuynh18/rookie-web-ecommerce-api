@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +39,7 @@ public class CategoryController {
     //save employee
 
     @PostMapping("/category")
-    public ResponseEntity<CategoryDTO> createCate(@RequestBody CategoryDTO categoryDTO) {
+    public ResponseEntity<CategoryDTO> createCate(@Valid @RequestBody CategoryDTO categoryDTO) {
         CategoryDTO dto = categoryService.saveCategory(categoryDTO);
         return ResponseEntity.ok(dto);
     }
@@ -46,7 +47,7 @@ public class CategoryController {
 
     //update
     @PutMapping("/category/{category_id}")
-    public ResponseEntity<CategoryDTO> updateCate(@PathVariable(value = "category_id") Long categoryId, @RequestBody CategoryDTO categoryDTO) throws ResourceNotFoundException {
+    public ResponseEntity<CategoryDTO> updateCate(@PathVariable(value = "category_id") Long categoryId, @Valid @RequestBody CategoryDTO categoryDTO) throws ResourceNotFoundException {
         CategoryDTO updateCate = categoryService.updateCategory(categoryId, categoryDTO);
 
         return new ResponseEntity<>(updateCate, HttpStatus.OK);

@@ -3,7 +3,12 @@ package com.rookie.webwatch.dto;
 import com.rookie.webwatch.entity.Order;
 import com.rookie.webwatch.entity.Role;
 import com.rookie.webwatch.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -11,8 +16,16 @@ import java.util.Set;
 
 public class UserDTO {
     private long user_id;
+
+    @NotNull
+    @Size(min = 2, max = 10)
     private String userName;
+
+    @NotNull
+    @Email
     private String userEmail;
+
+    @NotNull
     private String userPassword;
 
     private Set<String> roles;

@@ -2,12 +2,17 @@ package com.rookie.webwatch.dto;
 
 import com.rookie.webwatch.entity.Status;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StatusDTO {
     private long status_id;
+
+    @NotNull
     private long status;
+
+    @NotNull
     private String statusName;
 
     public StatusDTO() {
