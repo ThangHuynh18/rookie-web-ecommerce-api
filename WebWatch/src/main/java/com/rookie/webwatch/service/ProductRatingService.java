@@ -1,5 +1,6 @@
 package com.rookie.webwatch.service;
 
+import com.rookie.webwatch.dto.RatingDTO;
 import com.rookie.webwatch.entity.ProductRating;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 
@@ -7,13 +8,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductRatingService {
-    public List<ProductRating> retrieveRatings();
+    public List<RatingDTO> retrieveRatings();
 
-    public Optional<ProductRating> getRating(Long ratingId);
+    public RatingDTO getRating(Long ratingId) throws ResourceNotFoundException;
 
-    public ProductRating saveRating(ProductRating rating);
+    public RatingDTO saveRating(RatingDTO ratingDTO) throws ResourceNotFoundException;
 
     public void deleteRating(Long ratingId) throws ResourceNotFoundException;
 
-    public ProductRating updateRating(ProductRating rating);
+    public RatingDTO updateRating(Long id, RatingDTO ratingDTO) throws ResourceNotFoundException;
 }

@@ -2,18 +2,19 @@ package com.rookie.webwatch.service;
 
 import com.rookie.webwatch.dto.OrderDTO;
 import com.rookie.webwatch.dto.UserDTO;
-import com.rookie.webwatch.entity.Category;
-import com.rookie.webwatch.entity.Order;
-import com.rookie.webwatch.entity.Status;
-import com.rookie.webwatch.entity.User;
+import com.rookie.webwatch.entity.*;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
+import com.rookie.webwatch.repository.RoleRepository;
 import com.rookie.webwatch.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -21,6 +22,12 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private PasswordEncoder encoder;
 
     @Override
     public List<UserDTO> retrieveUsers() {
@@ -35,8 +42,32 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserDTO saveUser(UserDTO userDTO) {
+    public UserDTO saveUser(UserDTO userDTO){
         User user = new UserDTO().convertToEti(userDTO);
+
+        user = new User(userDTO.getUserName(), userDTO.getUserEmail(), encoder.encode(userDTO.getUserPassword()));
+        Set<String> strRoles = userDTO.getRoles();
+        Set<Role> roles = new HashSet<>();
+
+        if (strRoles == null) {
+            Role userRole = roleRepository.findByName("user")
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(userRole);
+        } else {
+            strRoles.forEach(role -> {
+                if ("admin".equals(role.toLowerCase())) {
+                    Role adminRole = roleRepository.findByName("admin")
+                            .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                    roles.add(adminRole);
+                } else {
+                    Role userRole = roleRepository.findByName("user")
+                            .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                    roles.add(userRole);
+                }
+            });
+        }
+
+        user.setRoles(roles);
 
         return new UserDTO().convertToDto(userRepository.save(user));
     }
@@ -54,7 +85,8 @@ public class UserServiceImpl implements UserService{
 
         userExist.setUserName(userDTO.getUserName());
         userExist.setUserEmail(userDTO.getUserEmail());
-        userExist.setUserPassword(userDTO.getUserPassword());
+        //userExist.setUserPassword(userDTO.getUserPassword());
+        userExist.setUserPassword(encoder.encode(userDTO.getUserPassword()));
 
         User user = new User();
         user = userRepository.save(userExist);

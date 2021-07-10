@@ -1,15 +1,17 @@
 package com.rookie.webwatch.service;
 
+import com.rookie.webwatch.dto.ImageDTO;
 import com.rookie.webwatch.entity.Product;
 import com.rookie.webwatch.entity.ProductImage;
+
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 import com.rookie.webwatch.repository.ProductImageRepository;
+import com.rookie.webwatch.repository.Productrepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -17,20 +19,30 @@ public class ProductImageServiceImpl implements ProductImageService{
     @Autowired
     private ProductImageRepository imageRepository;
 
+    @Autowired
+    private Productrepository productrepository;
+
     @Override
-    public List<ProductImage> retrieveProductImages() {
+    public List<ImageDTO> retrieveProductImages() {
         List<ProductImage> productImages = imageRepository.findAll();
-        return productImages;
+        return new ImageDTO().toListDto(productImages);
     }
 
     @Override
-    public Optional<ProductImage> getProductImage(Long imageId) {
-        return imageRepository.findById(imageId);
+    public ImageDTO getProductImage(Long imageId) throws ResourceNotFoundException {
+        ProductImage image = imageRepository.findById(imageId).orElseThrow(() -> new ResourceNotFoundException("image not found for this id: "+imageId));
+        return new ImageDTO().convertToDto(image);
     }
 
     @Override
-    public ProductImage saveProductImage(ProductImage productImage) {
-        return imageRepository.save(productImage);
+    public ImageDTO saveProductImage(ImageDTO imageDTO) throws ResourceNotFoundException {
+        Product product = productrepository.findById(imageDTO.getProduct_id()).orElseThrow(() ->
+                new ResourceNotFoundException("product not found for this id: "+imageDTO.getProduct_id()));
+
+        ProductImage image = new ImageDTO().convertToEti(imageDTO);
+        image.setProduct(product);
+
+        return new ImageDTO().convertToDto(imageRepository.save(image));
     }
 
     @Override
@@ -40,7 +52,14 @@ public class ProductImageServiceImpl implements ProductImageService{
     }
 
     @Override
-    public ProductImage updateProductImage(ProductImage productImage) {
-        return imageRepository.save(productImage);
+    public ImageDTO updateProductImage(Long id, ImageDTO imageDTO) throws ResourceNotFoundException {
+        ProductImage imageExist = imageRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("image not found for this id: "+id));
+
+        imageExist.setImageLink(imageDTO.getImageLink());
+
+        ProductImage image = new ProductImage();
+        image = imageRepository.save(imageExist);
+        return new ImageDTO().convertToDto(image);
     }
 }

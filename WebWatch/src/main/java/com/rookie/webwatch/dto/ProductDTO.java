@@ -4,6 +4,7 @@ import com.rookie.webwatch.entity.Order;
 import com.rookie.webwatch.entity.Product;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -14,8 +15,8 @@ public class ProductDTO {
     private String productDescription;
     private long productQty;
     private long category_id;
-    private Set<ImageDTO> productImages;
-    private Set<RatingDTO> productRatings;
+    private Set<String> productImages;
+    private Set<Long> productRatings;
 
     public ProductDTO() {
     }
@@ -30,7 +31,18 @@ public class ProductDTO {
         productDTO.setProductQty(product.getProductQty());
         productDTO.setCategory_id(product.getCategory().getCategory_id());
 
-        //productDTO.setProductImages(product.getProductImages());
+        Set<String> images = new HashSet<>();
+        product.getProductImages().forEach(r -> {
+            images.add(r.getImageLink());
+        });
+        productDTO.setProductImages(images);
+
+        Set<Long> ratings = new HashSet<>();
+        product.getProductRatings().forEach(rating -> {
+            ratings.add(rating.getRatingNumber());
+        });
+        productDTO.setProductRatings(ratings);
+
         return productDTO;
     }
 
@@ -104,19 +116,19 @@ public class ProductDTO {
         this.category_id = category_id;
     }
 
-    public Set<ImageDTO> getProductImages() {
+    public Set<String> getProductImages() {
         return productImages;
     }
 
-    public void setProductImages(Set<ImageDTO> productImages) {
+    public void setProductImages(Set<String> productImages) {
         this.productImages = productImages;
     }
 
-    public Set<RatingDTO> getProductRatings() {
+    public Set<Long> getProductRatings() {
         return productRatings;
     }
 
-    public void setProductRatings(Set<RatingDTO> productRatings) {
+    public void setProductRatings(Set<Long> productRatings) {
         this.productRatings = productRatings;
     }
 }

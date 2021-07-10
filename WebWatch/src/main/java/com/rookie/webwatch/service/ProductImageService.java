@@ -1,19 +1,19 @@
 package com.rookie.webwatch.service;
 
-import com.rookie.webwatch.entity.ProductImage;
+import com.rookie.webwatch.dto.ImageDTO;
+
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ProductImageService {
-    public List<ProductImage> retrieveProductImages();
+    public List<ImageDTO> retrieveProductImages();
 
-    public Optional<ProductImage> getProductImage(Long imageId);
+    public ImageDTO getProductImage(Long imageId) throws ResourceNotFoundException;
 
-    public ProductImage saveProductImage(ProductImage productImage);
+    public ImageDTO saveProductImage(ImageDTO imageDTO) throws ResourceNotFoundException;
 
     public void deleteProductImage(Long imageId) throws ResourceNotFoundException;
 
-    public ProductImage updateProductImage(ProductImage productImage);
+    public ImageDTO updateProductImage(Long id, ImageDTO imageDTO) throws ResourceNotFoundException;
 }

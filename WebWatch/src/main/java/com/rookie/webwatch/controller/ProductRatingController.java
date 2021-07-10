@@ -1,16 +1,16 @@
 package com.rookie.webwatch.controller;
 
-import com.rookie.webwatch.entity.ProductRating;
+import com.rookie.webwatch.dto.RatingDTO;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 import com.rookie.webwatch.service.ProductRatingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/ratings")
@@ -19,36 +19,32 @@ public class ProductRatingController {
     private ProductRatingService ratingService;
 
     @GetMapping("")
-    public List<ProductRating> getAllRating(){
-        List<ProductRating> ratings = ratingService.retrieveRatings();
+    public List<RatingDTO> getAllRating(){
+        List<RatingDTO> ratings = ratingService.retrieveRatings();
         return ratings;
     }
 
     @GetMapping("/{rating_id}")
-    public Optional<ProductRating> findRating(@PathVariable("rating_id") Long ratingId) throws ResourceNotFoundException {
-        Optional<ProductRating> rating = Optional.ofNullable(ratingService.getRating(ratingId)
-                .orElseThrow(() -> new ResourceNotFoundException("rating not found for this id: " + ratingId)));
+    public ResponseEntity<RatingDTO> findRating(@PathVariable("rating_id") Long ratingId) throws ResourceNotFoundException {
+        RatingDTO ratingDTO = ratingService.getRating(ratingId);
 
-        return ratingService.getRating(ratingId);
+        return ResponseEntity.ok(ratingDTO);
     }
 
     //save employee
     @PostMapping("/rating")
-    public ProductRating createRating(@RequestBody ProductRating rating){
-        return ratingService.saveRating(rating);
+    public ResponseEntity<RatingDTO> createRating(@RequestBody RatingDTO ratingDTO) throws ResourceNotFoundException {
+        RatingDTO dto = ratingService.saveRating(ratingDTO);
+        return ResponseEntity.ok(dto);
     }
     //
 //    //update
     @PutMapping("/rating/{rating_id}")
-    public ResponseEntity<ProductRating> updateRating(@PathVariable(value = "rating_id") Long ratingId,
-                                                 @RequestBody ProductRating ratingDetail) throws ResourceNotFoundException{
-        ProductRating rating = ratingService.getRating(ratingId).orElseThrow(() -> new ResourceNotFoundException("rating not found for this id: " +ratingId));
+    public ResponseEntity<RatingDTO> updateRating(@PathVariable(value = "rating_id") Long ratingId,
+                                                 @RequestBody RatingDTO ratingDTO) throws ResourceNotFoundException{
+        RatingDTO updateRating = ratingService.updateRating(ratingId, ratingDTO);
 
-        rating.setRatingNumber(ratingDetail.getRatingNumber());
-//        rating.setProduct(ratingDetail.getProduct());
-//        rating.setUser(ratingDetail.getUser());
-
-        return ResponseEntity.ok(ratingService.updateRating(rating));
+        return new ResponseEntity<>(updateRating, HttpStatus.OK);
     }
     //
 //    //delete

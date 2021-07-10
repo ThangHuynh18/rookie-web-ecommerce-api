@@ -2,17 +2,19 @@ package com.rookie.webwatch.controller;
 
 import com.rookie.webwatch.dto.UserDTO;
 
+import com.rookie.webwatch.entity.Role;
+import com.rookie.webwatch.entity.User;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
+import com.rookie.webwatch.repository.RoleRepository;
 import com.rookie.webwatch.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -20,6 +22,7 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
 
     @GetMapping("")
     public List<UserDTO> getAllUser(){
@@ -35,8 +38,9 @@ public class UserController {
     }
 
     @PostMapping("/user")
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO){
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
         UserDTO dto = userService.saveUser(userDTO);
+
         return ResponseEntity.ok(dto);
     }
 

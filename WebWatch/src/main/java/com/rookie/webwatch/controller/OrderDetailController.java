@@ -1,17 +1,17 @@
 package com.rookie.webwatch.controller;
 
-import com.rookie.webwatch.entity.Order;
-import com.rookie.webwatch.entity.OrderDetail;
+import com.rookie.webwatch.dto.OrderDetailDTO;
+
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 import com.rookie.webwatch.service.OrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/odetails")
@@ -20,38 +20,32 @@ public class OrderDetailController {
     private OrderDetailService detailService;
 
     @GetMapping("")
-    public List<OrderDetail> getAllOrderDetail(){
-        List<OrderDetail> details = detailService.retrieveOrderDetails();
+    public List<OrderDetailDTO> getAllOrderDetail(){
+        List<OrderDetailDTO> details = detailService.retrieveOrderDetails();
         return details;
     }
 
     @GetMapping("/{detail_id}")
-    public Optional<OrderDetail> findOrderDetail(@PathVariable("detail_id") Long detailId) throws ResourceNotFoundException {
-        Optional<OrderDetail> order = Optional.ofNullable(detailService.getOrderDetail(detailId)
-                .orElseThrow(() -> new ResourceNotFoundException("order detail not found for this id: " + detailId)));
+    public ResponseEntity<OrderDetailDTO> findOrderDetail(@PathVariable("detail_id") Long detailId) throws ResourceNotFoundException {
+        OrderDetailDTO detailDTO = detailService.getOrderDetail(detailId);
 
-        return detailService.getOrderDetail(detailId);
+        return ResponseEntity.ok(detailDTO);
     }
 
-    //save employee
+    //save
     @PostMapping("/odetail")
-    public OrderDetail createOrderDetail(@RequestBody OrderDetail detail){
-        return detailService.saveOrderDetail(detail);
+    public ResponseEntity<OrderDetailDTO> createOrderDetail(@RequestBody OrderDetailDTO detailDTO) throws ResourceNotFoundException {
+        OrderDetailDTO dto = detailService.saveOrderDetail(detailDTO);
+        return ResponseEntity.ok(dto);
     }
     //
 //    //update
     @PutMapping("/odetail/{detail_id}")
-    public ResponseEntity<OrderDetail> updateOrderDetail(@PathVariable(value = "detail_id") Long detailId,
-                                             @RequestBody OrderDetail orderDetail) throws ResourceNotFoundException{
-        OrderDetail detail = detailService.getOrderDetail(detailId).orElseThrow(() -> new ResourceNotFoundException("order detail not found for this id: " +detailId));
+    public ResponseEntity<OrderDetailDTO> updateOrderDetail(@PathVariable(value = "detail_id") Long detailId,
+                                             @RequestBody OrderDetailDTO detailDTO) throws ResourceNotFoundException{
+        OrderDetailDTO updateDetail = detailService.updateOrderDetail(detailId, detailDTO);
 
-        detail.setDetailQty(orderDetail.getDetailQty());
-        detail.setDetailPrice(orderDetail.getDetailPrice());
-
-//        detail.setOrder(orderDetail.getOrder());
-//        detail.setProduct(orderDetail.getProduct());
-
-        return ResponseEntity.ok(detailService.updateOrderDetail(detail));
+        return new ResponseEntity<>(updateDetail, HttpStatus.OK);
     }
     //
 //    //delete

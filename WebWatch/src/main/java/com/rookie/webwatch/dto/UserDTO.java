@@ -1,9 +1,11 @@
 package com.rookie.webwatch.dto;
 
 import com.rookie.webwatch.entity.Order;
+import com.rookie.webwatch.entity.Role;
 import com.rookie.webwatch.entity.User;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -13,7 +15,7 @@ public class UserDTO {
     private String userEmail;
     private String userPassword;
 
-    private Set<RoleDTO> roleDTOS;
+    private Set<String> roles;
 
     public UserDTO() {
     }
@@ -26,7 +28,11 @@ public class UserDTO {
         userDTO.setUserEmail(user.getUserEmail());
         userDTO.setUserPassword(user.getUserPassword());
 
-        //userDTO.setRoleDTOS(user.getRoles());
+        Set<String> roles = new HashSet<>();
+        user.getRoles().forEach(r -> {
+            roles.add(r.getName());
+        });
+        userDTO.setRoles(roles);
 
         return userDTO;
     }
@@ -38,6 +44,12 @@ public class UserDTO {
         user.setUserEmail(userDTO.getUserEmail());
         user.setUserPassword(userDTO.getUserPassword());
 
+//        Set<Role> roles = new HashSet<>();
+//        userDTO.getRoles().forEach(r ->{
+//            roles.add(r.get)
+//        });
+//        user.setRoles(userDTO.getRoles());
+//        user.setRoles(userDTO.getRoleDTOS());
         return user;
     }
 
@@ -83,11 +95,11 @@ public class UserDTO {
         this.userPassword = userPassword;
     }
 
-    public Set<RoleDTO> getRoleDTOS() {
-        return roleDTOS;
+    public Set<String> getRoles() {
+        return roles;
     }
 
-    public void setRoleDTOS(Set<RoleDTO> roleDTOS) {
-        this.roleDTOS = roleDTOS;
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
     }
 }

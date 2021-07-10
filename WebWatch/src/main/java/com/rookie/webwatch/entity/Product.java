@@ -58,6 +58,13 @@ public class Product {
         this.productRatings = productRatings;
     }
 
+    public Product(String productName, float productPrice, String productDescription, long productQty) {
+        this.productName = productName;
+        this.productPrice = productPrice;
+        this.productDescription = productDescription;
+        this.productQty = productQty;
+    }
+
     public Set<OrderDetail> getOrderDetails() {
         return orderDetails;
     }

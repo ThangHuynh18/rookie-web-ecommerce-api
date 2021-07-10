@@ -20,7 +20,6 @@ public class OrderDTO {
         orderDTO.setTotalPrice(order.getTotalPrice());
         orderDTO.setTotalQty(order.getTotalQty());
         orderDTO.setStatus_id(order.getStatus().getStatus_id());
-        orderDTO.setOrder_id(order.getOrder_id());
         orderDTO.setUser_id(order.getUser().getUser_id());
 
         return orderDTO;

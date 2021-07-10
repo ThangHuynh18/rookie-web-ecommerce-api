@@ -12,7 +12,7 @@ public class ProductRating {
     private long rating_id;
 
     @Column(name = "rating")
-    private int ratingNumber;
+    private long ratingNumber;
 
     @JsonBackReference(value = "userRating")
     @ManyToOne(fetch = FetchType.LAZY )
@@ -42,11 +42,11 @@ public class ProductRating {
         this.rating_id = rating_id;
     }
 
-    public int getRatingNumber() {
+    public long getRatingNumber() {
         return ratingNumber;
     }
 
-    public void setRatingNumber(int ratingNumber) {
+    public void setRatingNumber(long ratingNumber) {
         this.ratingNumber = ratingNumber;
     }
 
