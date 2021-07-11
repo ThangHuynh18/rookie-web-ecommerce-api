@@ -1,4 +1,4 @@
-package com.rookie.webwatch.service;
+package com.rookie.webwatch.service.impl;
 
 import com.rookie.webwatch.dto.OrderDTO;
 import com.rookie.webwatch.entity.Order;
@@ -9,6 +9,7 @@ import com.rookie.webwatch.repository.OrderRepository;
 import com.rookie.webwatch.repository.Productrepository;
 import com.rookie.webwatch.repository.StatusRepository;
 import com.rookie.webwatch.repository.UserRepository;
+import com.rookie.webwatch.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

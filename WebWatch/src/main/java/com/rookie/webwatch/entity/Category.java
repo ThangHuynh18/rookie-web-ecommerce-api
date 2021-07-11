@@ -26,9 +26,10 @@ public class Category {
     public Category() {
     }
 
-    public Category(long category_id, Set<Product> products, String categoryName) {
+
+    public Category(long category_id, String categoryName) {
         this.category_id = category_id;
-        this.products = products;
+//        this.products = products;
         this.categoryName = categoryName;
     }
 

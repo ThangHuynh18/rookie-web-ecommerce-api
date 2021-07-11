@@ -1,4 +1,4 @@
-package com.rookie.webwatch.service;
+package com.rookie.webwatch.service.impl;
 
 import com.rookie.webwatch.dto.OrderDTO;
 import com.rookie.webwatch.dto.ProductDTO;
@@ -8,6 +8,7 @@ import com.rookie.webwatch.repository.CategoryRepository;
 import com.rookie.webwatch.repository.ProductImageRepository;
 import com.rookie.webwatch.repository.ProductRatingRepository;
 import com.rookie.webwatch.repository.Productrepository;
+import com.rookie.webwatch.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +23,7 @@ import java.util.Set;
 
 @Service
 @Transactional
-public class ProductServiceImpl implements ProductService{
+public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private Productrepository productrepository;

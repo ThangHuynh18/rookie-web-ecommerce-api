@@ -1,4 +1,4 @@
-package com.rookie.webwatch.service;
+package com.rookie.webwatch.service.impl;
 
 import com.rookie.webwatch.dto.CategoryDTO;
 
@@ -6,16 +6,16 @@ import com.rookie.webwatch.entity.Category;
 
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 import com.rookie.webwatch.repository.CategoryRepository;
+import com.rookie.webwatch.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
-public class CategoryServiceImpl implements CategoryService{
+public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     private CategoryRepository categoryRepository;

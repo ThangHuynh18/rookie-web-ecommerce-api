@@ -1,9 +1,10 @@
-package com.rookie.webwatch.service;
+package com.rookie.webwatch.service.impl;
 
 import com.rookie.webwatch.dto.StatusDTO;
 import com.rookie.webwatch.entity.Status;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 import com.rookie.webwatch.repository.StatusRepository;
+import com.rookie.webwatch.service.StatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class StatusServiceImpl implements StatusService{
+public class StatusServiceImpl implements StatusService {
 
     @Autowired
     private StatusRepository statusRepository;

@@ -1,4 +1,4 @@
-package com.rookie.webwatch.service;
+package com.rookie.webwatch.service.impl;
 
 import com.rookie.webwatch.dto.OrderDetailDTO;
 
@@ -7,6 +7,7 @@ import com.rookie.webwatch.exception.ResourceNotFoundException;
 import com.rookie.webwatch.repository.OrderDetailRepository;
 import com.rookie.webwatch.repository.OrderRepository;
 import com.rookie.webwatch.repository.Productrepository;
+import com.rookie.webwatch.service.OrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class OrderDetailServiceImpl implements OrderDetailService{
+public class OrderDetailServiceImpl implements OrderDetailService {
 
     @Autowired
     private OrderDetailRepository detailRepository;

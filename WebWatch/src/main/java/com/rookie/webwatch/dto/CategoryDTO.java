@@ -43,6 +43,10 @@ public class CategoryDTO {
         return listDto;
     }
 
+    public CategoryDTO(long category_id, String categoryName) {
+        this.category_id = category_id;
+        this.categoryName = categoryName;
+    }
 //    public CategoryDTO(Category category) {
 //        this.setCategory_id(category.getCategory_id());
 //        this.setCategoryName(category.getCategoryName());

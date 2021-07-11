@@ -1,4 +1,4 @@
-package com.rookie.webwatch.service;
+package com.rookie.webwatch.service.impl;
 
 import com.rookie.webwatch.dto.RatingDTO;
 import com.rookie.webwatch.entity.*;
@@ -6,6 +6,7 @@ import com.rookie.webwatch.exception.ResourceNotFoundException;
 import com.rookie.webwatch.repository.ProductRatingRepository;
 import com.rookie.webwatch.repository.Productrepository;
 import com.rookie.webwatch.repository.UserRepository;
+import com.rookie.webwatch.service.ProductRatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class ProductRatingServiceImpl implements ProductRatingService{
+public class ProductRatingServiceImpl implements ProductRatingService {
 
     @Autowired
     private ProductRatingRepository ratingRepository;
