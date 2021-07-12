@@ -1,6 +1,5 @@
 package com.rookie.webwatch.dto;
 
-import com.rookie.webwatch.entity.Order;
 import com.rookie.webwatch.entity.Product;
 
 import javax.validation.constraints.NotNull;
@@ -8,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 
 public class ProductDTO {
     private long product_id;
@@ -24,8 +24,11 @@ public class ProductDTO {
     @NotNull
     private long productQty;
     private long category_id;
-    private Set<String> productImages;
-    private Set<Long> productRatings;
+
+    private List<ImageDTO> imageDTOS;
+
+    //private List<RatingDTO> ratingDTOS;
+    //private Set<Long> productRatings;
 
     public ProductDTO() {
     }
@@ -40,17 +43,22 @@ public class ProductDTO {
         productDTO.setProductQty(product.getProductQty());
         productDTO.setCategory_id(product.getCategory().getCategory_id());
 
-        Set<String> images = new HashSet<>();
-        product.getProductImages().forEach(r -> {
-            images.add(r.getImageLink());
-        });
-        productDTO.setProductImages(images);
 
-        Set<Long> ratings = new HashSet<>();
-        product.getProductRatings().forEach(rating -> {
-            ratings.add(rating.getRatingNumber());
-        });
-        productDTO.setProductRatings(ratings);
+        List<ImageDTO> listDto = new ArrayList<>();
+
+        if(product.getProductImages()!=null){
+            product.getProductImages().forEach(e -> {
+                listDto.add(new ImageDTO().convertToDto(e));
+            });
+        }
+        productDTO.setImageDTOS(listDto);
+
+
+//        List<RatingDTO> ratings = new ArrayList<>();
+//        product.getProductRatings().forEach(rating -> {
+//            ratings.add(new RatingDTO().convertToDto(rating));
+//        });
+//        productDTO.setRatingDTOS(ratings);
 
         return productDTO;
     }
@@ -125,19 +133,27 @@ public class ProductDTO {
         this.category_id = category_id;
     }
 
-    public Set<String> getProductImages() {
-        return productImages;
+    public List<ImageDTO> getImageDTOS() {
+        return imageDTOS;
     }
 
-    public void setProductImages(Set<String> productImages) {
-        this.productImages = productImages;
+    public void setImageDTOS(List<ImageDTO> imageDTOS) {
+        this.imageDTOS = imageDTOS;
     }
 
-    public Set<Long> getProductRatings() {
-        return productRatings;
-    }
+//    public Set<Long> getProductRatings() {
+//        return productRatings;
+//    }
+//
+//    public void setProductRatings(Set<Long> productRatings) {
+//        this.productRatings = productRatings;
+//    }
 
-    public void setProductRatings(Set<Long> productRatings) {
-        this.productRatings = productRatings;
-    }
+//    public List<RatingDTO> getRatingDTOS() {
+//        return ratingDTOS;
+//    }
+//
+//    public void setRatingDTOS(List<RatingDTO> ratingDTOS) {
+//        this.ratingDTOS = ratingDTOS;
+//    }
 }

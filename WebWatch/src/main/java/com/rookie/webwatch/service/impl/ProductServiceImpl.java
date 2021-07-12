@@ -1,7 +1,9 @@
 package com.rookie.webwatch.service.impl;
 
+import com.rookie.webwatch.dto.ImageDTO;
 import com.rookie.webwatch.dto.OrderDTO;
 import com.rookie.webwatch.dto.ProductDTO;
+import com.rookie.webwatch.dto.RatingDTO;
 import com.rookie.webwatch.entity.*;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 import com.rookie.webwatch.repository.CategoryRepository;
@@ -22,7 +24,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-@Transactional
+//@Transactional
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
@@ -51,39 +53,32 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDTO saveProduct(ProductDTO productDTO) throws ResourceNotFoundException {
+        Product product = new ProductDTO().convertToEti(productDTO);
 
         Category category = categoryRepository.findById(productDTO.getCategory_id()).orElseThrow(() ->
                 new ResourceNotFoundException("category not found for this id: "+productDTO.getCategory_id()));
 
-        Product product = new ProductDTO().convertToEti(productDTO);
-
-        product = new Product(productDTO.getProductName(), productDTO.getProductPrice(), productDTO.getProductDescription(), productDTO.getProductQty());
-
-        Set<String> strImage = productDTO.getProductImages();
-        Set<ProductImage> images = new HashSet<>();
-
-        if (strImage == null) {
-            ProductImage proImage = imageRepository.findByImageLink(product.getProductImages().toString())
-                    .orElseThrow(() -> new RuntimeException("Error: Image link is not found."));
-            images.add(proImage);
-        }
-        product.setProductImages(images);
-
-
-        Set<Long> longRating = productDTO.getProductRatings();
-        Set<ProductRating> ratings = new HashSet<>();
-
-//        if (longRating == null) {
-////            ProductRating proRat = ratingRepository.findByRatingNumber(product.getProductRatings().)
-////                    .orElseThrow(() -> new RuntimeException("Error: Image link is not found."));
-//            ratings.add(productDTO.getProductRatings());
-//        }
-        product.setProductRatings(ratings);
-
-
         product.setCategory(category);
 
-        return new ProductDTO().convertToDto(productrepository.save(product));
+        product = productrepository.save(product);
+
+//        List<ProductRating> ratings = new RatingDTO().toListEntity(productDTO.getRatingDTOS());
+//        Product productRa = product;
+//        ratings.forEach(r -> {
+//            r.setProduct(productRa);
+//            ratingRepository.save(r);
+//        });
+
+
+        List<ProductImage> images = new ImageDTO().toListEntity(productDTO.getImageDTOS());
+        Product productFinal = product;
+        images.forEach(i -> {
+            i.setProduct(productFinal);
+            //System.out.println("--------------------------"+ i.getImageLink()+"___"+i.getProduct().getProduct_id());
+            imageRepository.save(i);
+        });
+
+        return new ProductDTO().convertToDto(productrepository.findById(product.getProduct_id()).orElseThrow(()-> new ResourceNotFoundException("product not found for this id")));
     }
 
     @Override

@@ -9,11 +9,14 @@ import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,21 +65,24 @@ public class CategoryServiceTest {
         Assert.assertEquals(1,categoryService.retrieveCategories().size());
     }
 
-//    @Test
-//    public void addCate(){
-//        CategoryDTO category = new CategoryDTO(1,"category1");
+    @Test
+    public void addCate() throws Exception{
+        CategoryDTO category = new CategoryDTO(1,"category1");
 //        when(categoryRepository.save(category)).thenReturn(category);
-//        Assert.assertEquals(category, categoryService.saveCategory(category));
-//    }
+      //  Assert.assertEquals(true, categoryService.saveCategory(category));
 
-//    @Test
-//    public void deleteCate() throws ResourceNotFoundException {
-//        Category category = new Category(1,"cate1");
-//
-//        when(categoryRepository.deleteById(category.getCategory_id())).thenReturn(category);
-////        categoryService.deleteCategory(category.getCategory_id());
-////        verify(categoryRepository, times(1)).delete(category);
-//    }
+        when(categoryService.saveCategory(Mockito.any(CategoryDTO.class))).thenReturn(category);
+
+    }
+
+    @Test
+    public void deleteCate() throws ResourceNotFoundException {
+        Category category = new Category(1,"cate1");
+
+     //   when(categoryRepository.deleteById(category.getCategory_id())).thenReturn(category);
+        categoryService.deleteCategory(category.getCategory_id());
+        verify(categoryRepository, times(1)).delete(category);
+    }
 
     @Test
     public void loadCateById() throws ResourceNotFoundException {

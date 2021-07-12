@@ -38,6 +38,14 @@ public class ImageDTO {
         return listDto;
     }
 
+    public List<ProductImage> toListEntity(List<ImageDTO> listDto){
+        List<ProductImage> listEntity  = new ArrayList<>();
+        listDto.forEach(d->{
+            listEntity.add(this.convertToEti(d));
+        });
+        return listEntity;
+    }
+
     public String getImageLink() {
         return imageLink;
     }

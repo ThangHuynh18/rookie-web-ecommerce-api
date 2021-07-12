@@ -2,6 +2,7 @@ package com.rookie.webwatch.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -33,6 +34,7 @@ public class Product {
 
     @JsonManagedReference(value = "productImage")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "product")
+    //@Cascade(value = org.hibernate.annotations.CascadeType.ALL)
     private Set<ProductImage> productImages;
 
     @JsonManagedReference(value = "productOdetail")

@@ -4,6 +4,7 @@ import com.rookie.webwatch.entity.ProductRating;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class RatingDTO {
     private int ratingNumber;
@@ -39,6 +40,15 @@ public class RatingDTO {
             listDto.add(this.convertToDto(e));
         });
         return listDto;
+    }
+
+    public List<ProductRating> toListEntity(List<RatingDTO> listDto) {
+        List<ProductRating> listEntity = new ArrayList<>();
+
+        listDto.forEach(r->{
+            listEntity.add(this.convertToEti(r));
+        });
+        return listEntity;
     }
 
 

@@ -29,6 +29,10 @@ public class ProductImage {
         this.product = product;
     }
 
+    public ProductImage(String imageLink) {
+        this.imageLink = imageLink;
+    }
+
     public long getImage_id() {
         return image_id;
     }
