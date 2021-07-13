@@ -88,7 +88,7 @@ public class CategoryControllerTest {
 
         List<CategoryDTO> all = Arrays.asList(category);
 
-        given(categoryService.getCate(category.getCategory_id())).willReturn(category);
+        given(categoryService.getCate(category.getCategory_id())).willReturn(java.util.Optional.of(category));
 
         mockMvc.perform(get("/api/categories/1")
                 .contentType(MediaType.APPLICATION_JSON))

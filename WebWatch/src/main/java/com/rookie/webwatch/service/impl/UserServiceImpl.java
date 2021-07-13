@@ -37,9 +37,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO getUser(Long userId) throws ResourceNotFoundException {
+    public Optional<UserDTO> getUser(Long userId) throws ResourceNotFoundException {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("user not found for this id: "+userId));
-        return new UserDTO().convertToDto(user);
+        return Optional.of(new UserDTO().convertToDto(user));
     }
 
     @Override

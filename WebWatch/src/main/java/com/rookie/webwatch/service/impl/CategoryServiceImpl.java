@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -27,9 +28,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDTO getCate(Long cateId) throws ResourceNotFoundException {
+    public Optional<CategoryDTO> getCate(Long cateId) throws ResourceNotFoundException {
         Category category = categoryRepository.findById(cateId).orElseThrow(() -> new ResourceNotFoundException("category not found for this id: "+cateId));
-        return new CategoryDTO().convertToDto(category);
+        return Optional.of(new CategoryDTO().convertToDto(category));
     }
 
     @Override

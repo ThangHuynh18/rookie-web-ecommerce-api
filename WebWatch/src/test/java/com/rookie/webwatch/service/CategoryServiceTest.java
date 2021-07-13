@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -41,8 +42,8 @@ public class CategoryServiceTest {
 
     @BeforeEach
     public void setUp() {
-        category1 = new Category(1, "category1");
-        category2 = new Category(2, "category2");
+        category1 = new Category(1L, "category1");
+        category2 = new Category(2L, "category2");
 
         categories.add(category1);
         categories.add(category2);
@@ -60,27 +61,53 @@ public class CategoryServiceTest {
         categories.add(new CategoryDTO(2L,"cate2"));
         categories.add(new CategoryDTO(3L,"cate3"));
 
-        //when(categoryRepository.findAll()).thenReturn(categories);
          when(categoryRepository.findAll()).thenReturn(Stream.of(new Category(1,"cate1")).collect(Collectors.toList()));
         Assert.assertEquals(1,categoryService.retrieveCategories().size());
     }
 
     @Test
     public void addCate() throws Exception{
-        CategoryDTO category = new CategoryDTO(1,"category1");
+        CategoryDTO categoryDTO = new CategoryDTO(1,"category1");
 //        when(categoryRepository.save(category)).thenReturn(category);
       //  Assert.assertEquals(true, categoryService.saveCategory(category));
 
-        when(categoryService.saveCategory(Mockito.any(CategoryDTO.class))).thenReturn(category);
+        category1 = new Category(1L, "category1");
+
+
+        when(categoryRepository.save(any())).thenReturn(category1);
+
+        CategoryDTO dto = categoryService.saveCategory(categoryDTO);
+        Assert.assertEquals("category1", dto.getCategoryName());
+       // when(categoryService.saveCategory(Mockito.any(CategoryDTO.class))).thenReturn(category);
+
+    }
+
+    @Test
+    public void updateCate() throws Exception{
+        CategoryDTO categoryDTO = new CategoryDTO(1,"category1");
+//        when(categoryRepository.save(category)).thenReturn(category);
+        //  Assert.assertEquals(true, categoryService.saveCategory(category));
+
+        category1 = new Category(1L, "category1");
+
+        Category category = new Category(1,"cate1");
+        when(categoryRepository.findById(category.getCategory_id())).thenReturn(Optional.of(category));
+
+        when(categoryRepository.save(any())).thenReturn(category1);
+
+        CategoryDTO dto = categoryService.saveCategory(categoryDTO);
+        Assert.assertEquals("category1", dto.getCategoryName());
+        // when(categoryService.saveCategory(Mockito.any(CategoryDTO.class))).thenReturn(category);
 
     }
 
     @Test
     public void deleteCate() throws ResourceNotFoundException {
         Category category = new Category(1,"cate1");
+        when(categoryRepository.findById(category.getCategory_id())).thenReturn(Optional.of(category));
 
-     //   when(categoryRepository.deleteById(category.getCategory_id())).thenReturn(category);
         categoryService.deleteCategory(category.getCategory_id());
+
         verify(categoryRepository, times(1)).delete(category);
     }
 
@@ -98,13 +125,17 @@ public class CategoryServiceTest {
 
     }
 
-//    @Test
-//    public void givenCategoryToAddShouldReturnAddedCate(){
-//        CategoryDTO category = new CategoryDTO(1,"cate1");
-//
-//        when(categoryRepository.save(any())).thenReturn(category);
-//        categoryService.saveCategory(category);
-//        verify(categoryRepository,times(1)).save(any());
-//    }
+
+    @Test
+    public void GivenGetAllCateShouldReturnListOfAllCate(){
+        categoryRepository.save(category1);
+        //stubbing mock to return specific data
+        when(categoryRepository.findAll()).thenReturn(categories);
+        List<CategoryDTO> categories1 =categoryService.retrieveCategories();
+        Assert.assertEquals(categories1,categories);
+        verify(categoryRepository,times(1)).save(category1);
+        verify(categoryRepository,times(1)).findAll();
+    }
+
 
 }

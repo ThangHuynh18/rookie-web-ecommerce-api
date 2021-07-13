@@ -33,6 +33,11 @@ public class UserDTO {
     public UserDTO() {
     }
 
+    public UserDTO(String userName, String userEmail, String userPassword) {
+        this.userName = userName;
+        this.userEmail = userEmail;
+        this.userPassword = userPassword;
+    }
 
     public UserDTO convertToDto(User user) {
         UserDTO userDTO = new UserDTO();

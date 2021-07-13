@@ -3,6 +3,7 @@ package com.rookie.webwatch.service;
 
 import com.rookie.webwatch.dto.ProductDTO;
 import com.rookie.webwatch.entity.Product;
+import com.rookie.webwatch.exception.BadRequestException;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public interface ProductService {
 
     public ProductDTO getProduct(Long productId) throws ResourceNotFoundException;
 
-    public ProductDTO saveProduct(ProductDTO productDTO) throws ResourceNotFoundException;
+    public ProductDTO saveProduct(ProductDTO productDTO) throws ResourceNotFoundException, BadRequestException;
 
     public void deleteProduct(Long productId) throws ResourceNotFoundException;
 

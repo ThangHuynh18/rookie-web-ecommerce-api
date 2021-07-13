@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface UserService {
     public List<UserDTO> retrieveUsers();
 
-    public UserDTO getUser(Long userId) throws ResourceNotFoundException;
+    public Optional<UserDTO> getUser(Long userId) throws ResourceNotFoundException;
 
     public UserDTO saveUser(UserDTO userDTO);
 

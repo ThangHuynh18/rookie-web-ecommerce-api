@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -30,8 +31,8 @@ public class CategoryController {
     }
 
     @GetMapping("/{category_id}")
-    public ResponseEntity<CategoryDTO> getCate(@PathVariable("category_id") Long id) throws ResourceNotFoundException {
-        CategoryDTO categoryDTO = categoryService.getCate(id);
+    public ResponseEntity<Optional<CategoryDTO>> getCate(@PathVariable("category_id") Long id) throws ResourceNotFoundException {
+        Optional<CategoryDTO> categoryDTO = categoryService.getCate(id);
 
         return ResponseEntity.ok(categoryDTO);
     }

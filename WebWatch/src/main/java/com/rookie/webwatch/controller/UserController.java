@@ -32,8 +32,8 @@ public class UserController {
     }
 
     @GetMapping("/{user_id}")
-    public ResponseEntity<UserDTO> findUser(@PathVariable("user_id") Long userId) throws ResourceNotFoundException {
-        UserDTO userDTO = userService.getUser(userId);
+    public ResponseEntity<Optional<UserDTO>> findUser(@PathVariable("user_id") Long userId) throws ResourceNotFoundException {
+        Optional<UserDTO> userDTO = userService.getUser(userId);
 
         return ResponseEntity.ok(userDTO);
     }

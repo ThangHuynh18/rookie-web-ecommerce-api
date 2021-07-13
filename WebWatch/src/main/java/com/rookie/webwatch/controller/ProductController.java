@@ -3,6 +3,7 @@ package com.rookie.webwatch.controller;
 
 import com.rookie.webwatch.dto.ProductDTO;
 
+import com.rookie.webwatch.exception.BadRequestException;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 
 import com.rookie.webwatch.service.ProductService;
@@ -40,7 +41,7 @@ public class ProductController {
 
     //insert
     @PostMapping("/product")
-    public ResponseEntity<ProductDTO> createPro(@Valid @RequestBody ProductDTO dtoRequest) throws ResourceNotFoundException {
+    public ResponseEntity<ProductDTO> createPro(@Valid @RequestBody ProductDTO dtoRequest) throws ResourceNotFoundException, BadRequestException {
         ProductDTO dto = productService.saveProduct(dtoRequest);
         return ResponseEntity.ok(dto);
     }

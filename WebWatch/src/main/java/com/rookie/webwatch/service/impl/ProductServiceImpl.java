@@ -5,6 +5,7 @@ import com.rookie.webwatch.dto.OrderDTO;
 import com.rookie.webwatch.dto.ProductDTO;
 import com.rookie.webwatch.dto.RatingDTO;
 import com.rookie.webwatch.entity.*;
+import com.rookie.webwatch.exception.BadRequestException;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 import com.rookie.webwatch.repository.CategoryRepository;
 import com.rookie.webwatch.repository.ProductImageRepository;
@@ -52,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO saveProduct(ProductDTO productDTO) throws ResourceNotFoundException {
+    public ProductDTO saveProduct(ProductDTO productDTO) throws ResourceNotFoundException, BadRequestException {
         Product product = new ProductDTO().convertToEti(productDTO);
 
         Category category = categoryRepository.findById(productDTO.getCategory_id()).orElseThrow(() ->
@@ -60,7 +61,8 @@ public class ProductServiceImpl implements ProductService {
 
         product.setCategory(category);
 
-        product = productrepository.save(product);
+        try {
+            product = productrepository.save(product);
 
 //        List<ProductRating> ratings = new RatingDTO().toListEntity(productDTO.getRatingDTOS());
 //        Product productRa = product;
@@ -69,15 +71,16 @@ public class ProductServiceImpl implements ProductService {
 //            ratingRepository.save(r);
 //        });
 
-
-        List<ProductImage> images = new ImageDTO().toListEntity(productDTO.getImageDTOS());
-        Product productFinal = product;
-        images.forEach(i -> {
-            i.setProduct(productFinal);
-            //System.out.println("--------------------------"+ i.getImageLink()+"___"+i.getProduct().getProduct_id());
-            imageRepository.save(i);
-        });
-
+            List<ProductImage> images = new ImageDTO().toListEntity(productDTO.getImageDTOS());
+            Product productFinal = product;
+            images.forEach(i -> {
+                i.setProduct(productFinal);
+                //System.out.println("--------------------------"+ i.getImageLink()+"___"+i.getProduct().getProduct_id());
+                imageRepository.save(i);
+            });
+        } catch (Exception e){
+            throw new BadRequestException("invalid request "+e.getMessage());
+        }
         return new ProductDTO().convertToDto(productrepository.findById(product.getProduct_id()).orElseThrow(()-> new ResourceNotFoundException("product not found for this id")));
     }
 

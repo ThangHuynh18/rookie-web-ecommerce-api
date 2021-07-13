@@ -6,12 +6,13 @@ import com.rookie.webwatch.dto.CategoryDTO;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface CategoryService {
     public List<CategoryDTO> retrieveCategories();
 
-    public CategoryDTO getCate(Long categoryId) throws ResourceNotFoundException;
+    public Optional<CategoryDTO> getCate(Long categoryId) throws ResourceNotFoundException;
 
     public CategoryDTO saveCategory(CategoryDTO categoryDTO);
 
