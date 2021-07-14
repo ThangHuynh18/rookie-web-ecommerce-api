@@ -52,6 +52,13 @@ public class OrderDTO {
 
     }
 
+    public OrderDTO(int totalQty, float totalPrice, long user_id, long status_id) {
+        this.totalQty = totalQty;
+        this.totalPrice = totalPrice;
+        this.user_id = user_id;
+        this.status_id = status_id;
+    }
+
     public long getOrder_id() {
         return order_id;
     }

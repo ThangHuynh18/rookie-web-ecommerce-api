@@ -14,6 +14,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -29,8 +30,8 @@ public class OrderController {
     }
 
     @GetMapping("/{order_id}")
-    public ResponseEntity<OrderDTO> findOrder(@PathVariable("order_id") Long orderId) throws ResourceNotFoundException {
-        OrderDTO orderDTO = orderService.getOrder(orderId);
+    public ResponseEntity<Optional<OrderDTO>> findOrder(@PathVariable("order_id") Long orderId) throws ResourceNotFoundException {
+        Optional<OrderDTO> orderDTO = orderService.getOrder(orderId);
 
         return ResponseEntity.ok(orderDTO);
     }

@@ -48,11 +48,11 @@ public class Product {
     public Product() {
     }
 
-    public Product(long product_id, String productName, float productPrice, String productDesciption, long productQty, Category category, Set<ProductImage> productImages, Set<OrderDetail> orderDetails, Set<ProductRating> productRatings) {
+    public Product(long product_id, String productName, float productPrice, String productDescription, long productQty, Category category, Set<ProductImage> productImages, Set<OrderDetail> orderDetails, Set<ProductRating> productRatings) {
         this.product_id = product_id;
         this.productName = productName;
         this.productPrice = productPrice;
-        this.productDescription = productDesciption;
+        this.productDescription = productDescription;
         this.productQty = productQty;
         this.category = category;
         this.productImages = productImages;
@@ -60,11 +60,12 @@ public class Product {
         this.productRatings = productRatings;
     }
 
-    public Product(String productName, float productPrice, String productDescription, long productQty) {
+    public Product(String productName, float productPrice, String productDescription, long productQty, Category category) {
         this.productName = productName;
         this.productPrice = productPrice;
         this.productDescription = productDescription;
         this.productQty = productQty;
+        this.category = category;
     }
 
     public Set<OrderDetail> getOrderDetails() {

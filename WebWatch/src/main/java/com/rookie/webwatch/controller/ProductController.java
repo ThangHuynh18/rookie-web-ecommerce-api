@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @RestController
@@ -33,8 +34,8 @@ public class ProductController {
     }
 
     @GetMapping("/{product_id}")
-    public ResponseEntity<ProductDTO> getPro(@PathVariable("product_id") Long id) throws ResourceNotFoundException {
-        ProductDTO productDTO = productService.getProduct(id);
+    public ResponseEntity<Optional<ProductDTO>> getPro(@PathVariable("product_id") Long id) throws ResourceNotFoundException {
+        Optional<ProductDTO> productDTO = productService.getProduct(id);
 
         return ResponseEntity.ok(productDTO);
     }

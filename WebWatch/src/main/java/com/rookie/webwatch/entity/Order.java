@@ -47,6 +47,13 @@ public class Order {
         this.orderDetails = orderDetails;
     }
 
+    public Order(int totalQty, float totalPrice, User user, Status status) {
+        this.totalQty = totalQty;
+        this.totalPrice = totalPrice;
+        this.user = user;
+        this.status = status;
+    }
+
     public long getOrder_id() {
         return order_id;
     }

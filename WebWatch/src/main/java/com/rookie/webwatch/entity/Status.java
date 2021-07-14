@@ -25,11 +25,11 @@ public class Status {
     public Status() {
     }
 
-    public Status(long status_id, long status, String statusName, Set<Order> orders) {
+    public Status(long status_id, long status, String statusName) {
         this.status_id = status_id;
         this.status = status;
         this.statusName = statusName;
-        this.orders = orders;
+        //this.orders = orders;
     }
 
     public long getStatus_id() {

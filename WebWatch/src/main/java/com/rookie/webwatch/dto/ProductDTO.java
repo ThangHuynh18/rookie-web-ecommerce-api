@@ -33,6 +33,13 @@ public class ProductDTO {
     public ProductDTO() {
     }
 
+    public ProductDTO(String productName, float productPrice, String productDescription, long productQty, long category_id) {
+        this.productName = productName;
+        this.productPrice = productPrice;
+        this.productDescription = productDescription;
+        this.productQty = productQty;
+        this.category_id = category_id;
+    }
 
     public ProductDTO convertToDto(Product product) {
         ProductDTO productDTO = new ProductDTO();

@@ -38,9 +38,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDTO getOrder(Long orderId) throws ResourceNotFoundException {
+    public Optional<OrderDTO> getOrder(Long orderId) throws ResourceNotFoundException {
         Order orders = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("order not found for this id: "+orderId));
-        return new OrderDTO().convertToDto(orders);
+        return Optional.of(new OrderDTO().convertToDto(orders));
     }
 
     @Override

@@ -39,14 +39,14 @@ public class UserServiceTest {
     }
 
     @Test
-    public void addUser() throws Exception{
+    public void addUser(){
         when(userRepository.save(any())).thenReturn(user);
 
         Assert.assertEquals("user21", user.getUserName());
     }
 
     @Test
-    public void updateCate(){
+    public void updateUser(){
         User user = new User("user21", "user@gmail.com","123");
         when(userRepository.findById(user.getUser_id())).thenReturn(Optional.of(user));
 
@@ -56,7 +56,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void deleteCate() throws ResourceNotFoundException {
+    public void deleteUser() throws ResourceNotFoundException {
         User user = new User("user21", "user@gmail.com","123");
         when(userRepository.findById(user.getUser_id())).thenReturn(Optional.of(user));
 
@@ -66,7 +66,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void loadCateById(){
+    public void loadUserById(){
         // Given
         User user = new User();
         user.setUser_id(20L);

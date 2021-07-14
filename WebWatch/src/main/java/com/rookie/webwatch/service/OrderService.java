@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface OrderService {
     public List<OrderDTO> retrieveOrders();
 
-    public OrderDTO getOrder(Long orderId) throws ResourceNotFoundException;
+    public Optional<OrderDTO> getOrder(Long orderId) throws ResourceNotFoundException;
 
     public OrderDTO saveOrder(OrderDTO order) throws ResourceNotFoundException;
 

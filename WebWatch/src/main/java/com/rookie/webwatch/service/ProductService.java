@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface ProductService {
     public List<ProductDTO> retrieveProducts();
 
-    public ProductDTO getProduct(Long productId) throws ResourceNotFoundException;
+    public Optional<ProductDTO> getProduct(Long productId) throws ResourceNotFoundException;
 
     public ProductDTO saveProduct(ProductDTO productDTO) throws ResourceNotFoundException, BadRequestException;
 

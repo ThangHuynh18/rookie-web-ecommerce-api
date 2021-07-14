@@ -47,9 +47,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO getProduct(Long productId) throws ResourceNotFoundException {
+    public Optional<ProductDTO> getProduct(Long productId) throws ResourceNotFoundException {
         Product product = productrepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("product not found for this id: "+productId));
-        return new ProductDTO().convertToDto(product);
+        return Optional.of(new ProductDTO().convertToDto(product));
     }
 
     @Override
