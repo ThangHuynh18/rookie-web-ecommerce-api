@@ -1,13 +1,17 @@
 package com.rookie.webwatch.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.HashSet;
+
 import java.util.Set;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "category")
 public class Category {
@@ -15,45 +19,16 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long category_id;
 
-    @JsonManagedReference(value = "categoryProduct")
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "category")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
     private Set<Product> products;
 
     @Column(name = "category_name")
     @NotNull
     private String categoryName;
 
-    public Category() {
-    }
-
-
     public Category(long category_id, String categoryName) {
         this.category_id = category_id;
 //        this.products = products;
-        this.categoryName = categoryName;
-    }
-
-    public long getCategory_id() {
-        return category_id;
-    }
-
-    public void setCategory_id(long category_id) {
-        this.category_id = category_id;
-    }
-
-    public Set<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(Set<Product> products) {
-        this.products = products;
-    }
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
 }

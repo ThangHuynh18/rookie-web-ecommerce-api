@@ -1,0 +1,5 @@
+package com.rookie.webwatch.dto;
+
+public enum ErrorCode {
+    FIND_CATEGORY_ERROR, GET_CATEGORY_ERROR, ADD_CATEGORY_ERROR, UPDATE_CATEGORY_ERROR, DELETE_CATEGORY_ERROR
+}

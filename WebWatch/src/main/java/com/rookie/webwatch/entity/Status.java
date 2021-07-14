@@ -1,10 +1,17 @@
 package com.rookie.webwatch.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Set;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "status")
 public class Status {
@@ -18,12 +25,9 @@ public class Status {
     @Column(name = "status_name")
     private String statusName;
 
-    @JsonManagedReference(value = "statusOrder")
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "status")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "status")
     private Set<Order> orders;
 
-    public Status() {
-    }
 
     public Status(long status_id, long status, String statusName) {
         this.status_id = status_id;
@@ -32,35 +36,4 @@ public class Status {
         //this.orders = orders;
     }
 
-    public long getStatus_id() {
-        return status_id;
-    }
-
-    public void setStatus_id(long status_id) {
-        this.status_id = status_id;
-    }
-
-    public long getStatus() {
-        return status;
-    }
-
-    public void setStatus(long status) {
-        this.status = status;
-    }
-
-    public String getStatusName() {
-        return statusName;
-    }
-
-    public void setStatusName(String statusName) {
-        this.statusName = statusName;
-    }
-
-    public Set<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(Set<Order> orders) {
-        this.orders = orders;
-    }
 }

@@ -1,9 +1,16 @@
 package com.rookie.webwatch.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "user_detail")
 public class UserDetail {
@@ -17,50 +24,8 @@ public class UserDetail {
     @Column(name = "udetail_address")
     private String udetailAddress;
 
-    @JsonBackReference(value = "userDetail")
     @ManyToOne(fetch = FetchType.LAZY )
     @JoinColumn(name = "user_id")
     private User user;
 
-    public UserDetail() {
-    }
-
-    public UserDetail(long udetail_id, long udetailPhone, String udetailAddress, User user) {
-        this.udetail_id = udetail_id;
-        this.udetailPhone = udetailPhone;
-        this.udetailAddress = udetailAddress;
-        this.user = user;
-    }
-
-    public long getUdetail_id() {
-        return udetail_id;
-    }
-
-    public void setUdetail_id(long udetail_id) {
-        this.udetail_id = udetail_id;
-    }
-
-    public long getUdetailPhone() {
-        return udetailPhone;
-    }
-
-    public void setUdetailPhone(long udetailPhone) {
-        this.udetailPhone = udetailPhone;
-    }
-
-    public String getUdetailAddress() {
-        return udetailAddress;
-    }
-
-    public void setUdetailAddress(String udetailAddress) {
-        this.udetailAddress = udetailAddress;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }

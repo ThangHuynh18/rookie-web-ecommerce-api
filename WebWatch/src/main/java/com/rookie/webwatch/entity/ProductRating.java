@@ -1,9 +1,16 @@
 package com.rookie.webwatch.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "product_rating")
 public class ProductRating {
@@ -14,55 +21,12 @@ public class ProductRating {
     @Column(name = "rating")
     private long ratingNumber;
 
-    @JsonBackReference(value = "userRating")
     @ManyToOne(fetch = FetchType.LAZY )
     @JoinColumn(name = "user_id")
     private User user;
 
-    @JsonBackReference(value = "productRating")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public ProductRating() {
-    }
-
-    public ProductRating(long rating_id, int ratingNumber, User user, Product product) {
-        this.rating_id = rating_id;
-        this.ratingNumber = ratingNumber;
-        this.user = user;
-        this.product = product;
-    }
-
-    public long getRating_id() {
-        return rating_id;
-    }
-
-    public void setRating_id(long rating_id) {
-        this.rating_id = rating_id;
-    }
-
-    public long getRatingNumber() {
-        return ratingNumber;
-    }
-
-    public void setRatingNumber(long ratingNumber) {
-        this.ratingNumber = ratingNumber;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
 }

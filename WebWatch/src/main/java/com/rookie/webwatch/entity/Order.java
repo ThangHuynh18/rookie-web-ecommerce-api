@@ -1,12 +1,18 @@
 package com.rookie.webwatch.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Set;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "order", schema = "public")
 @JsonIgnoreProperties (value = { "hibernateLazyInitializer", "handler"})
@@ -21,31 +27,16 @@ public class Order {
     @Column(name = "total_price")
     private float totalPrice;
 
-    @JsonBackReference(value = "userOrder")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @JsonBackReference(value = "statusOrder")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id")
     private Status status;
 
-    @JsonManagedReference(value = "orderDetail")
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "order")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
     private Set<OrderDetail> orderDetails;
-
-    public Order() {
-    }
-
-    public Order(long order_id, int totalQty, float totalPrice, User user, Status status, Set<OrderDetail> orderDetails) {
-        this.order_id = order_id;
-        this.totalQty = totalQty;
-        this.totalPrice = totalPrice;
-        this.user = user;
-        this.status = status;
-        this.orderDetails = orderDetails;
-    }
 
     public Order(int totalQty, float totalPrice, User user, Status status) {
         this.totalQty = totalQty;
@@ -54,51 +45,4 @@ public class Order {
         this.status = status;
     }
 
-    public long getOrder_id() {
-        return order_id;
-    }
-
-    public void setOrder_id(long order_id) {
-        this.order_id = order_id;
-    }
-
-    public int getTotalQty() {
-        return totalQty;
-    }
-
-    public void setTotalQty(int totalQty) {
-        this.totalQty = totalQty;
-    }
-
-    public float getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(float totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public Set<OrderDetail> getOrderDetails() {
-        return orderDetails;
-    }
-
-    public void setOrderDetails(Set<OrderDetail> orderDetails) {
-        this.orderDetails = orderDetails;
-    }
 }

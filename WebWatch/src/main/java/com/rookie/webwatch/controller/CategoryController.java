@@ -1,6 +1,8 @@
 package com.rookie.webwatch.controller;
 
 import com.rookie.webwatch.dto.CategoryDTO;
+import com.rookie.webwatch.dto.ResponseDTO;
+import com.rookie.webwatch.dto.SuccessCode;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 import com.rookie.webwatch.service.CategoryService;
 
@@ -10,10 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -23,45 +22,65 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping("")
-    public List<CategoryDTO> getAllCategory(){
-        List<CategoryDTO> categoryDTOS = categoryService.retrieveCategories();
+    public ResponseEntity<ResponseDTO> getAllCategory(){
+        ResponseDTO response = new ResponseDTO();
+        List<ResponseDTO> responseDTO = new ArrayList<>();
 
-        return categoryDTOS;
+        List<CategoryDTO> categoryDTOS = categoryService.retrieveCategories();
+        List list = Collections.synchronizedList(new ArrayList(categoryDTOS));
+
+        //response.setData(responseDTO.addAll(list));
+        if(responseDTO.addAll(list) == true){
+            response.setData(categoryDTOS);
+        }
+        response.setSuccessCode(SuccessCode.GET_ALL_CATEGORY_SUCCESS);
+
+        return ResponseEntity.ok(response);
 
     }
 
     @GetMapping("/{category_id}")
-    public ResponseEntity<Optional<CategoryDTO>> getCate(@PathVariable("category_id") Long id) throws ResourceNotFoundException {
+    public ResponseEntity<ResponseDTO> getCate(@PathVariable("category_id") Long id) throws ResourceNotFoundException {
+        ResponseDTO responseDTO = new ResponseDTO();
         Optional<CategoryDTO> categoryDTO = categoryService.getCate(id);
 
-        return ResponseEntity.ok(categoryDTO);
+        responseDTO.setData(categoryDTO);
+        responseDTO.setSuccessCode(SuccessCode.FIND_CATEGORY_SUCCESS);
+
+        return ResponseEntity.ok(responseDTO);
     }
 
     //save employee
 
     @PostMapping("/category")
-    public ResponseEntity<CategoryDTO> createCate(@Valid @RequestBody CategoryDTO categoryDTO) {
+    public ResponseEntity<ResponseDTO> createCate(@Valid @RequestBody CategoryDTO categoryDTO) {
+        ResponseDTO responseDTO = new ResponseDTO();
         CategoryDTO dto = categoryService.saveCategory(categoryDTO);
-        return ResponseEntity.ok(dto);
+        responseDTO.setData(dto);
+        responseDTO.setSuccessCode(SuccessCode.ADD_CATEGORY_SUCCESS);
+        return ResponseEntity.ok(responseDTO);
     }
 
 
     //update
     @PutMapping("/category/{category_id}")
-    public ResponseEntity<CategoryDTO> updateCate(@PathVariable(value = "category_id") Long categoryId, @Valid @RequestBody CategoryDTO categoryDTO) throws ResourceNotFoundException {
+    public ResponseEntity<ResponseDTO> updateCate(@PathVariable(value = "category_id") Long categoryId, @Valid @RequestBody CategoryDTO categoryDTO) throws ResourceNotFoundException {
+        ResponseDTO responseDTO = new ResponseDTO();
         CategoryDTO updateCate = categoryService.updateCategory(categoryId, categoryDTO);
 
-        return new ResponseEntity<>(updateCate, HttpStatus.OK);
+        responseDTO.setData(updateCate);
+        responseDTO.setSuccessCode(SuccessCode.UPDATE_CATEGORY_SUCCESS);
+
+        return ResponseEntity.ok(responseDTO);
     }
 
 //    //delete
     @DeleteMapping("/category/{category_id}")
-    public Map<String, Boolean> deleteCategory(@PathVariable(value = "category_id") Long categoryId)
-            throws ResourceNotFoundException {
-        categoryService.deleteCategory(categoryId);
-        Map<String, Boolean> reponse = new HashMap<>();
-        reponse.put("deleted", Boolean.TRUE);
-
-        return reponse;
+    public ResponseEntity<ResponseDTO> deleteCate(@PathVariable(value = "category_id") Long categoryId) throws ResourceNotFoundException {
+        ResponseDTO responseDTO = new ResponseDTO();
+        Boolean isDel = categoryService.deleteCategory(categoryId);
+        responseDTO.setData(isDel);
+        responseDTO.setSuccessCode(SuccessCode.DELETE_CATEGORY_SUCCESS);
+        return ResponseEntity.ok(responseDTO);
     }
 }
