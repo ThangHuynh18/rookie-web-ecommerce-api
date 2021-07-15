@@ -1,11 +1,17 @@
 package com.rookie.webwatch.dto;
 
 import com.rookie.webwatch.entity.UserDetail;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class UserDetailDTO {
     private long udetail_id;
 
@@ -15,9 +21,6 @@ public class UserDetailDTO {
     @NotNull
     private String udetailAddress;
     private long user_id;
-
-    public UserDetailDTO() {
-    }
 
 
     public UserDetailDTO convertToDto(UserDetail detail) {
@@ -49,36 +52,4 @@ public class UserDetailDTO {
         return listDto;
     }
 
-
-    public long getUdetail_id() {
-        return udetail_id;
-    }
-
-    public void setUdetail_id(long udetail_id) {
-        this.udetail_id = udetail_id;
-    }
-
-    public long getUdetailPhone() {
-        return udetailPhone;
-    }
-
-    public void setUdetailPhone(long udetailPhone) {
-        this.udetailPhone = udetailPhone;
-    }
-
-    public String getUdetailAddress() {
-        return udetailAddress;
-    }
-
-    public void setUdetailAddress(String udetailAddress) {
-        this.udetailAddress = udetailAddress;
-    }
-
-    public long getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(long user_id) {
-        this.user_id = user_id;
-    }
 }

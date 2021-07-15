@@ -1,11 +1,17 @@
 package com.rookie.webwatch.dto;
 
 import com.rookie.webwatch.entity.Status;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class StatusDTO {
     private long status_id;
 
@@ -14,9 +20,6 @@ public class StatusDTO {
 
     @NotNull
     private String statusName;
-
-    public StatusDTO() {
-    }
 
 
     public StatusDTO convertToDto(Status status) {
@@ -47,28 +50,4 @@ public class StatusDTO {
         return listDto;
     }
 
-
-    public long getStatus_id() {
-        return status_id;
-    }
-
-    public void setStatus_id(long status_id) {
-        this.status_id = status_id;
-    }
-
-    public long getStatus() {
-        return status;
-    }
-
-    public void setStatus(long status) {
-        this.status = status;
-    }
-
-    public String getStatusName() {
-        return statusName;
-    }
-
-    public void setStatusName(String statusName) {
-        this.statusName = statusName;
-    }
 }

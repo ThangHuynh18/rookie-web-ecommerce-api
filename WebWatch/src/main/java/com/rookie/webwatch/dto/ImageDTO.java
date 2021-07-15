@@ -1,16 +1,20 @@
 package com.rookie.webwatch.dto;
 
 import com.rookie.webwatch.entity.ProductImage;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class ImageDTO {
     private String imageLink;
 
     private long product_id;
-    public ImageDTO() {
-    }
 
     public ImageDTO convertToDto(ProductImage image) {
         ImageDTO dto = new ImageDTO();
@@ -46,19 +50,4 @@ public class ImageDTO {
         return listEntity;
     }
 
-    public String getImageLink() {
-        return imageLink;
-    }
-
-    public void setImageLink(String imageLink) {
-        this.imageLink = imageLink;
-    }
-
-    public long getProduct_id() {
-        return product_id;
-    }
-
-    public void setProduct_id(long product_id) {
-        this.product_id = product_id;
-    }
 }

@@ -1,9 +1,13 @@
 package com.rookie.webwatch.controller;
 
 import com.rookie.webwatch.dto.CategoryDTO;
+import com.rookie.webwatch.dto.ErrorCode;
 import com.rookie.webwatch.dto.ResponseDTO;
 import com.rookie.webwatch.dto.SuccessCode;
+import com.rookie.webwatch.exception.AddDataFail;
+import com.rookie.webwatch.exception.DeleteDataFail;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
+import com.rookie.webwatch.exception.UpdateDataFail;
 import com.rookie.webwatch.service.CategoryService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,37 +54,50 @@ public class CategoryController {
         return ResponseEntity.ok(responseDTO);
     }
 
-    //save employee
+    //insert
 
     @PostMapping("/category")
-    public ResponseEntity<ResponseDTO> createCate(@Valid @RequestBody CategoryDTO categoryDTO) {
+    public ResponseEntity<ResponseDTO> createCate(@Valid @RequestBody CategoryDTO categoryDTO) throws AddDataFail {
         ResponseDTO responseDTO = new ResponseDTO();
-        CategoryDTO dto = categoryService.saveCategory(categoryDTO);
-        responseDTO.setData(dto);
-        responseDTO.setSuccessCode(SuccessCode.ADD_CATEGORY_SUCCESS);
+        try {
+            CategoryDTO dto = categoryService.saveCategory(categoryDTO);
+            responseDTO.setData(dto);
+            responseDTO.setSuccessCode(SuccessCode.ADD_CATEGORY_SUCCESS);
+        } catch (Exception e){
+            throw new AddDataFail(""+ErrorCode.ADD_CATEGORY_ERROR);
+        }
+
         return ResponseEntity.ok(responseDTO);
     }
 
-
     //update
     @PutMapping("/category/{category_id}")
-    public ResponseEntity<ResponseDTO> updateCate(@PathVariable(value = "category_id") Long categoryId, @Valid @RequestBody CategoryDTO categoryDTO) throws ResourceNotFoundException {
+    public ResponseEntity<ResponseDTO> updateCate(@PathVariable(value = "category_id") Long categoryId, @Valid @RequestBody CategoryDTO categoryDTO) throws UpdateDataFail {
         ResponseDTO responseDTO = new ResponseDTO();
-        CategoryDTO updateCate = categoryService.updateCategory(categoryId, categoryDTO);
+        try {
+            CategoryDTO updateCate = categoryService.updateCategory(categoryId, categoryDTO);
 
-        responseDTO.setData(updateCate);
-        responseDTO.setSuccessCode(SuccessCode.UPDATE_CATEGORY_SUCCESS);
+            responseDTO.setData(updateCate);
+            responseDTO.setSuccessCode(SuccessCode.UPDATE_CATEGORY_SUCCESS);
+        } catch (Exception e){
+            throw new UpdateDataFail(""+ErrorCode.UPDATE_CATEGORY_ERROR);
+        }
 
         return ResponseEntity.ok(responseDTO);
     }
 
 //    //delete
     @DeleteMapping("/category/{category_id}")
-    public ResponseEntity<ResponseDTO> deleteCate(@PathVariable(value = "category_id") Long categoryId) throws ResourceNotFoundException {
+    public ResponseEntity<ResponseDTO> deleteCate(@PathVariable(value = "category_id") Long categoryId) throws DeleteDataFail {
         ResponseDTO responseDTO = new ResponseDTO();
-        Boolean isDel = categoryService.deleteCategory(categoryId);
-        responseDTO.setData(isDel);
-        responseDTO.setSuccessCode(SuccessCode.DELETE_CATEGORY_SUCCESS);
+        try {
+            Boolean isDel = categoryService.deleteCategory(categoryId);
+            responseDTO.setData(isDel);
+            responseDTO.setSuccessCode(SuccessCode.DELETE_CATEGORY_SUCCESS);
+        } catch (Exception e){
+            throw new DeleteDataFail(""+ErrorCode.DELETE_CATEGORY_ERROR);
+        }
+
         return ResponseEntity.ok(responseDTO);
     }
 }

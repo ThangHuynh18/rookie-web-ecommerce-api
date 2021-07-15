@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import java.util.Set;
@@ -13,7 +14,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "category")
+@Table(name = "category", indexes = @Index(name = "firstIndex", columnList = "category_name"))
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +24,7 @@ public class Category {
     private Set<Product> products;
 
     @Column(name = "category_name")
-    @NotNull
+    @NotBlank
     private String categoryName;
 
     public Category(long category_id, String categoryName) {

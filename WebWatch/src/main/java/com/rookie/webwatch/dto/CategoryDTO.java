@@ -2,20 +2,27 @@ package com.rookie.webwatch.dto;
 
 import com.rookie.webwatch.entity.Category;
 import com.rookie.webwatch.entity.Order;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CategoryDTO {
     private long category_id;
 
-    @NotNull
+    @NotBlank
     private String categoryName;
 
-    public CategoryDTO() {
-    }
 
     public CategoryDTO convertToDto(Category category) {
         CategoryDTO categoryDTO = new CategoryDTO();
@@ -44,28 +51,4 @@ public class CategoryDTO {
         return listDto;
     }
 
-    public CategoryDTO(long category_id, String categoryName) {
-        this.category_id = category_id;
-        this.categoryName = categoryName;
-    }
-//    public CategoryDTO(Category category) {
-//        this.setCategory_id(category.getCategory_id());
-//        this.setCategoryName(category.getCategoryName());
-//    }
-
-    public long getCategory_id() {
-        return category_id;
-    }
-
-    public void setCategory_id(long category_id) {
-        this.category_id = category_id;
-    }
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
 }

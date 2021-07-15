@@ -1,11 +1,17 @@
 package com.rookie.webwatch.dto;
 
 import com.rookie.webwatch.entity.OrderDetail;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class OrderDetailDTO {
     @NotNull
     private long detail_id;
@@ -17,9 +23,6 @@ public class OrderDetailDTO {
     private float detailPrice;
     private long order_id;
     private long product_id;
-
-    public OrderDetailDTO() {
-    }
 
 
     public OrderDetailDTO convertToDto(OrderDetail detail) {
@@ -52,44 +55,4 @@ public class OrderDetailDTO {
         return listDto;
     }
 
-
-    public long getDetail_id() {
-        return detail_id;
-    }
-
-    public void setDetail_id(long detail_id) {
-        this.detail_id = detail_id;
-    }
-
-    public int getDetailQty() {
-        return detailQty;
-    }
-
-    public void setDetailQty(int detailQty) {
-        this.detailQty = detailQty;
-    }
-
-    public float getDetailPrice() {
-        return detailPrice;
-    }
-
-    public void setDetailPrice(float detailPrice) {
-        this.detailPrice = detailPrice;
-    }
-
-    public long getOrder_id() {
-        return order_id;
-    }
-
-    public void setOrder_id(long order_id) {
-        this.order_id = order_id;
-    }
-
-    public long getProduct_id() {
-        return product_id;
-    }
-
-    public void setProduct_id(long product_id) {
-        this.product_id = product_id;
-    }
 }

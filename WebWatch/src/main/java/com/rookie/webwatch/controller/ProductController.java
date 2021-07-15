@@ -1,10 +1,12 @@
 package com.rookie.webwatch.controller;
 
 
+import com.rookie.webwatch.dto.ErrorCode;
 import com.rookie.webwatch.dto.ProductDTO;
 
-import com.rookie.webwatch.exception.BadRequestException;
-import com.rookie.webwatch.exception.ResourceNotFoundException;
+import com.rookie.webwatch.dto.ResponseDTO;
+import com.rookie.webwatch.dto.SuccessCode;
+import com.rookie.webwatch.exception.*;
 
 import com.rookie.webwatch.service.ProductService;
 
@@ -14,10 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 
 @RestController
@@ -27,42 +26,74 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("")
-    public List<ProductDTO> getAllProduct(){
-        List<ProductDTO> productDTOS = productService.retrieveProducts();
+    public ResponseEntity<ResponseDTO> getAllProduct(){
+        ResponseDTO response = new ResponseDTO();
+        List<ResponseDTO> listResponse = new ArrayList<>();
 
-        return productDTOS;
+        List<ProductDTO> productDTOS = productService.retrieveProducts();
+        List list = Collections.synchronizedList(new ArrayList(productDTOS));
+
+        if(listResponse.addAll(list) == true){
+            response.setData(productDTOS);
+        }
+        response.setSuccessCode(SuccessCode.GET_ALL_PRODUCT_SUCCESS);
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{product_id}")
-    public ResponseEntity<Optional<ProductDTO>> getPro(@PathVariable("product_id") Long id) throws ResourceNotFoundException {
+    public ResponseEntity<ResponseDTO> getPro(@PathVariable("product_id") Long id) throws ResourceNotFoundException {
+        ResponseDTO responseDTO = new ResponseDTO();
         Optional<ProductDTO> productDTO = productService.getProduct(id);
 
-        return ResponseEntity.ok(productDTO);
+        responseDTO.setData(productDTO);
+        responseDTO.setSuccessCode(SuccessCode.FIND_PRODUCT_SUCCESS);
+
+        return ResponseEntity.ok(responseDTO);
     }
 
     //insert
     @PostMapping("/product")
-    public ResponseEntity<ProductDTO> createPro(@Valid @RequestBody ProductDTO dtoRequest) throws ResourceNotFoundException, BadRequestException {
-        ProductDTO dto = productService.saveProduct(dtoRequest);
-        return ResponseEntity.ok(dto);
+    public ResponseEntity<ResponseDTO> createPro(@Valid @RequestBody ProductDTO dtoRequest) throws AddDataFail {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            ProductDTO dto = productService.saveProduct(dtoRequest);
+            responseDTO.setData(dto);
+            responseDTO.setSuccessCode(SuccessCode.ADD_PRODUCT_SUCCESS);
+        } catch (Exception e){
+            throw new AddDataFail(""+ErrorCode.ADD_PRODUCT_ERROR);
+        }
+
+        return ResponseEntity.ok(responseDTO);
     }
 
 //    //update
     @PutMapping("/product/{product_id}")
-    public ResponseEntity<ProductDTO> updatePro(@PathVariable(value = "product_id") Long id, @Valid @RequestBody ProductDTO dtoRequest) throws ResourceNotFoundException {
+    public ResponseEntity<ResponseDTO> updatePro(@PathVariable(value = "product_id") Long id, @Valid @RequestBody ProductDTO dtoRequest) throws UpdateDataFail {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
         ProductDTO updatePro = productService.updateProduct(id, dtoRequest);
+            responseDTO.setData(updatePro);
+            responseDTO.setSuccessCode(SuccessCode.UPDATE_PRODUCT_SUCCESS);
+        } catch (Exception e){
+            throw new UpdateDataFail(""+ ErrorCode.UPDATE_PRODUCT_ERROR);
+        }
 
-        return new ResponseEntity<>(updatePro, HttpStatus.OK);
+        return ResponseEntity.ok(responseDTO);
     }
 
 //    //delete
     @DeleteMapping("/product/{product_id}")
-    public Map<String, Boolean> deleteProduct(@PathVariable(value = "product_id") Long productId)
-            throws ResourceNotFoundException {
-        productService.deleteProduct(productId);
-        Map<String, Boolean> reponse = new HashMap<>();
-        reponse.put("deleted", Boolean.TRUE);
+    public ResponseEntity<ResponseDTO> deleteProduct(@PathVariable(value = "product_id") Long productId) throws DeleteDataFail {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            Boolean isDel = productService.deleteProduct(productId);
+            responseDTO.setData(isDel);
+            responseDTO.setSuccessCode(SuccessCode.DELETE_PRODUCT_SUCCESS);
+        } catch (Exception e){
+            throw new DeleteDataFail(""+ErrorCode.DELETE_PRODUCT_ERROR);
+        }
 
-        return reponse;
+        return ResponseEntity.ok(responseDTO);
     }
 }

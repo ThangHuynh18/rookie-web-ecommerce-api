@@ -1,14 +1,17 @@
 package com.rookie.webwatch.dto;
 
 import com.rookie.webwatch.entity.Product;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-
+@Getter
+@Setter
+@NoArgsConstructor
 public class ProductDTO {
     private long product_id;
 
@@ -30,8 +33,6 @@ public class ProductDTO {
     //private List<RatingDTO> ratingDTOS;
     //private Set<Long> productRatings;
 
-    public ProductDTO() {
-    }
 
     public ProductDTO(String productName, float productPrice, String productDescription, long productQty, long category_id) {
         this.productName = productName;
@@ -91,76 +92,4 @@ public class ProductDTO {
         return listDto;
     }
 
-
-    public long getProduct_id() {
-        return product_id;
-    }
-
-    public void setProduct_id(long product_id) {
-        this.product_id = product_id;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public float getProductPrice() {
-        return productPrice;
-    }
-
-    public void setProductPrice(float productPrice) {
-        this.productPrice = productPrice;
-    }
-
-    public String getProductDescription() {
-        return productDescription;
-    }
-
-    public void setProductDescription(String productDescription) {
-        this.productDescription = productDescription;
-    }
-
-    public long getProductQty() {
-        return productQty;
-    }
-
-    public void setProductQty(long productQty) {
-        this.productQty = productQty;
-    }
-
-    public long getCategory_id() {
-        return category_id;
-    }
-
-    public void setCategory_id(long category_id) {
-        this.category_id = category_id;
-    }
-
-    public List<ImageDTO> getImageDTOS() {
-        return imageDTOS;
-    }
-
-    public void setImageDTOS(List<ImageDTO> imageDTOS) {
-        this.imageDTOS = imageDTOS;
-    }
-
-//    public Set<Long> getProductRatings() {
-//        return productRatings;
-//    }
-//
-//    public void setProductRatings(Set<Long> productRatings) {
-//        this.productRatings = productRatings;
-//    }
-
-//    public List<RatingDTO> getRatingDTOS() {
-//        return ratingDTOS;
-//    }
-//
-//    public void setRatingDTOS(List<RatingDTO> ratingDTOS) {
-//        this.ratingDTOS = ratingDTOS;
-//    }
 }

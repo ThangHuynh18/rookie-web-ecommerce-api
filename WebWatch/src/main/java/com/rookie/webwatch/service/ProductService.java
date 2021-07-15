@@ -16,7 +16,7 @@ public interface ProductService {
 
     public ProductDTO saveProduct(ProductDTO productDTO) throws ResourceNotFoundException, BadRequestException;
 
-    public void deleteProduct(Long productId) throws ResourceNotFoundException;
+    public Boolean deleteProduct(Long productId) throws ResourceNotFoundException;
 
     public ProductDTO updateProduct(Long productId, ProductDTO productDTO) throws ResourceNotFoundException;
 

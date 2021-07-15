@@ -85,9 +85,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProduct(Long productId) throws ResourceNotFoundException {
+    public Boolean deleteProduct(Long productId) throws ResourceNotFoundException {
         Product product = productrepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("product not found for this id: " + productId));
         this.productrepository.delete(product);
+        return true;
     }
 
     @Override

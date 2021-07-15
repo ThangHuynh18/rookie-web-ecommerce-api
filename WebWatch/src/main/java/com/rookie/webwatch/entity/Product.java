@@ -13,7 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "product")
+@Table(name = "product", indexes = @Index(name = "multiIndex", columnList = "product_name, product_price, product_description, product_qty, category_id"))
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,8 +38,8 @@ public class Product {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
     private Set<ProductImage> productImages;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
-    private Set<OrderDetail> orderDetails;
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
+//    private Set<OrderDetail> orderDetails;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
     private Set<ProductRating> productRatings;

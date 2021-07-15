@@ -1,10 +1,9 @@
 package com.rookie.webwatch.dto;
 
-import com.rookie.webwatch.entity.Order;
-import com.rookie.webwatch.entity.Role;
 import com.rookie.webwatch.entity.User;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -14,6 +13,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class UserDTO {
     private long user_id;
 
@@ -30,8 +32,6 @@ public class UserDTO {
 
     private Set<String> roles;
 
-    public UserDTO() {
-    }
 
     public UserDTO(String userName, String userEmail, String userPassword) {
         this.userName = userName;
@@ -81,43 +81,4 @@ public class UserDTO {
         return listDto;
     }
 
-    public long getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(long user_id) {
-        this.user_id = user_id;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getUserEmail() {
-        return userEmail;
-    }
-
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
-    }
-
-    public String getUserPassword() {
-        return userPassword;
-    }
-
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
-    }
-
-    public Set<String> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<String> roles) {
-        this.roles = roles;
-    }
 }
