@@ -4,10 +4,7 @@ import com.rookie.webwatch.dto.CategoryDTO;
 import com.rookie.webwatch.dto.ErrorCode;
 import com.rookie.webwatch.dto.ResponseDTO;
 import com.rookie.webwatch.dto.SuccessCode;
-import com.rookie.webwatch.exception.AddDataFail;
-import com.rookie.webwatch.exception.DeleteDataFail;
-import com.rookie.webwatch.exception.ResourceNotFoundException;
-import com.rookie.webwatch.exception.UpdateDataFail;
+import com.rookie.webwatch.exception.*;
 import com.rookie.webwatch.service.CategoryService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,19 +23,22 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping("")
-    public ResponseEntity<ResponseDTO> getAllCategory(){
+    public ResponseEntity<ResponseDTO> getAllCategory() throws GetDataFail {
         ResponseDTO response = new ResponseDTO();
         List<ResponseDTO> responseDTO = new ArrayList<>();
 
-        List<CategoryDTO> categoryDTOS = categoryService.retrieveCategories();
-        List list = Collections.synchronizedList(new ArrayList(categoryDTOS));
+        try {
+            List<CategoryDTO> categoryDTOS = categoryService.retrieveCategories();
+            List list = Collections.synchronizedList(new ArrayList(categoryDTOS));
 
-        //response.setData(responseDTO.addAll(list));
-        if(responseDTO.addAll(list) == true){
-            response.setData(categoryDTOS);
+            //response.setData(responseDTO.addAll(list));
+            if (responseDTO.addAll(list) == true) {
+                response.setData(categoryDTOS);
+            }
+            response.setSuccessCode(SuccessCode.GET_ALL_CATEGORY_SUCCESS);
+        } catch (Exception e){
+            throw new GetDataFail(""+ErrorCode.GET_CATEGORY_ERROR);
         }
-        response.setSuccessCode(SuccessCode.GET_ALL_CATEGORY_SUCCESS);
-
         return ResponseEntity.ok(response);
 
     }
@@ -46,11 +46,14 @@ public class CategoryController {
     @GetMapping("/{category_id}")
     public ResponseEntity<ResponseDTO> getCate(@PathVariable("category_id") Long id) throws ResourceNotFoundException {
         ResponseDTO responseDTO = new ResponseDTO();
-        Optional<CategoryDTO> categoryDTO = categoryService.getCate(id);
+        try {
+            Optional<CategoryDTO> categoryDTO = categoryService.getCate(id);
 
-        responseDTO.setData(categoryDTO);
-        responseDTO.setSuccessCode(SuccessCode.FIND_CATEGORY_SUCCESS);
-
+            responseDTO.setData(categoryDTO);
+            responseDTO.setSuccessCode(SuccessCode.FIND_CATEGORY_SUCCESS);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException(""+ErrorCode.FIND_CATEGORY_ERROR);
+        }
         return ResponseEntity.ok(responseDTO);
     }
 

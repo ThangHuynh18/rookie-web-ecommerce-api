@@ -1,16 +1,16 @@
 package com.rookie.webwatch.controller;
 
+import com.rookie.webwatch.dto.ErrorCode;
 import com.rookie.webwatch.dto.ImageDTO;
-import com.rookie.webwatch.exception.ResourceNotFoundException;
+import com.rookie.webwatch.dto.ResponseDTO;
+import com.rookie.webwatch.dto.SuccessCode;
+import com.rookie.webwatch.exception.*;
 import com.rookie.webwatch.service.ProductImageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/images")
@@ -19,42 +19,81 @@ public class ProductImageController {
     private ProductImageService imageService;
 
     @GetMapping("")
-    public List<ImageDTO> getAllImage(){
-        List<ImageDTO> images = imageService.retrieveProductImages();
-        return images;
+    public ResponseEntity<ResponseDTO> getAllImage() throws GetDataFail {
+        ResponseDTO response = new ResponseDTO();
+        List<ResponseDTO> responseDTO = new ArrayList<>();
+        try {
+            List<ImageDTO> images = imageService.retrieveProductImages();
+            List list = Collections.synchronizedList(new ArrayList(images));
+
+            if (responseDTO.addAll(list) == true) {
+                response.setData(images);
+            }
+            response.setSuccessCode(SuccessCode.GET_ALL_PRODUCT_IMAGE_SUCCESS);
+        } catch (Exception e){
+            throw new GetDataFail(""+ ErrorCode.GET_PRODUCT_IMAGE_ERROR);
+        }
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{image_id}")
-    public ResponseEntity<ImageDTO> findProductImage(@PathVariable("image_id") Long imageId) throws ResourceNotFoundException {
-        ImageDTO imageDTO = imageService.getProductImage(imageId);
+    public ResponseEntity<ResponseDTO> findProductImage(@PathVariable("image_id") Long imageId) throws ResourceNotFoundException {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            Optional<ImageDTO> imageDTO = imageService.getProductImage(imageId);
 
-        return ResponseEntity.ok(imageDTO);
+            responseDTO.setData(imageDTO);
+            responseDTO.setSuccessCode(SuccessCode.FIND_PRODUCT_IMAGE_SUCCESS);
+        } catch (Exception e){
+            throw new ResourceNotFoundException(""+ErrorCode.FIND_PRODUCT_IMAGE_ERROR);
+        }
+        return ResponseEntity.ok(responseDTO);
     }
 
-    //save employee
+    //insert
     @PostMapping("/image")
-    public ResponseEntity<ImageDTO>  createProductImage(@RequestBody ImageDTO imageDTO) throws ResourceNotFoundException {
-        ImageDTO dto = imageService.saveProductImage(imageDTO);
-        return ResponseEntity.ok(dto);
+    public ResponseEntity<ResponseDTO>  createProductImage(@RequestBody ImageDTO imageDTO) throws AddDataFail {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            ImageDTO dto = imageService.saveProductImage(imageDTO);
+            responseDTO.setData(dto);
+            responseDTO.setSuccessCode(SuccessCode.ADD_PRODUCT_IMAGE_SUCCESS);
+        } catch (Exception e){
+            throw new AddDataFail(""+ErrorCode.ADD_PRODUCT_IMAGE_ERROR);
+        }
+
+        return ResponseEntity.ok(responseDTO);
     }
 
 //    //update
     @PutMapping("/image/{image_id}")
-    public ResponseEntity<ImageDTO> updateProductImage(@PathVariable(value = "image_id") Long imageId,
-                                                 @RequestBody ImageDTO imageDTO) throws ResourceNotFoundException{
-        ImageDTO updateImage = imageService.updateProductImage(imageId, imageDTO);
+    public ResponseEntity<ResponseDTO> updateProductImage(@PathVariable(value = "image_id") Long imageId,
+                                                 @RequestBody ImageDTO imageDTO) throws UpdateDataFail {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            ImageDTO updateImage = imageService.updateProductImage(imageId, imageDTO);
 
-        return new ResponseEntity<>(updateImage, HttpStatus.OK);
+            responseDTO.setData(updateImage);
+            responseDTO.setSuccessCode(SuccessCode.UPDATE_PRODUCT_IMAGE_SUCCESS);
+        } catch (Exception e){
+            throw new UpdateDataFail(""+ErrorCode.UPDATE_PRODUCT_IMAGE_ERROR);
+        }
+
+        return ResponseEntity.ok(responseDTO);
     }
 
 //    //delete
     @DeleteMapping("/image/{image_id}")
-    public Map<String, Boolean> deleteProductImage(@PathVariable(value = "image_id") Long imageId)
-            throws ResourceNotFoundException {
-        imageService.deleteProductImage(imageId);
-        Map<String, Boolean> reponse = new HashMap<>();
-        reponse.put("deleted", Boolean.TRUE);
+    public ResponseEntity<ResponseDTO> deleteProductImage(@PathVariable(value = "image_id") Long imageId) throws DeleteDataFail {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            Boolean isDel = imageService.deleteProductImage(imageId);
+            responseDTO.setData(isDel);
+            responseDTO.setSuccessCode(SuccessCode.DELETE_PRODUCT_IMAGE_SUCCESS);
+        } catch (Exception e){
+            throw new DeleteDataFail(""+ErrorCode.DELETE_PRODUCT_IMAGE_ERROR);
+        }
 
-        return reponse;
+        return ResponseEntity.ok(responseDTO);
     }
 }

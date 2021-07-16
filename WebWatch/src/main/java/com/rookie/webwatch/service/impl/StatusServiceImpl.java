@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -26,9 +27,9 @@ public class StatusServiceImpl implements StatusService {
     }
 
     @Override
-    public StatusDTO getStatus(Long statusId) throws ResourceNotFoundException {
+    public Optional<StatusDTO> getStatus(Long statusId) throws ResourceNotFoundException {
         Status status = statusRepository.findById(statusId).orElseThrow(() -> new ResourceNotFoundException("status not found for this id: "+statusId));
-        return new StatusDTO().convertToDto(status);
+        return Optional.of(new StatusDTO().convertToDto(status));
     }
 
     @Override
@@ -39,9 +40,10 @@ public class StatusServiceImpl implements StatusService {
     }
 
     @Override
-    public void deleteStatus(Long statusId) throws ResourceNotFoundException {
+    public Boolean deleteStatus(Long statusId) throws ResourceNotFoundException {
         Status status = statusRepository.findById(statusId).orElseThrow(() -> new ResourceNotFoundException("status not found for this id: " + statusId));
         this.statusRepository.delete(status);
+        return true;
     }
 
     @Override

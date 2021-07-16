@@ -14,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "order", schema = "public")
+@Table(name = "order", indexes = @Index(name = "orderIndex", columnList = "total_qty, total_price"), schema = "public")
 @JsonIgnoreProperties (value = { "hibernateLazyInitializer", "handler"})
 public class Order {
     @Id

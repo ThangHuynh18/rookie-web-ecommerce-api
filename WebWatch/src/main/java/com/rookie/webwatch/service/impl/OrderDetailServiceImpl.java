@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -34,9 +35,9 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     }
 
     @Override
-    public OrderDetailDTO getOrderDetail(Long detailId) throws ResourceNotFoundException {
+    public Optional<OrderDetailDTO> getOrderDetail(Long detailId) throws ResourceNotFoundException {
         OrderDetail detail = detailRepository.findById(detailId).orElseThrow(() -> new ResourceNotFoundException("detail not found for this id: "+detailId));
-        return new OrderDetailDTO().convertToDto(detail);
+        return Optional.of(new OrderDetailDTO().convertToDto(detail));
     }
 
     @Override
@@ -55,9 +56,10 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     }
 
     @Override
-    public void deleteOrderDetail(Long detailId) throws ResourceNotFoundException {
+    public Boolean deleteOrderDetail(Long detailId) throws ResourceNotFoundException {
         OrderDetail detail = detailRepository.findById(detailId).orElseThrow(() -> new ResourceNotFoundException("order detail not found for this id: " + detailId));
         this.detailRepository.delete(detail);
+        return true;
     }
 
     @Override

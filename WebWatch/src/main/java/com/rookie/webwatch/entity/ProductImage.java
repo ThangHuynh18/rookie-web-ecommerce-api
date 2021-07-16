@@ -12,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "product_image")
+@Table(name = "product_image", indexes = @Index(name = "imageIndex", columnList = "image_link"))
 public class ProductImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

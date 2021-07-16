@@ -1,18 +1,18 @@
 package com.rookie.webwatch.controller;
 
+import com.rookie.webwatch.dto.ErrorCode;
 import com.rookie.webwatch.dto.OrderDetailDTO;
 
-import com.rookie.webwatch.exception.ResourceNotFoundException;
+import com.rookie.webwatch.dto.ResponseDTO;
+import com.rookie.webwatch.dto.SuccessCode;
+import com.rookie.webwatch.exception.*;
 import com.rookie.webwatch.service.OrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/odetails")
@@ -21,42 +21,81 @@ public class OrderDetailController {
     private OrderDetailService detailService;
 
     @GetMapping("")
-    public List<OrderDetailDTO> getAllOrderDetail(){
-        List<OrderDetailDTO> details = detailService.retrieveOrderDetails();
-        return details;
+    public ResponseEntity<ResponseDTO> getAllOrderDetail() throws GetDataFail {
+        ResponseDTO response = new ResponseDTO();
+        List<ResponseDTO> responseDTO = new ArrayList<>();
+        try {
+            List<OrderDetailDTO> details = detailService.retrieveOrderDetails();
+            List list = Collections.synchronizedList(new ArrayList(details));
+
+            if (responseDTO.addAll(list) == true) {
+                response.setData(details);
+            }
+            response.setSuccessCode(SuccessCode.GET_ALL_ORDER_DETAIL_SUCCESS);
+        } catch (Exception e){
+            throw new GetDataFail(""+ ErrorCode.GET_ORDER_DETAIL_ERROR);
+        }
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{detail_id}")
-    public ResponseEntity<OrderDetailDTO> findOrderDetail(@PathVariable("detail_id") Long detailId) throws ResourceNotFoundException {
-        OrderDetailDTO detailDTO = detailService.getOrderDetail(detailId);
+    public ResponseEntity<ResponseDTO> findOrderDetail(@PathVariable("detail_id") Long detailId) throws ResourceNotFoundException {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            Optional<OrderDetailDTO> detailDTO = detailService.getOrderDetail(detailId);
 
-        return ResponseEntity.ok(detailDTO);
+            responseDTO.setData(detailDTO);
+            responseDTO.setSuccessCode(SuccessCode.FIND_ORDER_DETAIL_SUCCESS);
+        } catch (Exception e){
+            throw new ResourceNotFoundException(""+ErrorCode.FIND_ORDER_DETAIL_ERROR);
+        }
+        return ResponseEntity.ok(responseDTO);
     }
 
     //save
     @PostMapping("/odetail")
-    public ResponseEntity<OrderDetailDTO> createOrderDetail(@Valid @RequestBody OrderDetailDTO detailDTO) throws ResourceNotFoundException {
-        OrderDetailDTO dto = detailService.saveOrderDetail(detailDTO);
-        return ResponseEntity.ok(dto);
+    public ResponseEntity<ResponseDTO> createOrderDetail(@Valid @RequestBody OrderDetailDTO detailDTO) throws AddDataFail {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            OrderDetailDTO dto = detailService.saveOrderDetail(detailDTO);
+            responseDTO.setData(dto);
+            responseDTO.setSuccessCode(SuccessCode.ADD_ORDER_DETAIL_SUCCESS);
+        } catch (Exception e){
+            throw new AddDataFail(""+ErrorCode.ADD_ORDER_DETAIL_ERROR);
+        }
+
+        return ResponseEntity.ok(responseDTO);
     }
     //
 //    //update
     @PutMapping("/odetail/{detail_id}")
-    public ResponseEntity<OrderDetailDTO> updateOrderDetail(@PathVariable(value = "detail_id") Long detailId,
-                                             @Valid @RequestBody OrderDetailDTO detailDTO) throws ResourceNotFoundException{
-        OrderDetailDTO updateDetail = detailService.updateOrderDetail(detailId, detailDTO);
+    public ResponseEntity<ResponseDTO> updateOrderDetail(@PathVariable(value = "detail_id") Long detailId,
+                                             @Valid @RequestBody OrderDetailDTO detailDTO) throws UpdateDataFail {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            OrderDetailDTO updateDetail = detailService.updateOrderDetail(detailId, detailDTO);
 
-        return new ResponseEntity<>(updateDetail, HttpStatus.OK);
+            responseDTO.setData(updateDetail);
+            responseDTO.setSuccessCode(SuccessCode.UPDATE_ORDER_DETAIL_SUCCESS);
+        } catch (Exception e){
+            throw new UpdateDataFail(""+ErrorCode.UPDATE_ORDER_DETAIL_ERROR);
+        }
+
+        return ResponseEntity.ok(responseDTO);
     }
     //
 //    //delete
     @DeleteMapping("/odetail/{detail_id}")
-    public Map<String, Boolean> deleteOrderDetail(@PathVariable(value = "detail_id") Long detailId)
-            throws ResourceNotFoundException {
-        detailService.deleteOrderDetail(detailId);
-        Map<String, Boolean> reponse = new HashMap<>();
-        reponse.put("deleted", Boolean.TRUE);
+    public ResponseEntity<ResponseDTO> deleteOrderDetail(@PathVariable(value = "detail_id") Long detailId) throws DeleteDataFail {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            Boolean isDel = detailService.deleteOrderDetail(detailId);
+            responseDTO.setData(isDel);
+            responseDTO.setSuccessCode(SuccessCode.DELETE_ORDER_DETAIL_SUCCESS);
+        } catch (Exception e){
+            throw new DeleteDataFail(""+ErrorCode.DELETE_ORDER_DETAIL_ERROR);
+        }
 
-        return reponse;
+        return ResponseEntity.ok(responseDTO);
     }
 }

@@ -1,18 +1,18 @@
 package com.rookie.webwatch.controller;
 
+import com.rookie.webwatch.dto.ErrorCode;
+import com.rookie.webwatch.dto.ResponseDTO;
+import com.rookie.webwatch.dto.SuccessCode;
 import com.rookie.webwatch.dto.UserDetailDTO;
 
-import com.rookie.webwatch.exception.ResourceNotFoundException;
+import com.rookie.webwatch.exception.*;
 import com.rookie.webwatch.service.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/udetails")
@@ -21,42 +21,81 @@ public class UserDetailController {
     private UserDetailService detailService;
 
     @GetMapping("")
-    public List<UserDetailDTO> getAllUserDetail(){
-        List<UserDetailDTO> users = detailService.retrieveUserDetails();
-        return users;
+    public ResponseEntity<ResponseDTO> getAllUserDetail() throws GetDataFail {
+        ResponseDTO response = new ResponseDTO();
+        List<ResponseDTO> responseDTO = new ArrayList<>();
+        try {
+            List<UserDetailDTO> users = detailService.retrieveUserDetails();
+            List list = Collections.synchronizedList(new ArrayList(users));
+
+            if (responseDTO.addAll(list) == true) {
+                response.setData(users);
+            }
+            response.setSuccessCode(SuccessCode.GET_ALL_USER_DETAIL_SUCCESS);
+        } catch (Exception e){
+            throw new GetDataFail(""+ ErrorCode.GET_USER_DETAIL_ERROR);
+        }
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{udetail_id}")
-    public ResponseEntity<UserDetailDTO> findUserDetail(@PathVariable("udetail_id") Long udetailId) throws ResourceNotFoundException {
-        UserDetailDTO detailDTO = detailService.getUserDetail(udetailId);
+    public ResponseEntity<ResponseDTO> findUserDetail(@PathVariable("udetail_id") Long udetailId) throws ResourceNotFoundException {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            Optional<UserDetailDTO> detailDTO = detailService.getUserDetail(udetailId);
 
-        return ResponseEntity.ok(detailDTO);
+            responseDTO.setData(detailDTO);
+            responseDTO.setSuccessCode(SuccessCode.FIND_USER_DETAIL_SUCCESS);
+        } catch (Exception e){
+            throw new ResourceNotFoundException(""+ErrorCode.FIND_USER_DETAIL_ERROR);
+        }
+        return ResponseEntity.ok(responseDTO);
     }
 
     //save
     @PostMapping("/udetail")
-    public ResponseEntity<UserDetailDTO> createUserDetail(@Valid @RequestBody UserDetailDTO detailDTO) throws ResourceNotFoundException {
-        UserDetailDTO dto = detailService.saveUserDetail(detailDTO);
-        return ResponseEntity.ok(dto);
+    public ResponseEntity<ResponseDTO> createUserDetail(@Valid @RequestBody UserDetailDTO detailDTO) throws AddDataFail {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            UserDetailDTO dto = detailService.saveUserDetail(detailDTO);
+            responseDTO.setData(dto);
+            responseDTO.setSuccessCode(SuccessCode.ADD_USER_DETAIL_SUCCESS);
+        } catch (Exception e){
+            throw new AddDataFail(""+ErrorCode.ADD_USER_DETAIL_ERROR);
+        }
+
+        return ResponseEntity.ok(responseDTO);
     }
 
 //    //update
     @PutMapping("/udetail/{udetail_id}")
-    public ResponseEntity<UserDetailDTO> updateUserDetail(@PathVariable(value = "udetail_id") Long udetailId,
-                                           @Valid @RequestBody UserDetailDTO detailDTO) throws ResourceNotFoundException{
-        UserDetailDTO updateDetail = detailService.updateUserDetail(udetailId, detailDTO);
+    public ResponseEntity<ResponseDTO> updateUserDetail(@PathVariable(value = "udetail_id") Long udetailId,
+                                           @Valid @RequestBody UserDetailDTO detailDTO) throws UpdateDataFail {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            UserDetailDTO updateDetail = detailService.updateUserDetail(udetailId, detailDTO);
 
-        return new ResponseEntity<>(updateDetail, HttpStatus.OK);
+            responseDTO.setData(updateDetail);
+            responseDTO.setSuccessCode(SuccessCode.UPDATE_USER_DETAIL_SUCCESS);
+        } catch (Exception e){
+            throw new UpdateDataFail(""+ErrorCode.UPDATE_USER_DETAIL_ERROR);
+        }
+
+        return ResponseEntity.ok(responseDTO);
     }
 
 //    //delete
     @DeleteMapping("/udetail/{udetail_id}")
-    public Map<String, Boolean> deleteUserDetail(@PathVariable(value = "udetail_id") Long udetailId)
-            throws ResourceNotFoundException {
-        detailService.deleteUserDetail(udetailId);
-        Map<String, Boolean> reponse = new HashMap<>();
-        reponse.put("deleted", Boolean.TRUE);
+    public ResponseEntity<ResponseDTO> deleteUserDetail(@PathVariable(value = "udetail_id") Long udetailId) throws DeleteDataFail {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            Boolean isDel = detailService.deleteUserDetail(udetailId);
+            responseDTO.setData(isDel);
+            responseDTO.setSuccessCode(SuccessCode.DELETE_USER_DETAIL_SUCCESS);
+        } catch (Exception e){
+            throw new DeleteDataFail(""+ErrorCode.DELETE_USER_DETAIL_ERROR);
+        }
 
-        return reponse;
+        return ResponseEntity.ok(responseDTO);
     }
 }

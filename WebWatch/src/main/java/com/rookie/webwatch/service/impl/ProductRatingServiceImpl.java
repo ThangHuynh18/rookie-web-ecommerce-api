@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -33,9 +34,9 @@ public class ProductRatingServiceImpl implements ProductRatingService {
     }
 
     @Override
-    public RatingDTO getRating(Long ratingId) throws ResourceNotFoundException {
+    public Optional<RatingDTO> getRating(Long ratingId) throws ResourceNotFoundException {
         ProductRating rating = ratingRepository.findById(ratingId).orElseThrow(() -> new ResourceNotFoundException("rating not found for this id: "+ratingId));
-        return new RatingDTO().convertToDto(rating);
+        return Optional.of(new RatingDTO().convertToDto(rating));
     }
 
     @Override
@@ -54,9 +55,10 @@ public class ProductRatingServiceImpl implements ProductRatingService {
     }
 
     @Override
-    public void deleteRating(Long ratingId) throws ResourceNotFoundException {
+    public Boolean deleteRating(Long ratingId) throws ResourceNotFoundException {
         ProductRating rating = ratingRepository.findById(ratingId).orElseThrow(() -> new ResourceNotFoundException("rating not found for this id: " + ratingId));
         this.ratingRepository.delete(rating);
+        return true;
     }
 
     @Override

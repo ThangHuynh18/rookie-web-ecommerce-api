@@ -11,7 +11,6 @@ import com.rookie.webwatch.exception.*;
 import com.rookie.webwatch.service.ProductService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,29 +25,35 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("")
-    public ResponseEntity<ResponseDTO> getAllProduct(){
+    public ResponseEntity<ResponseDTO> getAllProduct() throws GetDataFail {
         ResponseDTO response = new ResponseDTO();
         List<ResponseDTO> listResponse = new ArrayList<>();
 
-        List<ProductDTO> productDTOS = productService.retrieveProducts();
-        List list = Collections.synchronizedList(new ArrayList(productDTOS));
+        try {
+            List<ProductDTO> productDTOS = productService.retrieveProducts();
+            List list = Collections.synchronizedList(new ArrayList(productDTOS));
 
-        if(listResponse.addAll(list) == true){
-            response.setData(productDTOS);
+            if (listResponse.addAll(list) == true) {
+                response.setData(productDTOS);
+            }
+            response.setSuccessCode(SuccessCode.GET_ALL_PRODUCT_SUCCESS);
+        } catch (Exception e) {
+            throw new GetDataFail("" + ErrorCode.GET_PRODUCT_ERROR);
         }
-        response.setSuccessCode(SuccessCode.GET_ALL_PRODUCT_SUCCESS);
-
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{product_id}")
     public ResponseEntity<ResponseDTO> getPro(@PathVariable("product_id") Long id) throws ResourceNotFoundException {
         ResponseDTO responseDTO = new ResponseDTO();
-        Optional<ProductDTO> productDTO = productService.getProduct(id);
+        try {
+            Optional<ProductDTO> productDTO = productService.getProduct(id);
 
-        responseDTO.setData(productDTO);
-        responseDTO.setSuccessCode(SuccessCode.FIND_PRODUCT_SUCCESS);
-
+            responseDTO.setData(productDTO);
+            responseDTO.setSuccessCode(SuccessCode.FIND_PRODUCT_SUCCESS);
+        } catch (Exception e){
+            throw new ResourceNotFoundException(""+ErrorCode.FIND_PRODUCT_ERROR);
+        }
         return ResponseEntity.ok(responseDTO);
     }
 

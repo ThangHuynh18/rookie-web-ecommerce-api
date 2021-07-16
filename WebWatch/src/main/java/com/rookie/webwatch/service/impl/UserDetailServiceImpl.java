@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -32,9 +33,9 @@ public class UserDetailServiceImpl implements UserDetailService {
     }
 
     @Override
-    public UserDetailDTO getUserDetail(Long udetailId) throws ResourceNotFoundException {
+    public Optional<UserDetailDTO> getUserDetail(Long udetailId) throws ResourceNotFoundException {
         UserDetail detail = detailRepository.findById(udetailId).orElseThrow(() -> new ResourceNotFoundException("user detail not found for this id: "+udetailId));
-        return new UserDetailDTO().convertToDto(detail);
+        return Optional.of(new UserDetailDTO().convertToDto(detail));
     }
 
     @Override
@@ -50,9 +51,10 @@ public class UserDetailServiceImpl implements UserDetailService {
     }
 
     @Override
-    public void deleteUserDetail(Long udetailId) throws ResourceNotFoundException {
+    public Boolean deleteUserDetail(Long udetailId) throws ResourceNotFoundException {
         UserDetail userDetail = detailRepository.findById(udetailId).orElseThrow(() -> new ResourceNotFoundException("user_detail not found for this id: " + udetailId));
         this.detailRepository.delete(userDetail);
+        return true;
     }
 
     @Override

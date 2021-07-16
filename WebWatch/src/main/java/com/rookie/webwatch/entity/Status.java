@@ -13,7 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "status")
+@Table(name = "status", indexes = @Index(name = "statusIndex", columnList = "status, status_name"))
 public class Status {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

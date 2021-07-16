@@ -13,7 +13,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "user", schema = "public")
+@Table(name = "user", indexes = @Index(name = "userIndex", columnList = "user_name, user_email, user_password"), schema = "public")
 @JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler"})
 public class User {
     @Id

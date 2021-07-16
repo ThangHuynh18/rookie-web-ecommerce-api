@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -30,9 +31,9 @@ public class ProductImageServiceImpl implements ProductImageService {
     }
 
     @Override
-    public ImageDTO getProductImage(Long imageId) throws ResourceNotFoundException {
+    public Optional<ImageDTO> getProductImage(Long imageId) throws ResourceNotFoundException {
         ProductImage image = imageRepository.findById(imageId).orElseThrow(() -> new ResourceNotFoundException("image not found for this id: "+imageId));
-        return new ImageDTO().convertToDto(image);
+        return Optional.of(new ImageDTO().convertToDto(image));
     }
 
     @Override
@@ -47,9 +48,10 @@ public class ProductImageServiceImpl implements ProductImageService {
     }
 
     @Override
-    public void deleteProductImage(Long imageId) throws ResourceNotFoundException {
+    public Boolean deleteProductImage(Long imageId) throws ResourceNotFoundException {
         ProductImage productImage = imageRepository.findById(imageId).orElseThrow(() -> new ResourceNotFoundException("iamge not found for this id: " + imageId));
         this.imageRepository.delete(productImage);
+        return true;
     }
 
     @Override

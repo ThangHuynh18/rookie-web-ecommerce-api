@@ -15,7 +15,7 @@ public interface UserService {
 
     public UserDTO saveUser(UserDTO userDTO);
 
-    public void deleteUser(Long userId) throws ResourceNotFoundException;
+    public Boolean deleteUser(Long userId) throws ResourceNotFoundException;
 
     UserDTO updateUser(Long userId, UserDTO userDTO) throws ResourceNotFoundException;
 

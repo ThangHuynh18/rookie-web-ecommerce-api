@@ -1,19 +1,19 @@
 package com.rookie.webwatch.controller;
 
+import com.rookie.webwatch.dto.ErrorCode;
+import com.rookie.webwatch.dto.ResponseDTO;
 import com.rookie.webwatch.dto.StatusDTO;
 
-import com.rookie.webwatch.exception.ResourceNotFoundException;
+import com.rookie.webwatch.dto.SuccessCode;
+import com.rookie.webwatch.exception.*;
 import com.rookie.webwatch.service.StatusService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/statuses")
@@ -22,41 +22,80 @@ public class StatusController {
     private StatusService statusService;
 
     @GetMapping("")
-    public List<StatusDTO> getAllStatus(){
+    public ResponseEntity<ResponseDTO> getAllStatus() throws GetDataFail {
+        ResponseDTO response = new ResponseDTO();
+        List<ResponseDTO> responseDTO = new ArrayList<>();
+        try {
         List<StatusDTO> statuses = statusService.retrieveStatuses();
-        return statuses;
+            List list = Collections.synchronizedList(new ArrayList(statuses));
+
+            if (responseDTO.addAll(list) == true) {
+                response.setData(statuses);
+            }
+            response.setSuccessCode(SuccessCode.GET_ALL_STATUS_SUCCESS);
+        } catch (Exception e){
+            throw new GetDataFail(""+ ErrorCode.GET_STATUS_ERROR);
+        }
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{status_id}")
-    public ResponseEntity<StatusDTO> findStatus(@PathVariable("status_id") Long statusId) throws ResourceNotFoundException {
-        StatusDTO statusDTO = statusService.getStatus(statusId);
+    public ResponseEntity<ResponseDTO> findStatus(@PathVariable("status_id") Long statusId) throws ResourceNotFoundException {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            Optional<StatusDTO> statusDTO = statusService.getStatus(statusId);
 
-        return ResponseEntity.ok(statusDTO);
+            responseDTO.setData(statusDTO);
+            responseDTO.setSuccessCode(SuccessCode.FIND_STATUS_SUCCESS);
+        } catch (Exception e){
+            throw new ResourceNotFoundException(""+ErrorCode.FIND_STATUS_ERROR);
+        }
+        return ResponseEntity.ok(responseDTO);
     }
 
     @PostMapping("/status")
-    public ResponseEntity<StatusDTO> createStatus(@Valid @RequestBody StatusDTO statusDTO) {
-        StatusDTO dto = statusService.saveStatus(statusDTO);
-        return ResponseEntity.ok(dto);
+    public ResponseEntity<ResponseDTO> createStatus(@Valid @RequestBody StatusDTO statusDTO) throws AddDataFail {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            StatusDTO dto = statusService.saveStatus(statusDTO);
+            responseDTO.setData(dto);
+            responseDTO.setSuccessCode(SuccessCode.ADD_STATUS_SUCCESS);
+        } catch (Exception e){
+            throw new AddDataFail(""+ErrorCode.ADD_STATUS_ERROR);
+        }
+
+        return ResponseEntity.ok(responseDTO);
     }
 
 //    //update
     @PutMapping("/status/{status_id}")
-    public ResponseEntity<StatusDTO> updateStatus(@PathVariable(value = "status_id") Long statusId,
-                                                   @Valid @RequestBody StatusDTO statusDTO) throws ResourceNotFoundException{
-        StatusDTO updateSta = statusService.updateStatus(statusId, statusDTO);
+    public ResponseEntity<ResponseDTO> updateStatus(@PathVariable(value = "status_id") Long statusId,
+                                                   @Valid @RequestBody StatusDTO statusDTO) throws UpdateDataFail {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            StatusDTO updateSta = statusService.updateStatus(statusId, statusDTO);
 
-        return new ResponseEntity<>(updateSta, HttpStatus.OK);
+            responseDTO.setData(updateSta);
+            responseDTO.setSuccessCode(SuccessCode.UPDATE_STATUS_SUCCESS);
+        } catch (Exception e){
+            throw new UpdateDataFail(""+ErrorCode.UPDATE_STATUS_ERROR);
+        }
+
+        return ResponseEntity.ok(responseDTO);
     }
 
 //    //delete
     @DeleteMapping("/status/{status_id}")
-    public Map<String, Boolean> deleteStatus(@PathVariable(value = "status_id") Long statusId)
-            throws ResourceNotFoundException {
-        statusService.deleteStatus(statusId);
-        Map<String, Boolean> reponse = new HashMap<>();
-        reponse.put("deleted", Boolean.TRUE);
+    public ResponseEntity<ResponseDTO> deleteStatus(@PathVariable(value = "status_id") Long statusId) throws DeleteDataFail {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            Boolean isDel = statusService.deleteStatus(statusId);
+            responseDTO.setData(isDel);
+            responseDTO.setSuccessCode(SuccessCode.DELETE_STATUS_SUCCESS);
+        } catch (Exception e){
+            throw new DeleteDataFail(""+ErrorCode.DELETE_STATUS_ERROR);
+        }
 
-        return reponse;
+        return ResponseEntity.ok(responseDTO);
     }
 }

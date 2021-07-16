@@ -60,9 +60,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void deleteOrder(Long orderId) throws ResourceNotFoundException {
+    public Boolean deleteOrder(Long orderId) throws ResourceNotFoundException {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("order not found for this id: " + orderId));
         this.orderRepository.delete(order);
+        return true;
     }
 
     @Override

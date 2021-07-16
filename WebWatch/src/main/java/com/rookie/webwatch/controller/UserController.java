@@ -1,17 +1,18 @@
 package com.rookie.webwatch.controller;
 
+import com.rookie.webwatch.dto.ErrorCode;
+import com.rookie.webwatch.dto.ResponseDTO;
+import com.rookie.webwatch.dto.SuccessCode;
 import com.rookie.webwatch.dto.UserDTO;
 
-import com.rookie.webwatch.entity.Role;
-import com.rookie.webwatch.entity.User;
-import com.rookie.webwatch.exception.ResourceNotFoundException;
-import com.rookie.webwatch.repository.RoleRepository;
+import com.rookie.webwatch.exception.*;
+
 import com.rookie.webwatch.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,45 +25,82 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
     @GetMapping("")
-    public List<UserDTO> getAllUser(){
-        List<UserDTO> userDTOS = userService.retrieveUsers();
-        return userDTOS;
+    public ResponseEntity<ResponseDTO> getAllUser() throws GetDataFail {
+        ResponseDTO response = new ResponseDTO();
+        List<ResponseDTO> responseDTO = new ArrayList<>();
+        try {
+            List<UserDTO> userDTOS = userService.retrieveUsers();
+            List list = Collections.synchronizedList(new ArrayList(userDTOS));
+
+            if (responseDTO.addAll(list) == true) {
+                response.setData(userDTOS);
+            }
+            response.setSuccessCode(SuccessCode.GET_ALL_USER_SUCCESS);
+        } catch (Exception e){
+            throw new GetDataFail(""+ ErrorCode.GET_USER_ERROR);
+        }
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{user_id}")
-    public ResponseEntity<Optional<UserDTO>> findUser(@PathVariable("user_id") Long userId) throws ResourceNotFoundException {
+    public ResponseEntity<ResponseDTO> findUser(@PathVariable("user_id") Long userId) throws ResourceNotFoundException {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
         Optional<UserDTO> userDTO = userService.getUser(userId);
 
-        return ResponseEntity.ok(userDTO);
+            responseDTO.setData(userDTO);
+            responseDTO.setSuccessCode(SuccessCode.FIND_USER_SUCCESS);
+        } catch (Exception e){
+            throw new ResourceNotFoundException(""+ErrorCode.FIND_USER_ERROR);
+        }
+        return ResponseEntity.ok(responseDTO);
     }
 
     @PostMapping("/user")
-    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
-        UserDTO dto = userService.saveUser(userDTO);
+    public ResponseEntity<ResponseDTO> createUser(@Valid @RequestBody UserDTO userDTO) throws AddDataFail {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            UserDTO dto = userService.saveUser(userDTO);
+            responseDTO.setData(dto);
+            responseDTO.setSuccessCode(SuccessCode.ADD_USER_SUCCESS);
+        } catch (Exception e){
+            throw new AddDataFail(""+ErrorCode.ADD_USER_ERROR);
+        }
 
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(responseDTO);
     }
 
 //    //update
     @PutMapping("/user/{user_id}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable(value = "user_id") Long userId,
-                                                 @Valid @RequestBody UserDTO userDTO) throws ResourceNotFoundException{
-        UserDTO updateUser = userService.updateUser(userId, userDTO);
+    public ResponseEntity<ResponseDTO> updateUser(@PathVariable(value = "user_id") Long userId,
+                                                 @Valid @RequestBody UserDTO userDTO) throws UpdateDataFail {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            UserDTO updateUser = userService.updateUser(userId, userDTO);
 
-        return new ResponseEntity<>(updateUser, HttpStatus.OK);
+            responseDTO.setData(updateUser);
+            responseDTO.setSuccessCode(SuccessCode.UPDATE_USER_SUCCESS);
+        } catch (Exception e){
+            throw new UpdateDataFail(""+ErrorCode.UPDATE_USER_ERROR);
+        }
+
+        return ResponseEntity.ok(responseDTO);
     }
 
 //    //delete
     @DeleteMapping("/user/{user_id}")
-    public Map<String, Boolean> deleteUser(@PathVariable(value = "user_id") Long userId)
-            throws ResourceNotFoundException {
-        userService.deleteUser(userId);
-        Map<String, Boolean> reponse = new HashMap<>();
-        reponse.put("deleted", Boolean.TRUE);
+    public ResponseEntity<ResponseDTO> deleteUser(@PathVariable(value = "user_id") Long userId) throws DeleteDataFail {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            Boolean isDel = userService.deleteUser(userId);
+                responseDTO.setData(isDel);
+                responseDTO.setSuccessCode(SuccessCode.DELETE_USER_SUCCESS);
+            } catch (Exception e){
+                throw new DeleteDataFail(""+ErrorCode.DELETE_USER_ERROR);
+            }
 
-        return reponse;
+        return ResponseEntity.ok(responseDTO);
     }
 
 }

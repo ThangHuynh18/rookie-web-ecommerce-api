@@ -14,7 +14,7 @@ public interface OrderService {
 
     public OrderDTO saveOrder(OrderDTO order) throws ResourceNotFoundException;
 
-    public void deleteOrder(Long orderId) throws ResourceNotFoundException;
+    public Boolean deleteOrder(Long orderId) throws ResourceNotFoundException;
 
     public OrderDTO updateOrder(Long orderId,OrderDTO order) throws ResourceNotFoundException;
 }
