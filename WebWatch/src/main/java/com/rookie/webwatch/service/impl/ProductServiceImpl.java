@@ -13,9 +13,7 @@ import com.rookie.webwatch.repository.ProductRatingRepository;
 import com.rookie.webwatch.repository.Productrepository;
 import com.rookie.webwatch.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -109,6 +107,17 @@ public class ProductServiceImpl implements ProductService {
         Product product = new Product();
         product = productrepository.save(proExist);
         return new ProductDTO().convertToDto(product);
+    }
+
+    @Override
+    public Page<ProductDTO> getProductSort(ProductDTO productDTO) {
+        List<Product> list = null;
+        Page<ProductDTO> page = null;
+        Pageable pageable = PageRequest.of(1, 5, Sort.by(productDTO.getProductName()));
+
+        list = productrepository.findAll(pageable).getContent();
+        page = new PageImpl(list);
+        return page;
     }
 
 }
