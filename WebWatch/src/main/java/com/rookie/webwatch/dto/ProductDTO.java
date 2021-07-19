@@ -4,7 +4,11 @@ import com.rookie.webwatch.entity.Product;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,18 +19,21 @@ import java.util.List;
 public class ProductDTO {
     private long product_id;
 
-    @NotNull
+    @NotBlank
     private String productName;
 
     @NotNull
+    @Min(value = 1)
     private float productPrice;
 
-    @NotNull
+    @NotBlank
     private String productDescription;
 
     @NotNull
+    @Min(value = 1)
     private long productQty;
     private long category_id;
+    private long brand_id;
 
     private List<ImageDTO> imageDTOS;
 
@@ -50,7 +57,7 @@ public class ProductDTO {
         productDTO.setProductDescription(product.getProductDescription());
         productDTO.setProductQty(product.getProductQty());
         productDTO.setCategory_id(product.getCategory().getCategory_id());
-
+        productDTO.setBrand_id(product.getBrand().getBrand_id());
 
         List<ImageDTO> listDto = new ArrayList<>();
 
@@ -91,5 +98,6 @@ public class ProductDTO {
         });
         return listDto;
     }
+
 
 }

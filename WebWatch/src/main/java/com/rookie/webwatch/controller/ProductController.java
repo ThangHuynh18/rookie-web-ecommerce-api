@@ -1,20 +1,20 @@
 package com.rookie.webwatch.controller;
 
 
-import com.rookie.webwatch.dto.ErrorCode;
-import com.rookie.webwatch.dto.ProductDTO;
+import com.rookie.webwatch.dto.*;
 
-import com.rookie.webwatch.dto.ResponseDTO;
-import com.rookie.webwatch.dto.SuccessCode;
 import com.rookie.webwatch.exception.*;
 
 import com.rookie.webwatch.service.ProductService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -42,6 +42,28 @@ public class ProductController {
         }
         return ResponseEntity.ok(response);
     }
+
+
+    @GetMapping("/search")
+    public ResponseEntity<ResponseDTO> findProductByCate(@RequestParam("category_id") @NotBlank Long categoryId,
+                                                            PageDTO pageDTO
+    ) throws ResourceNotFoundException {
+        ResponseDTO responseDTO = new ResponseDTO();
+        List<ProductDTO> productDTOS = productService.findProductByCate(categoryId, pageDTO);
+        responseDTO.setData(productDTOS);
+        responseDTO.setSuccessCode(SuccessCode.FIND_PRODUCT_SUCCESS);
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @GetMapping("/sort")
+    public ResponseEntity<ResponseDTO> getProductSort(PageDTO pageDTO){
+        ResponseDTO responseDTO = new ResponseDTO();
+       List<ProductDTO> productDTO = productService.sortProduct(pageDTO);
+       responseDTO.setData(productDTO);
+       responseDTO.setSuccessCode(SuccessCode.GET_ALL_PRODUCT_SUCCESS);
+        return ResponseEntity.ok(responseDTO);
+    }
+
 
     @GetMapping("/{product_id}")
     public ResponseEntity<ResponseDTO> getPro(@PathVariable("product_id") Long id) throws ResourceNotFoundException {

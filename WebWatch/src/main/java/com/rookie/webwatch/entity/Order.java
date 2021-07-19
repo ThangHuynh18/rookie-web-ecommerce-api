@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.util.Set;
 
 @Getter
@@ -14,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "order", indexes = @Index(name = "orderIndex", columnList = "total_qty, total_price"), schema = "public")
+@Table(name = "order", indexes = @Index(name = "orderIndex", columnList = "order_id, user_id, status_id"), schema = "public")
 @JsonIgnoreProperties (value = { "hibernateLazyInitializer", "handler"})
 public class Order {
     @Id
@@ -22,9 +23,11 @@ public class Order {
     private long order_id;
 
     @Column(name = "total_qty")
+    @Min(value = 1)
     private int totalQty;
 
     @Column(name = "total_price")
+    @Min(value = 1)
     private float totalPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)

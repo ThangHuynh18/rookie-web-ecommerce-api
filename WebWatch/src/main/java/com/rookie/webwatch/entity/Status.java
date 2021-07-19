@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.util.Set;
 
 @Getter
@@ -20,9 +22,11 @@ public class Status {
     private long status_id;
 
     @Column(name = "status")
+    @Min(value = 0)
     private long status;
 
     @Column(name = "status_name")
+    @NotBlank
     private String statusName;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "status")

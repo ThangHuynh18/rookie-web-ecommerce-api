@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -19,6 +20,17 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long category_id;
+
+    @ManyToMany
+    @JoinTable(name = "subcategories",
+            joinColumns = { @JoinColumn(name = "parent_id") },
+            inverseJoinColumns = { @JoinColumn(name = "category_id")
+            })
+    private Set<Category> subCategories = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    public Category parent;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
     private Set<Product> products;

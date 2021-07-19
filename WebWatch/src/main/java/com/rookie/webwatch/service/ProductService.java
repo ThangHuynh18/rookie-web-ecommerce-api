@@ -1,6 +1,7 @@
 package com.rookie.webwatch.service;
 
 
+import com.rookie.webwatch.dto.PageDTO;
 import com.rookie.webwatch.dto.ProductDTO;
 import com.rookie.webwatch.entity.Product;
 import com.rookie.webwatch.exception.BadRequestException;
@@ -21,6 +22,7 @@ public interface ProductService {
 
     public ProductDTO updateProduct(Long productId, ProductDTO productDTO) throws ResourceNotFoundException;
 
-    public Page<ProductDTO> getProductSort(ProductDTO productDTO);
+    public List<ProductDTO>sortProduct(PageDTO pageDTO);
 
+    public List<ProductDTO> findProductByCate(Long categoryId, PageDTO pageDTO) throws ResourceNotFoundException;
 }

@@ -2,6 +2,7 @@ package com.rookie.webwatch.service.impl;
 
 import com.rookie.webwatch.dto.CategoryDTO;
 
+import com.rookie.webwatch.dto.ErrorCode;
 import com.rookie.webwatch.entity.Category;
 
 import com.rookie.webwatch.exception.ResourceNotFoundException;
@@ -29,7 +30,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Optional<CategoryDTO> getCate(Long cateId) throws ResourceNotFoundException {
-        Category category = categoryRepository.findById(cateId).orElseThrow(() -> new ResourceNotFoundException("category not found for this id: "+cateId));
+        Category category = categoryRepository.findById(cateId).orElseThrow(() -> new ResourceNotFoundException(""+ ErrorCode.FIND_CATEGORY_ERROR));
         return Optional.of(new CategoryDTO().convertToDto(category));
     }
 
@@ -42,7 +43,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Boolean deleteCategory(Long categoryId) throws ResourceNotFoundException {
         Category category = categoryRepository.findById(categoryId).orElseThrow(() ->
-                new ResourceNotFoundException("category not found for this id: " + categoryId));
+                new ResourceNotFoundException(""+ ErrorCode.FIND_CATEGORY_ERROR));
         this.categoryRepository.delete(category);
         return true;
     }
@@ -50,7 +51,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDTO updateCategory(Long categoryId, CategoryDTO categoryDTO) throws ResourceNotFoundException {
         Category cateExist = categoryRepository.findById(categoryId).orElseThrow(() ->
-                new ResourceNotFoundException("category not found for this id: "+categoryId));
+                new ResourceNotFoundException(""+ ErrorCode.FIND_CATEGORY_ERROR));
 
         cateExist.setCategoryName(categoryDTO.getCategoryName());
 

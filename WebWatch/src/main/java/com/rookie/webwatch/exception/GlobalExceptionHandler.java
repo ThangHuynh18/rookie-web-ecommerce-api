@@ -24,6 +24,30 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(GetDataFail.class)
+    public ResponseEntity<?> getDataFailHandler(Exception ex, WebRequest request){
+        ErrorDetail errorDetail = new ErrorDetail(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorDetail, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(AddDataFail.class)
+    public ResponseEntity<?> addDataFailHandler(Exception ex, WebRequest request){
+        ErrorDetail errorDetail = new ErrorDetail(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorDetail, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(UpdateDataFail.class)
+    public ResponseEntity<?> updateDataFailHandler(Exception ex, WebRequest request){
+        ErrorDetail errorDetail = new ErrorDetail(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorDetail, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(DeleteDataFail.class)
+    public ResponseEntity<?> deleteDataFailHandler(Exception ex, WebRequest request){
+        ErrorDetail errorDetail = new ErrorDetail(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorDetail, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> globalExceptionHandler(Exception ex, WebRequest request){
         ErrorDetail errorDetail = new ErrorDetail(new Date(), ex.getMessage(), request.getDescription(false));
