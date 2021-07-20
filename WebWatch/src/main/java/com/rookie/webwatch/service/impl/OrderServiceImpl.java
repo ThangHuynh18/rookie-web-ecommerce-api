@@ -1,9 +1,9 @@
 package com.rookie.webwatch.service.impl;
 
+import com.rookie.webwatch.dto.ErrorCode;
 import com.rookie.webwatch.dto.OrderDTO;
-import com.rookie.webwatch.entity.Order;
-import com.rookie.webwatch.entity.Status;
-import com.rookie.webwatch.entity.User;
+import com.rookie.webwatch.dto.ProductDTO;
+import com.rookie.webwatch.entity.*;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 import com.rookie.webwatch.repository.OrderRepository;
 import com.rookie.webwatch.repository.Productrepository;
@@ -11,9 +11,11 @@ import com.rookie.webwatch.repository.StatusRepository;
 import com.rookie.webwatch.repository.UserRepository;
 import com.rookie.webwatch.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,5 +84,21 @@ public class OrderServiceImpl implements OrderService {
         order = orderRepository.save(orderExist);
         return new OrderDTO().convertToDto(order);
 
+    }
+
+    @Override
+    public List<OrderDTO> findOrderByUser(Long userId) throws ResourceNotFoundException {
+        Optional<User> userExist = userRepository.findById(userId);
+        if(!userExist.isPresent()){
+            throw new ResourceNotFoundException(""+ ErrorCode.FIND_USER_ERROR);
+        }
+        User user = userExist.get();
+
+        List<Order> list = null;
+        list = orderRepository.getOrderByUser(user);
+
+        List<OrderDTO> orderDTOS = new ArrayList<>();
+        orderDTOS = new OrderDTO().toListDto(list);
+        return orderDTOS;
     }
 }

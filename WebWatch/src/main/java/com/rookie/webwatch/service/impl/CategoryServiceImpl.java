@@ -35,8 +35,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDTO saveCategory(CategoryDTO categoryDTO) {
+    public CategoryDTO saveCategory(CategoryDTO categoryDTO) throws ResourceNotFoundException {
         Category category = new CategoryDTO().convertToEti(categoryDTO);
+        Category parent = categoryRepository.findById(categoryDTO.getParent_id()).orElseThrow(()-> new ResourceNotFoundException(ErrorCode.FIND_CATEGORY_ERROR+""));
+        category.setParent(parent);
         return new CategoryDTO().convertToDto(categoryRepository.save(category));
     }
 
@@ -52,8 +54,10 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDTO updateCategory(Long categoryId, CategoryDTO categoryDTO) throws ResourceNotFoundException {
         Category cateExist = categoryRepository.findById(categoryId).orElseThrow(() ->
                 new ResourceNotFoundException(""+ ErrorCode.FIND_CATEGORY_ERROR));
-
         cateExist.setCategoryName(categoryDTO.getCategoryName());
+
+        Category parent = categoryRepository.findById(categoryDTO.getParent_id()).orElseThrow(()-> new ResourceNotFoundException(ErrorCode.FIND_CATEGORY_ERROR+""));
+        cateExist.setParent(parent);
 
         Category category = new Category();
         category = categoryRepository.save(cateExist);

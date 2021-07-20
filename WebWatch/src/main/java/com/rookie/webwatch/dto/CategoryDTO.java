@@ -22,16 +22,21 @@ public class CategoryDTO {
 
     @NotBlank
     private String categoryName;
-    //private long parent_id;
+    private long parent_id;
 
 
     public CategoryDTO convertToDto(Category category) {
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setCategory_id(category.getCategory_id());
         categoryDTO.setCategoryName(category.getCategoryName());
-        //categoryDTO.setParent_id(category.getParent().getCategory_id());
+        categoryDTO.setParent_id(category.getParent().getCategory_id());
 
         return categoryDTO;
+    }
+
+    public CategoryDTO(long category_id, String categoryName) {
+        this.category_id = category_id;
+        this.categoryName = categoryName;
     }
 
     public Category convertToEti(CategoryDTO categoryDTO) {

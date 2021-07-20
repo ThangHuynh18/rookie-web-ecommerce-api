@@ -14,7 +14,7 @@ public interface CategoryService {
 
     public Optional<CategoryDTO> getCate(Long categoryId) throws ResourceNotFoundException;
 
-    public CategoryDTO saveCategory(CategoryDTO categoryDTO);
+    public CategoryDTO saveCategory(CategoryDTO categoryDTO) throws ResourceNotFoundException;
 
     public Boolean deleteCategory(Long categoryId) throws ResourceNotFoundException;
 

@@ -1,10 +1,7 @@
 package com.rookie.webwatch.controller;
 
-import com.rookie.webwatch.dto.ErrorCode;
-import com.rookie.webwatch.dto.OrderDTO;
+import com.rookie.webwatch.dto.*;
 
-import com.rookie.webwatch.dto.ResponseDTO;
-import com.rookie.webwatch.dto.SuccessCode;
 import com.rookie.webwatch.exception.*;
 import com.rookie.webwatch.service.OrderService;
 
@@ -14,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -52,6 +50,15 @@ public class OrderController {
         } catch (Exception e){
             throw new ResourceNotFoundException(""+ErrorCode.FIND_ORDER_ERROR);
         }
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @GetMapping("/user/{user_id}")
+    public ResponseEntity<ResponseDTO> findOrderByUser(@PathVariable("user_id") @NotBlank Long userId) throws ResourceNotFoundException {
+        ResponseDTO responseDTO = new ResponseDTO();
+        List<OrderDTO> orderDTOS = orderService.findOrderByUser(userId);
+        responseDTO.setData(orderDTOS);
+        responseDTO.setSuccessCode(SuccessCode.FIND_ORDER_SUCCESS);
         return ResponseEntity.ok(responseDTO);
     }
 
