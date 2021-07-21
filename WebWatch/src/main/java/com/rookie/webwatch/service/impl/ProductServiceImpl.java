@@ -147,4 +147,36 @@ public class ProductServiceImpl implements ProductService {
         return productDTOS;
     }
 
+    @Override
+    public List<ProductDTO> findProductByCategory(Long categoryId) throws ResourceNotFoundException {
+        Optional<Category> cateExist = categoryRepository.findById(categoryId);
+        if(!cateExist.isPresent()){
+            throw new ResourceNotFoundException(""+ ErrorCode.FIND_CATEGORY_ERROR);
+        }
+        Category category = cateExist.get();
+
+        List<Product> list = null;
+        list = productrepository.findProductByCategory(category);
+
+        List<ProductDTO> productDTOS = new ArrayList<>();
+        productDTOS = new ProductDTO().toListDto(list);
+        return productDTOS;
+    }
+
+    @Override
+    public List<ProductDTO> findProductByBrand(Long brandId) throws ResourceNotFoundException {
+        Optional<Brand> brandExist = brandRepository.findById(brandId);
+        if(!brandExist.isPresent()){
+            throw new ResourceNotFoundException(""+ ErrorCode.FIND_BRAND_ERROR);
+        }
+        Brand brand = brandExist.get();
+
+        List<Product> list = null;
+        list = productrepository.findProductByBrand(brand);
+
+        List<ProductDTO> productDTOS = new ArrayList<>();
+        productDTOS = new ProductDTO().toListDto(list);
+        return productDTOS;
+    }
+
 }

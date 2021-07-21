@@ -64,6 +64,23 @@ public class ProductController {
         return ResponseEntity.ok(responseDTO);
     }
 
+    @GetMapping("/category/{category_id}")
+    public ResponseEntity<ResponseDTO> findProductByCategory(@PathVariable("category_id") @NotBlank Long cateId) throws ResourceNotFoundException {
+        ResponseDTO responseDTO = new ResponseDTO();
+        List<ProductDTO> productDTOS = productService.findProductByCategory(cateId);
+        responseDTO.setData(productDTOS);
+        responseDTO.setSuccessCode(SuccessCode.FIND_PRODUCT_SUCCESS);
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @GetMapping("/brand/{brand_id}")
+    public ResponseEntity<ResponseDTO> findProductByBrand(@PathVariable("brand_id") @NotBlank Long brandId) throws ResourceNotFoundException {
+        ResponseDTO responseDTO = new ResponseDTO();
+        List<ProductDTO> productDTOS = productService.findProductByBrand(brandId);
+        responseDTO.setData(productDTOS);
+        responseDTO.setSuccessCode(SuccessCode.FIND_PRODUCT_SUCCESS);
+        return ResponseEntity.ok(responseDTO);
+    }
 
     @GetMapping("/{product_id}")
     public ResponseEntity<ResponseDTO> getPro(@PathVariable("product_id") Long id) throws ResourceNotFoundException {
