@@ -13,14 +13,14 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 public class RatingDTO {
-    private int ratingNumber;
+    private long ratingNumber;
     private long user_id;
     private long product_id;
 
 
     public RatingDTO convertToDto(ProductRating rating) {
         RatingDTO ratingDTO = new RatingDTO();
-        ratingDTO.setRatingNumber((int) rating.getRatingNumber());
+        ratingDTO.setRatingNumber(rating.getRatingNumber());
         ratingDTO.setUser_id(rating.getUser().getUser_id());
         ratingDTO.setProduct_id(rating.getProduct().getProduct_id());
 

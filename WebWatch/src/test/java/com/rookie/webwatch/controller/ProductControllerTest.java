@@ -3,6 +3,7 @@ package com.rookie.webwatch.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rookie.webwatch.dto.ProductDTO;
+import com.rookie.webwatch.dto.ProductResponseDTO;
 import com.rookie.webwatch.entity.Category;
 import com.rookie.webwatch.entity.Product;
 
@@ -53,7 +54,8 @@ public class ProductControllerTest {
 
     @Test
     public void getAllTest() throws Exception {
-        when(productService.retrieveProducts()).thenReturn(this.productDTOS);
+        List<ProductResponseDTO> dtos = new ArrayList<>();
+        when(productService.retrieveProducts()).thenReturn(dtos);
         this.mockMvc.perform(get("/api/products"))
                 .andExpect(status().isOk())                                             // Mong muốn Server trả về status 200
                 .andExpect(jsonPath("$.size()", is(productDTOS.size())));

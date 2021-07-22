@@ -30,7 +30,7 @@ public class ProductController {
         List<ResponseDTO> listResponse = new ArrayList<>();
 
         try {
-            List<ProductDTO> productDTOS = productService.retrieveProducts();
+            List<ProductResponseDTO> productDTOS = productService.retrieveProducts();
             List list = Collections.synchronizedList(new ArrayList(productDTOS));
 
             if (listResponse.addAll(list) == true) {

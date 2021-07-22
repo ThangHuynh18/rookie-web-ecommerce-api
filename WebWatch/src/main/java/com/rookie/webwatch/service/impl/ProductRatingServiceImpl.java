@@ -45,7 +45,7 @@ public class ProductRatingServiceImpl implements ProductRatingService {
                 new ResourceNotFoundException("user not found for this id: "+ratingDTO.getUser_id()));
 
         Product product = productrepository.findById(ratingDTO.getProduct_id()).orElseThrow(() ->
-                new ResourceNotFoundException("status not found for this id: "+ratingDTO.getProduct_id()));
+                new ResourceNotFoundException("product not found for this id: "+ratingDTO.getProduct_id()));
 
         ProductRating rating = new RatingDTO().convertToEti(ratingDTO);
         rating.setProduct(product);

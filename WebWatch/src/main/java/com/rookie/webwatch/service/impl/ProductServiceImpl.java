@@ -30,9 +30,9 @@ public class ProductServiceImpl implements ProductService {
     private BrandRepository brandRepository;
 
     @Override
-    public List<ProductDTO> retrieveProducts() {
+    public List<ProductResponseDTO> retrieveProducts() {
         List<Product> products = productrepository.findAll();
-        return new ProductDTO().toListDto(products);
+        return new ProductResponseDTO().toListDto(products);
     }
 
     @Override
