@@ -73,6 +73,7 @@ public class ProductServiceImpl implements ProductService {
         } catch (Exception e){
             throw new BadRequestException("invalid request "+e.getMessage());
         }
+        System.out.println("aaaaa " + productDTO);
         return new ProductDTO().convertToDto(productrepository.findById(product.getProduct_id()).orElseThrow(()-> new ResourceNotFoundException(""+ErrorCode.FIND_PRODUCT_ERROR)));
     }
 

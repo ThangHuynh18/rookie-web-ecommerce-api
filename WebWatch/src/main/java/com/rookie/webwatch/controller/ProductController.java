@@ -101,6 +101,8 @@ public class ProductController {
     public ResponseEntity<ResponseDTO> createPro(@Valid @RequestBody ProductDTO dtoRequest) throws AddDataFail {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
+            //dtoRequest
+            System.out.println("aaaaaaaaaaaaaaaaaaaaa"+dtoRequest);
             ProductDTO dto = productService.saveProduct(dtoRequest);
             responseDTO.setData(dto);
             responseDTO.setSuccessCode(SuccessCode.ADD_PRODUCT_SUCCESS);

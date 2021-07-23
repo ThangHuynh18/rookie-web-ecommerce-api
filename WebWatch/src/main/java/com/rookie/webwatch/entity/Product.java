@@ -45,13 +45,13 @@ public class Product {
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = {CascadeType.REMOVE})
     private Set<ProductImage> productImages;
 
 //    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
 //    private Set<OrderDetail> orderDetails;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = {CascadeType.REMOVE})
     private Set<ProductRating> productRatings;
 
     public Product(String productName, float productPrice, String productDescription, long productQty, Category category) {
