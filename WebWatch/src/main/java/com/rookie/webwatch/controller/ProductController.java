@@ -5,22 +5,17 @@ import com.rookie.webwatch.dto.*;
 
 import com.rookie.webwatch.exception.*;
 
-import com.rookie.webwatch.service.FileService;
 import com.rookie.webwatch.service.ProductService;
 
 import com.rookie.webwatch.service.impl.CloudinaryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import java.io.IOException;
 import java.util.*;
-import java.util.logging.Logger;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -30,11 +25,7 @@ public class ProductController {
     private ProductService productService;
 
     @Autowired
-    private FileService fileService;
-
-    @Autowired
     private CloudinaryService cloudinaryService;
-    //static Logger logger = Logger.getLogger(ProductController.class.getName());
 
     @GetMapping("")
     public ResponseEntity<ResponseDTO> getAllProduct() throws GetDataFail {
@@ -153,13 +144,6 @@ public class ProductController {
         }
 
         return ResponseEntity.ok(responseDTO);
-    }
-
-
-    @PostMapping("/profile/pic")
-    public Object upload(@RequestParam("file") MultipartFile multipartFile) throws IOException {
-        //logger.info("HIT -/upload | File Name : {}", multipartFile.getOriginalFilename());
-        return fileService.upload(multipartFile);
     }
 
     @PostMapping("/upload")
