@@ -1,5 +1,6 @@
 package com.rookie.webwatch.service;
 
+import com.rookie.webwatch.dto.ProductDTO;
 import com.rookie.webwatch.dto.UserDetailDTO;
 
 import com.rookie.webwatch.exception.ResourceNotFoundException;
@@ -17,4 +18,6 @@ public interface UserDetailService {
     public Boolean deleteUserDetail(Long udetailId) throws ResourceNotFoundException;
 
     public UserDetailDTO updateUserDetail(Long id, UserDetailDTO detailDTO) throws ResourceNotFoundException;
+
+    public List<UserDetailDTO> findDetailByUser(Long userId) throws ResourceNotFoundException;
 }

@@ -1,9 +1,6 @@
 package com.rookie.webwatch.controller;
 
-import com.rookie.webwatch.dto.CategoryDTO;
-import com.rookie.webwatch.dto.ErrorCode;
-import com.rookie.webwatch.dto.ResponseDTO;
-import com.rookie.webwatch.dto.SuccessCode;
+import com.rookie.webwatch.dto.*;
 import com.rookie.webwatch.exception.*;
 import com.rookie.webwatch.service.CategoryService;
 
@@ -13,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -102,6 +100,24 @@ public class CategoryController {
             throw new DeleteDataFail(""+ErrorCode.DELETE_CATEGORY_ERROR);
         }
 
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @GetMapping("/parent/{category_id}")
+    public ResponseEntity<ResponseDTO> findCategoryByParent(@PathVariable("category_id") @NotBlank Long cateId) throws ResourceNotFoundException {
+        ResponseDTO responseDTO = new ResponseDTO();
+        List<CategoryDTO> categoryDTOS = categoryService.getCategoryByParent(cateId);
+        responseDTO.setData(categoryDTOS);
+        responseDTO.setSuccessCode(SuccessCode.FIND_PRODUCT_SUCCESS);
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @GetMapping("/parent")
+    public ResponseEntity<ResponseDTO> getParent() {
+        ResponseDTO responseDTO = new ResponseDTO();
+        List<CategoryDTO> categoryDTOS = categoryService.getParent();
+        responseDTO.setData(categoryDTOS);
+        responseDTO.setSuccessCode(SuccessCode.FIND_CATEGORY_SUCCESS);
         return ResponseEntity.ok(responseDTO);
     }
 }

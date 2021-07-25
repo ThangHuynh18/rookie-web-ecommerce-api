@@ -1,9 +1,6 @@
 package com.rookie.webwatch.controller;
 
-import com.rookie.webwatch.dto.ErrorCode;
-import com.rookie.webwatch.dto.ResponseDTO;
-import com.rookie.webwatch.dto.SuccessCode;
-import com.rookie.webwatch.dto.UserDetailDTO;
+import com.rookie.webwatch.dto.*;
 
 import com.rookie.webwatch.exception.*;
 import com.rookie.webwatch.service.UserDetailService;
@@ -12,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -97,6 +95,15 @@ public class UserDetailController {
             throw new DeleteDataFail(""+ErrorCode.DELETE_USER_DETAIL_ERROR);
         }
 
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @GetMapping("/user/{user_id}")
+    public ResponseEntity<ResponseDTO> findDetailByUser(@PathVariable("user_id") @NotBlank Long userId) throws ResourceNotFoundException {
+        ResponseDTO responseDTO = new ResponseDTO();
+        List<UserDetailDTO> detailDTOS = detailService.findDetailByUser(userId);
+        responseDTO.setData(detailDTOS);
+        responseDTO.setSuccessCode(SuccessCode.FIND_PRODUCT_SUCCESS);
         return ResponseEntity.ok(responseDTO);
     }
 }

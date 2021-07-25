@@ -3,8 +3,10 @@ package com.rookie.webwatch.service.impl;
 import com.rookie.webwatch.dto.CategoryDTO;
 
 import com.rookie.webwatch.dto.ErrorCode;
+import com.rookie.webwatch.dto.ProductDTO;
 import com.rookie.webwatch.entity.Category;
 
+import com.rookie.webwatch.entity.Product;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 import com.rookie.webwatch.repository.CategoryRepository;
 import com.rookie.webwatch.service.CategoryService;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,6 +65,32 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = new Category();
         category = categoryRepository.save(cateExist);
         return new CategoryDTO().convertToDto(category);
+    }
+
+    @Override
+    public List<CategoryDTO> getCategoryByParent(Long categoryId) throws ResourceNotFoundException {
+        Optional<Category> cateExist = categoryRepository.findById(categoryId);
+        if(!cateExist.isPresent()){
+            throw new ResourceNotFoundException(""+ ErrorCode.FIND_CATEGORY_ERROR);
+        }
+        Category category = cateExist.get();
+
+        List<Category> list = null;
+        list = categoryRepository.getCategoriesByParent(category);
+
+        List<CategoryDTO> categoryDTOS = new ArrayList<>();
+        categoryDTOS = new CategoryDTO().toListDto(list);
+        return categoryDTOS;
+    }
+
+    @Override
+    public List<CategoryDTO> getParent() {
+        List<Category> list = null;
+        list = categoryRepository.findAllParentCategory();
+
+        List<CategoryDTO> categoryDTOS = new ArrayList<>();
+        categoryDTOS = new CategoryDTO().toListDto(list);
+        return categoryDTOS;
     }
 
 }

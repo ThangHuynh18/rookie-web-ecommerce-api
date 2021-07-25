@@ -1,7 +1,11 @@
 package com.rookie.webwatch.service.impl;
 
+import com.rookie.webwatch.dto.ErrorCode;
+import com.rookie.webwatch.dto.ProductDTO;
 import com.rookie.webwatch.dto.UserDetailDTO;
 
+import com.rookie.webwatch.entity.Category;
+import com.rookie.webwatch.entity.Product;
 import com.rookie.webwatch.entity.User;
 import com.rookie.webwatch.entity.UserDetail;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
@@ -13,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,5 +73,21 @@ public class UserDetailServiceImpl implements UserDetailService {
         UserDetail detail = new UserDetail();
         detail = detailRepository.save(detailExist);
         return new UserDetailDTO().convertToDto(detail);
+    }
+
+    @Override
+    public List<UserDetailDTO> findDetailByUser(Long userId) throws ResourceNotFoundException {
+        Optional<User> userExist = userRepository.findById(userId);
+        if(!userExist.isPresent()){
+            throw new ResourceNotFoundException(""+ ErrorCode.FIND_USER_ERROR);
+        }
+        User user = userExist.get();
+
+        List<UserDetail> list = null;
+        list = detailRepository.getUserDetailByUser(user);
+
+        List<UserDetailDTO> detailDTOS = new ArrayList<>();
+        detailDTOS = new UserDetailDTO().toListDto(list);
+        return detailDTOS;
     }
 }

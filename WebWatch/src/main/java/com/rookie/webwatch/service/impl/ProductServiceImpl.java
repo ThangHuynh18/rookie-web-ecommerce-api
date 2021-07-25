@@ -4,12 +4,13 @@ import com.rookie.webwatch.dto.*;
 import com.rookie.webwatch.entity.*;
 import com.rookie.webwatch.exception.BadRequestException;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
+import com.rookie.webwatch.payload.ProductWithName;
 import com.rookie.webwatch.repository.*;
 import com.rookie.webwatch.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -28,6 +29,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private BrandRepository brandRepository;
+
+//    @Autowired
+//    private ProductSpecification productSpecification;
+//
+//    @Value("${pagination.page.size.default}")
+//    private Integer defaultPageSize;
 
     @Override
     public List<ProductResponseDTO> retrieveProducts() {
@@ -178,6 +185,28 @@ public class ProductServiceImpl implements ProductService {
         List<ProductDTO> productDTOS = new ArrayList<>();
         productDTOS = new ProductDTO().toListDto(list);
         return productDTOS;
+    }
+
+    @Override
+    public List<ProductDTO> searchProduct(String productName, Pageable pageable) {
+        Specification<Product> spec = Specification.where(new ProductWithName(productName));
+
+        List<Product> list = null;
+        Page<Product> products = productrepository.findAll(spec, pageable);
+        List<ProductDTO> productDTOS = new ArrayList<>();
+        productDTOS = new ProductDTO().toListDto(products.getContent());
+        return productDTOS;
+    }
+
+    @Override
+    public List<ProductDTO> searchProductByName(String name, Pageable pageable) {
+        List<Product> products = new ArrayList<>();
+        Page<Product> page;
+
+        page = productrepository.findByProductNameContaining(name, pageable);
+        products = page.getContent();
+
+        return new ProductDTO().toListDto(products);
     }
 
 }

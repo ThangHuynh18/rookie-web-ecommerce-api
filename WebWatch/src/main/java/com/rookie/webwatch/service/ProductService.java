@@ -9,6 +9,7 @@ import com.rookie.webwatch.entity.Product;
 import com.rookie.webwatch.exception.BadRequestException;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,4 +32,9 @@ public interface ProductService {
     public List<ProductDTO> findProductByCategory(Long categoryId) throws ResourceNotFoundException;
 
     public List<ProductDTO> findProductByBrand(Long brandId) throws ResourceNotFoundException;
+
+    public List<ProductDTO>searchProduct(String productName, Pageable pageable);
+
+    public List<ProductDTO> searchProductByName(String name, Pageable pageable);
+
 }

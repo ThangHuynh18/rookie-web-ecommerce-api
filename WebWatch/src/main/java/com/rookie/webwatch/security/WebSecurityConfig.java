@@ -7,6 +7,7 @@ import com.rookie.webwatch.security.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -84,8 +85,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers("/api/signin", "/api/signup", "/api/orders", "/api/products", "/api/products/{product_id}", "/api/products/category/{category_id}", "/api/products/brand/{brand_id}", "/api/categories", "/api/brands", "/api/ratings").permitAll()
+                .authorizeRequests().antMatchers("/api/signin", "/api/signup", "/api/orders", "/api/ratings").permitAll()
                 .antMatchers(AUTH_WHITELIST).permitAll()
+                .antMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/brands/**").permitAll()
                 .anyRequest()
                 .authenticated();
 

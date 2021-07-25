@@ -3,12 +3,20 @@ package com.rookie.webwatch.controller;
 
 import com.rookie.webwatch.dto.*;
 
+import com.rookie.webwatch.entity.Product;
 import com.rookie.webwatch.exception.*;
 
+import com.rookie.webwatch.payload.ProductWithName;
+import com.rookie.webwatch.repository.Productrepository;
 import com.rookie.webwatch.service.ProductService;
 
 import com.rookie.webwatch.service.impl.CloudinaryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +34,9 @@ public class ProductController {
 
     @Autowired
     private CloudinaryService cloudinaryService;
+
+    @Autowired
+    private Productrepository productrepository;
 
     @GetMapping("")
     public ResponseEntity<ResponseDTO> getAllProduct() throws GetDataFail {
@@ -47,7 +58,7 @@ public class ProductController {
     }
 
 
-    @GetMapping("/search")
+    @GetMapping("/searchcate")
     public ResponseEntity<ResponseDTO> findProductByCate(@RequestParam("category_id") @NotBlank Long categoryId,
                                                             PageDTO pageDTO
     ) throws ResourceNotFoundException {
@@ -150,5 +161,60 @@ public class ProductController {
     public String uploadFile(@RequestParam("file") MultipartFile file) {
         String url = cloudinaryService.uploadFile(file);
         return url;
+    }
+
+    @GetMapping("/searchproduct")
+    public ResponseEntity<ResponseDTO> findProductExact(
+            @RequestParam("productName") String productName, Pageable pageable) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        List<ProductDTO> productDTOS = productService.searchProduct(productName, pageable);
+        responseDTO.setData(productDTOS);
+        responseDTO.setSuccessCode(SuccessCode.FIND_PRODUCT_SUCCESS);
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ResponseDTO> findProductByName(
+            @RequestParam("keyword") String productName, Pageable pageable) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        List<ProductDTO> productDTOS = productService.searchProductByName(productName, pageable);
+        responseDTO.setData(productDTOS);
+        responseDTO.setSuccessCode(SuccessCode.FIND_PRODUCT_SUCCESS);
+        return ResponseEntity.ok(responseDTO);
+    }
+
+
+    @GetMapping("/pagination")
+    public ResponseEntity<Map<String, Object>> getAllProducts(
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size
+    ) {
+        try {
+            int length = 0;
+            List<Product> products = new ArrayList<Product>();
+            Pageable paging = PageRequest.of(page, size);
+
+            Page<Product> pagePros;
+            if (search == null){
+                pagePros  = productrepository.findAll(paging);
+            } else {
+                pagePros = productrepository.findByProductNameContaining(search, paging);
+                length = search.length();
+            }
+            products = pagePros.getContent();
+            List<ProductDTO> productDTOS = new ProductDTO().toListDto(products);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("products", productDTOS);
+            response.put("currentPage", pagePros.getNumber());
+            response.put("totalItems", pagePros.getTotalElements());
+            response.put("totalPages", pagePros.getTotalPages());
+            response.put("length", length);
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

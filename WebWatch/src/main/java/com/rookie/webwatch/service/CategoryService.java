@@ -20,5 +20,7 @@ public interface CategoryService {
 
     public CategoryDTO updateCategory(Long categoryId,CategoryDTO categoryDTO) throws ResourceNotFoundException;
 
+    public List<CategoryDTO> getParent();
 
+    public List<CategoryDTO> getCategoryByParent(Long categoryId) throws ResourceNotFoundException;
 }
