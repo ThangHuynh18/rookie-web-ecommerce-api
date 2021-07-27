@@ -71,15 +71,16 @@ public class UserDetailController {
     public ResponseEntity<ResponseDTO> updateUserDetail(@PathVariable(value = "udetail_id") Long udetailId,
                                            @Valid @RequestBody UserDetailDTO detailDTO) throws UpdateDataFail {
         ResponseDTO responseDTO = new ResponseDTO();
-        try {
-            UserDetailDTO updateDetail = detailService.updateUserDetail(udetailId, detailDTO);
 
+        UserDetailDTO updateDetail = new UserDetailDTO();
+        try {
+            updateDetail = detailService.updateUserDetail(udetailId, detailDTO);
             responseDTO.setData(updateDetail);
             responseDTO.setSuccessCode(SuccessCode.UPDATE_USER_DETAIL_SUCCESS);
+
         } catch (Exception e){
             throw new UpdateDataFail(""+ErrorCode.UPDATE_USER_DETAIL_ERROR);
         }
-
         return ResponseEntity.ok(responseDTO);
     }
 
@@ -103,7 +104,7 @@ public class UserDetailController {
         ResponseDTO responseDTO = new ResponseDTO();
         List<UserDetailDTO> detailDTOS = detailService.findDetailByUser(userId);
         responseDTO.setData(detailDTOS);
-        responseDTO.setSuccessCode(SuccessCode.FIND_PRODUCT_SUCCESS);
+        responseDTO.setSuccessCode(SuccessCode.FIND_USER_DETAIL_SUCCESS);
         return ResponseEntity.ok(responseDTO);
     }
 }

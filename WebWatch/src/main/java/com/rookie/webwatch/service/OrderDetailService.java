@@ -2,6 +2,7 @@ package com.rookie.webwatch.service;
 
 import com.rookie.webwatch.dto.OrderDetailDTO;
 
+import com.rookie.webwatch.dto.OrderDetailResponseDTO;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public interface OrderDetailService {
     public Boolean deleteOrderDetail(Long detailId) throws ResourceNotFoundException;
 
     public OrderDetailDTO updateOrderDetail(Long id, OrderDetailDTO detailDTO) throws ResourceNotFoundException;
+
+    public List<OrderDetailResponseDTO> findDetailByOrder(Long orderId) throws ResourceNotFoundException;
 }

@@ -37,6 +37,8 @@ public class UserDetailServiceImpl implements UserDetailService {
         return new UserDetailDTO().toListDto(userDetails);
     }
 
+
+
     @Override
     public Optional<UserDetailDTO> getUserDetail(Long udetailId) throws ResourceNotFoundException {
         UserDetail detail = detailRepository.findById(udetailId).orElseThrow(() -> new ResourceNotFoundException("user detail not found for this id: "+udetailId));
@@ -51,7 +53,6 @@ public class UserDetailServiceImpl implements UserDetailService {
         UserDetail detail = new UserDetailDTO().convertToEti(detailDTO);
 
         detail.setUser(user);
-
         return new UserDetailDTO().convertToDto(detailRepository.save(detail));
     }
 
@@ -72,6 +73,7 @@ public class UserDetailServiceImpl implements UserDetailService {
 
         UserDetail detail = new UserDetail();
         detail = detailRepository.save(detailExist);
+
         return new UserDetailDTO().convertToDto(detail);
     }
 

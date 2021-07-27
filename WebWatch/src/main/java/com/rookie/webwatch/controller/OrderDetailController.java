@@ -1,10 +1,7 @@
 package com.rookie.webwatch.controller;
 
-import com.rookie.webwatch.dto.ErrorCode;
-import com.rookie.webwatch.dto.OrderDetailDTO;
+import com.rookie.webwatch.dto.*;
 
-import com.rookie.webwatch.dto.ResponseDTO;
-import com.rookie.webwatch.dto.SuccessCode;
 import com.rookie.webwatch.exception.*;
 import com.rookie.webwatch.service.OrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -97,6 +95,15 @@ public class OrderDetailController {
             throw new DeleteDataFail(""+ErrorCode.DELETE_ORDER_DETAIL_ERROR);
         }
 
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @GetMapping("/order/{order_id}")
+    public ResponseEntity<ResponseDTO> findDetailByOrder(@PathVariable("order_id") @NotBlank Long orderId) throws ResourceNotFoundException {
+        ResponseDTO responseDTO = new ResponseDTO();
+        List<OrderDetailResponseDTO> detailDTOS = detailService.findDetailByOrder(orderId);
+        responseDTO.setData(detailDTOS);
+        responseDTO.setSuccessCode(SuccessCode.FIND_ORDER_DETAIL_SUCCESS);
         return ResponseEntity.ok(responseDTO);
     }
 }

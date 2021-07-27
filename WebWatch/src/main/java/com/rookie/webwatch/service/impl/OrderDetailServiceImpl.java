@@ -1,7 +1,10 @@
 package com.rookie.webwatch.service.impl;
 
+import com.rookie.webwatch.dto.ErrorCode;
 import com.rookie.webwatch.dto.OrderDetailDTO;
 
+import com.rookie.webwatch.dto.OrderDetailResponseDTO;
+import com.rookie.webwatch.dto.UserDetailDTO;
 import com.rookie.webwatch.entity.*;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 import com.rookie.webwatch.repository.OrderDetailRepository;
@@ -12,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,5 +77,21 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         OrderDetail detail = new OrderDetail();
         detail = detailRepository.save(detailExist);
         return new OrderDetailDTO().convertToDto(detail);
+    }
+
+    @Override
+    public List<OrderDetailResponseDTO> findDetailByOrder(Long orderId) throws ResourceNotFoundException {
+        Optional<Order> orderExist = orderRepository.findById(orderId);
+        if(!orderExist.isPresent()){
+            throw new ResourceNotFoundException(""+ ErrorCode.FIND_ORDER_ERROR);
+        }
+        Order order = orderExist.get();
+
+        List<OrderDetail> list = null;
+        list = detailRepository.findOrderDetailsByOrder(order);
+
+        List<OrderDetailResponseDTO> detailDTOS = new ArrayList<>();
+        detailDTOS = new OrderDetailResponseDTO().toListDto(list);
+        return detailDTOS;
     }
 }
