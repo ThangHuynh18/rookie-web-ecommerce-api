@@ -3,16 +3,21 @@ package com.rookie.webwatch.controller;
 
 import com.rookie.webwatch.dto.*;
 
+import com.rookie.webwatch.entity.Brand;
+import com.rookie.webwatch.entity.Category;
 import com.rookie.webwatch.entity.Product;
 import com.rookie.webwatch.exception.*;
 
 import com.rookie.webwatch.payload.ProductWithName;
+import com.rookie.webwatch.repository.BrandRepository;
+import com.rookie.webwatch.repository.CategoryRepository;
 import com.rookie.webwatch.repository.Productrepository;
 import com.rookie.webwatch.service.ProductService;
 
 import com.rookie.webwatch.service.impl.CloudinaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -37,6 +42,12 @@ public class ProductController {
 
     @Autowired
     private Productrepository productrepository;
+
+    @Autowired
+    private BrandRepository brandRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @GetMapping("")
     public ResponseEntity<ResponseDTO> getAllProduct() throws GetDataFail {
@@ -187,30 +198,24 @@ public class ProductController {
     @GetMapping("/pagination")
     public ResponseEntity<Map<String, Object>> getAllProducts(
             @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "-1") Long cateId,
+            @RequestParam(defaultValue = "-1")Long brandId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "8") int size
     ) {
         try {
-            int length = 0;
             List<Product> products = new ArrayList<Product>();
             Pageable paging = PageRequest.of(page, size);
+            Page<Product> pagePros = productService.filterProduct(search, cateId, brandId,paging);
 
-            Page<Product> pagePros;
-            if (search == null){
-                pagePros  = productrepository.findAll(paging);
-            } else {
-                pagePros = productrepository.findByProductNameContaining(search, paging);
-                length = search.length();
-            }
             products = pagePros.getContent();
-            List<ProductDTO> productDTOS = new ProductDTO().toListDto(products);
+            List<ProductResponseDTO> productDTOS = new ProductResponseDTO().toListDto(products);
 
             Map<String, Object> response = new HashMap<>();
             response.put("products", productDTOS);
             response.put("currentPage", pagePros.getNumber());
             response.put("totalItems", pagePros.getTotalElements());
             response.put("totalPages", pagePros.getTotalPages());
-            response.put("length", length);
 
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {

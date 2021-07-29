@@ -37,4 +37,6 @@ public interface ProductService {
 
     public List<ProductDTO> searchProductByName(String name, Pageable pageable);
 
+    public Page<Product> filterProduct(String search, Long cateId, Long brandId, Pageable pageable);
+
 }

@@ -209,4 +209,26 @@ public class ProductServiceImpl implements ProductService {
         return new ProductDTO().toListDto(products);
     }
 
+    @Override
+    public Page<Product> filterProduct(String search, Long cateId, Long brandId, Pageable paging) {
+        Page<Product> pagePros = null;
+        Optional<Brand> brandExist = brandRepository.findById(brandId);
+        Optional<Category> cateExist = categoryRepository.findById(cateId);
+
+        if (search == null && cateId == -1 && brandId == -1){
+            pagePros  = productrepository.findAll(paging);
+        } else if(search != null && cateId == -1 && brandId == -1){
+            pagePros = productrepository.findByProductNameContaining(search, paging);
+        } else if(search != null && cateId != -1 && brandId != -1){
+            pagePros = productrepository.findAllByProductNameContainingAndCategoryAndBrand(search, cateExist.get(), brandExist.get(), paging);
+        }else if(search == null && brandId == -1  ){
+            pagePros = productrepository.findAllByCategory(cateExist.get(), paging);
+        } else if(search == null && cateId == -1){
+            pagePros = productrepository.findAllByBrand(brandExist.get(), paging);
+        } else if(search == null && cateId != -1 && brandId != -1 ) {
+            pagePros = productrepository.findAllByCategoryAndBrand(cateExist.get(), brandExist.get(), paging);
+        }
+        return pagePros;
+    }
+
 }
