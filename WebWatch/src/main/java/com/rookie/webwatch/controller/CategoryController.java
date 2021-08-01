@@ -72,6 +72,20 @@ public class CategoryController {
         return ResponseEntity.ok(responseDTO);
     }
 
+    @PostMapping("/parent")
+    public ResponseEntity<ResponseDTO> createParent(@Valid @RequestBody CategoryDTO categoryDTO) throws AddDataFail {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            CategoryDTO dto = categoryService.createParent(categoryDTO);
+            responseDTO.setData(dto);
+            responseDTO.setSuccessCode(SuccessCode.ADD_CATEGORY_SUCCESS);
+        } catch (Exception e){
+            throw new AddDataFail(""+ErrorCode.ADD_CATEGORY_ERROR);
+        }
+
+        return ResponseEntity.ok(responseDTO);
+    }
+
     //update
     @PutMapping("/category/{category_id}")
     public ResponseEntity<ResponseDTO> updateCate(@PathVariable(value = "category_id") Long categoryId, @Valid @RequestBody CategoryDTO categoryDTO) throws UpdateDataFail {

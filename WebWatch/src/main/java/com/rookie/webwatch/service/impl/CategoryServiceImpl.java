@@ -84,6 +84,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public CategoryDTO createParent(CategoryDTO categoryDTO) {
+        Category category = new CategoryDTO().convertToEti(categoryDTO);
+        category.setParent(category);
+        return new CategoryDTO().convertToDto(categoryRepository.save(category));
+    }
+
+    @Override
     public List<CategoryDTO> getParent() {
         List<Category> list = null;
         list = categoryRepository.findAllParentCategory();

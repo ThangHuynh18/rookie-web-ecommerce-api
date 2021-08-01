@@ -227,6 +227,10 @@ public class ProductServiceImpl implements ProductService {
             pagePros = productrepository.findAllByBrand(brandExist.get(), paging);
         } else if(search == null && cateId != -1 && brandId != -1 ) {
             pagePros = productrepository.findAllByCategoryAndBrand(cateExist.get(), brandExist.get(), paging);
+        }else if(search != null && cateId != -1 && brandId == -1 ) {
+            pagePros = productrepository.findAllByProductNameContainingAndCategory(search, cateExist.get(), paging);
+        }else if(search != null && cateId == -1 && brandId != -1 ) {
+            pagePros = productrepository.findAllByProductNameContainingAndBrand(search, brandExist.get(), paging);
         }
         return pagePros;
     }
