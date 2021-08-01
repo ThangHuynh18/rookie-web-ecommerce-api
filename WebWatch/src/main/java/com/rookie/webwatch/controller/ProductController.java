@@ -3,24 +3,18 @@ package com.rookie.webwatch.controller;
 
 import com.rookie.webwatch.dto.*;
 
-import com.rookie.webwatch.entity.Brand;
-import com.rookie.webwatch.entity.Category;
 import com.rookie.webwatch.entity.Product;
 import com.rookie.webwatch.exception.*;
 
-import com.rookie.webwatch.payload.ProductWithName;
-import com.rookie.webwatch.repository.BrandRepository;
-import com.rookie.webwatch.repository.CategoryRepository;
-import com.rookie.webwatch.repository.Productrepository;
 import com.rookie.webwatch.service.ProductService;
 
 import com.rookie.webwatch.service.impl.CloudinaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,15 +33,6 @@ public class ProductController {
 
     @Autowired
     private CloudinaryService cloudinaryService;
-
-    @Autowired
-    private Productrepository productrepository;
-
-    @Autowired
-    private BrandRepository brandRepository;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
 
     @GetMapping("")
     public ResponseEntity<ResponseDTO> getAllProduct() throws GetDataFail {
@@ -201,7 +186,7 @@ public class ProductController {
             @RequestParam(defaultValue = "-1") Long cateId,
             @RequestParam(defaultValue = "-1")Long brandId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "8") int size
+            @RequestParam(defaultValue = "6") int size
     ) {
         try {
             List<Product> products = new ArrayList<Product>();
