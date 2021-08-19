@@ -21,6 +21,9 @@ public class ProductRating {
     @Column(name = "rating")
     private long ratingNumber;
 
+    @Column(name = "comment")
+    private String comment;
+
     @ManyToOne(fetch = FetchType.LAZY )
     @JoinColumn(name = "user_id")
     private User user;

@@ -96,7 +96,7 @@ public class ProductController {
     public ResponseEntity<ResponseDTO> getPro(@PathVariable("product_id") Long id) throws ResourceNotFoundException {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            Optional<ProductDTO> productDTO = productService.getProduct(id);
+            Optional<ProductResponseDTO> productDTO = productService.getProduct(id);
 
             responseDTO.setData(productDTO);
             responseDTO.setSuccessCode(SuccessCode.FIND_PRODUCT_SUCCESS);

@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-//@Transactional
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
@@ -26,6 +25,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductImageRepository imageRepository;
+
+    @Autowired
+    private ProductRatingRepository ratingRepository;
 
     @Autowired
     private BrandRepository brandRepository;
@@ -43,9 +45,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Optional<ProductDTO> getProduct(Long productId) throws ResourceNotFoundException {
+    public Optional<ProductResponseDTO> getProduct(Long productId) throws ResourceNotFoundException {
         Product product = productrepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException(""+ErrorCode.FIND_PRODUCT_ERROR));
-        return Optional.of(new ProductDTO().convertToDto(product));
+        return Optional.of(new ProductResponseDTO().convertToDto(product));
     }
 
     @Override
@@ -60,15 +62,19 @@ public class ProductServiceImpl implements ProductService {
                 new ResourceNotFoundException(""+ErrorCode.FIND_BRAND_ERROR));
         product.setBrand(brand);
 
+        product.setRatingTB(0);
         try {
             product = productrepository.save(product);
 
 //        List<ProductRating> ratings = new RatingDTO().toListEntity(productDTO.getRatingDTOS());
-//        Product productRa = product;
-//        ratings.forEach(r -> {
-//            r.setProduct(productRa);
-//            ratingRepository.save(r);
-//        });
+            List<ProductRating> ratings = new ArrayList<>();
+        Product productRa = product;
+            ratings.forEach(r -> {
+                r.setRatingNumber(0);
+                r.setProduct(productRa);
+                ratingRepository.save(r);
+            });
+
 
             List<ProductImage> images = new ImageDTO().toListEntity(productDTO.getImageDTOS());
             Product productFinal = product;

@@ -35,10 +35,19 @@ public class ProductResponseDTO {
 
     private List<ImageDTO> imageDTOS;
 
-    private List<RatingDTO> ratingDTOS;
+    private List<RatingResponseDTO> ratingDTOS;
     //private Set<Long> productRatings;
+    private float ratingTB;
 
 
+    public ProductResponseDTO(String productName, float productPrice, String productDescription, long productQty, String categoryName, String brandName) {
+        this.productName = productName;
+        this.productPrice = productPrice;
+        this.productDescription = productDescription;
+        this.productQty = productQty;
+        this.categoryName = categoryName;
+        this.brandName = brandName;
+    }
 
     public ProductResponseDTO convertToDto(Product product) {
         ProductResponseDTO productDTO = new ProductResponseDTO();
@@ -60,14 +69,24 @@ public class ProductResponseDTO {
         productDTO.setImageDTOS(dtos);
 
 
-        List<RatingDTO> ratings = new ArrayList<>();
+        List<RatingResponseDTO> ratings = new ArrayList<>();
         if(product.getProductRatings()!=null) {
             product.getProductRatings().forEach(rating -> {
-                ratings.add(new RatingDTO().convertToDto(rating));
+                ratings.add(new RatingResponseDTO().convertToDto(rating));
             });
         }
         productDTO.setRatingDTOS(ratings);
+        float total = 0;
+        float ratingTB = 0;
+        for(int i=0; i<ratings.size(); i++){
 
+            total += ratings.get(i).ratingNumber;
+        }
+        if(ratings.size() != 0){
+            ratingTB = total/ratings.size();
+
+        }
+        productDTO.setRatingTB(ratingTB);
         return productDTO;
     }
 

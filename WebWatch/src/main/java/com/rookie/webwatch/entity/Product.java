@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.util.Set;
@@ -36,6 +37,11 @@ public class Product {
     @Column(name = "product_qty")
     @Min(value = 1)
     private long productQty;
+
+    @Column(name = "product_ratingTB")
+    @Min(value = 0)
+    @Max(value = 5)
+    private float ratingTB;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")

@@ -20,7 +20,7 @@ public class UserDetail {
     private long udetail_id;
 
     @Column(name = "udetail_phone")
-    @NotBlank
+//    @NotBlank
     private long udetailPhone;
 
     @Column(name = "udetail_address")

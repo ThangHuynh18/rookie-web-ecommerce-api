@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -13,7 +15,10 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 public class RatingDTO {
+    @Min(value = 0)
+    @Max(value = 5)
     private long ratingNumber;
+    private String comment;
     private long user_id;
     private long product_id;
 
@@ -21,6 +26,7 @@ public class RatingDTO {
     public RatingDTO convertToDto(ProductRating rating) {
         RatingDTO ratingDTO = new RatingDTO();
         ratingDTO.setRatingNumber(rating.getRatingNumber());
+        ratingDTO.setComment(rating.getComment());
         ratingDTO.setUser_id(rating.getUser().getUser_id());
         ratingDTO.setProduct_id(rating.getProduct().getProduct_id());
 
@@ -31,6 +37,7 @@ public class RatingDTO {
         ProductRating rating = new ProductRating();
 
         rating.setRatingNumber(ratingDTO.getRatingNumber());
+        rating.setComment(ratingDTO.getComment());
 
         return rating;
     }

@@ -37,7 +37,7 @@ public class ProductDTO {
 
     private List<ImageDTO> imageDTOS;
 
-    //private List<RatingDTO> ratingDTOS;
+    private List<RatingDTO> ratingDTOS;
     //private Set<Long> productRatings;
 
 
@@ -69,11 +69,15 @@ public class ProductDTO {
         productDTO.setImageDTOS(listDto);
 
 
-//        List<RatingDTO> ratings = new ArrayList<>();
-//        product.getProductRatings().forEach(rating -> {
-//            ratings.add(new RatingDTO().convertToDto(rating));
-//        });
-//        productDTO.setRatingDTOS(ratings);
+        List<RatingDTO> ratings = new ArrayList<>();
+        if(product.getProductRatings()!=null) {
+            product.getProductRatings().forEach(rating -> {
+                ratings.add(new RatingDTO().convertToDto(rating));
+            });
+        }
+        productDTO.setRatingDTOS(ratings);
+
+
 
         return productDTO;
     }
@@ -86,6 +90,7 @@ public class ProductDTO {
         product.setProductDescription(productDTO.getProductDescription());
         product.setProductQty(productDTO.getProductQty());
 
+        //product.setRatingTB(0);
         return product;
     }
 

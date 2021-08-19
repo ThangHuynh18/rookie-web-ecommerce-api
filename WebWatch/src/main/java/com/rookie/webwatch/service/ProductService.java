@@ -17,7 +17,7 @@ import java.util.Optional;
 public interface ProductService {
     public List<ProductResponseDTO> retrieveProducts();
 
-    public Optional<ProductDTO> getProduct(Long productId) throws ResourceNotFoundException;
+    public Optional<ProductResponseDTO> getProduct(Long productId) throws ResourceNotFoundException;
 
     public ProductDTO saveProduct(ProductDTO productDTO) throws ResourceNotFoundException, BadRequestException;
 

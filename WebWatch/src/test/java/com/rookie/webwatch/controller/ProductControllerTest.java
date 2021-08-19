@@ -64,7 +64,7 @@ public class ProductControllerTest {
 
     @Test
     public void givenProductId_whenGetUser() throws Exception {
-        ProductDTO productDTO = new ProductDTO("test6", 342424, "test description6", 50, 1L);
+        ProductResponseDTO productDTO = new ProductResponseDTO("test6", 342424, "test description6", 50, "category 1", "brand 1");
 
         given(productService.getProduct(productDTO.getProduct_id())).willReturn(Optional.of(productDTO));
 
