@@ -115,8 +115,21 @@ public class ProductServiceImpl implements ProductService {
         proExist.setCategory(category);
         proExist.setBrand(brand);
 
+        proExist = productrepository.save(proExist);
+        Product proUpdate = proExist;
+
+        Set<ProductImage> images = (Set<ProductImage>) new ImageDTO().toListEntity(productDTO.getImageDTOS());
+        imageRepository.deleteAllByProduct(proExist);
+        images.forEach(i -> {
+            i.setProduct(proUpdate);
+
+            imageRepository.save(i);
+        });
+        proUpdate.setProductImages(images);
+        //proExist.setRatingTB(proExist.getRatingTB());
+
         Product product = new Product();
-        product = productrepository.save(proExist);
+        product = productrepository.save(proUpdate);
         return new ProductDTO().convertToDto(product);
     }
 
@@ -237,6 +250,40 @@ public class ProductServiceImpl implements ProductService {
             pagePros = productrepository.findAllByProductNameContainingAndCategory(search, cateExist.get(), paging);
         }else if(search != null && cateId == -1 && brandId != -1 ) {
             pagePros = productrepository.findAllByProductNameContainingAndBrand(search, brandExist.get(), paging);
+        }
+        return pagePros;
+    }
+
+    @Override
+    public Page<Product> sortProductByPriceAsc(Pageable pageable) {
+        Page<Product> pagePros = null;
+        pagePros = productrepository.findAllByOrderByProductPriceAsc(pageable);
+        return pagePros;
+    }
+
+    @Override
+    public Page<Product> sortProductByPriceDesc(Pageable pageable) {
+        Page<Product> pagePros = null;
+        pagePros = productrepository.findAllByOrderByProductPriceDesc(pageable);
+        return pagePros;
+    }
+
+    @Override
+    public Page<Product> sortProductByRatingDesc(Pageable pageable) {
+        Page<Product> pagePros = null;
+        pagePros = productrepository.findAllByOrderByRatingTBDesc(pageable);
+        return pagePros;
+    }
+
+    @Override
+    public Page<Product> sortProductByName(String sort, Pageable pageable) {
+        Page<Product> pagePros = null;
+        if(sort.equals("asc")){
+            pagePros = productrepository.findAllByOrderByProductNameAsc(pageable);
+        } else if (sort.equals("desc")){
+            pagePros = productrepository.findAllByOrderByProductNameDesc(pageable);
+        } else if(sort.equals("hot")){
+            pagePros = productrepository.findAllByOrderByRatingTBDesc(pageable);
         }
         return pagePros;
     }

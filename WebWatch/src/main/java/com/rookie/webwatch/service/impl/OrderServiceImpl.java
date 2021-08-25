@@ -2,6 +2,7 @@ package com.rookie.webwatch.service.impl;
 
 import com.rookie.webwatch.dto.ErrorCode;
 import com.rookie.webwatch.dto.OrderDTO;
+import com.rookie.webwatch.dto.OrderResponseDTO;
 import com.rookie.webwatch.dto.ProductDTO;
 import com.rookie.webwatch.entity.*;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
@@ -32,11 +33,14 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private StatusRepository statusRepository;
 
+    @Autowired
+    private Productrepository productrepository;
+
     @Override
-    public List<OrderDTO> retrieveOrders() {
+    public List<OrderResponseDTO> retrieveOrders() {
         List<Order> orders = orderRepository.findAll();
 
-        return new OrderDTO().toListDto(orders);
+        return new OrderResponseDTO().toListDto(orders);
     }
 
     @Override
@@ -87,7 +91,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDTO> findOrderByUser(Long userId) throws ResourceNotFoundException {
+    public List<OrderResponseDTO> findOrderByUser(Long userId) throws ResourceNotFoundException {
         Optional<User> userExist = userRepository.findById(userId);
         if(!userExist.isPresent()){
             throw new ResourceNotFoundException(""+ ErrorCode.FIND_USER_ERROR);
@@ -97,8 +101,37 @@ public class OrderServiceImpl implements OrderService {
         List<Order> list = null;
         list = orderRepository.getOrderByUser(user);
 
-        List<OrderDTO> orderDTOS = new ArrayList<>();
-        orderDTOS = new OrderDTO().toListDto(list);
+        List<OrderResponseDTO> orderDTOS = new ArrayList<>();
+        orderDTOS = new OrderResponseDTO().toListDto(list);
         return orderDTOS;
+    }
+
+    @Override
+    public OrderDTO updateStatusOrder(Long orderId, String status) throws ResourceNotFoundException {
+        Order orderExist = orderRepository.findById(orderId).orElseThrow(() ->
+                new ResourceNotFoundException("order not found for this id: "+orderId));
+
+        if(status.equals("waiting confirm")){
+            Status stt = statusRepository.findAllByStatusName(status);
+            orderExist.setStatus(stt);
+        } else if(status.equals("confirmed")){
+            Status stt = statusRepository.findAllByStatusName(status);
+            orderExist.setStatus(stt);
+        } else if(status.equals("cancel")) {
+            Status stt = statusRepository.findAllByStatusName(status);
+            orderExist.setStatus(stt);
+            orderExist.getOrderDetails().forEach(i -> {
+                Product product = i.getProduct();
+                product.setProductQty(product.getProductQty() + i.getDetailQty());
+                productrepository.save(product);
+            });
+        } else if(status.equals("complete")) {
+            Status stt = statusRepository.findAllByStatusName(status);
+            orderExist.setStatus(stt);
+        }
+
+        Order order = new Order();
+        order = orderRepository.save(orderExist);
+        return new OrderDTO().convertToDto(order);
     }
 }

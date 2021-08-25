@@ -39,4 +39,12 @@ public interface ProductService {
 
     public Page<Product> filterProduct(String search, Long cateId, Long brandId, Pageable pageable);
 
+    public Page<Product> sortProductByPriceAsc(Pageable pageable);
+
+    public Page<Product> sortProductByPriceDesc(Pageable pageable);
+
+    public Page<Product> sortProductByRatingDesc(Pageable pageable);
+
+    public Page<Product> sortProductByName(String sort, Pageable pageable);
+
 }

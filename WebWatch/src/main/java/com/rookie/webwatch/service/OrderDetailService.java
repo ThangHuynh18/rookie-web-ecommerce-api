@@ -20,4 +20,6 @@ public interface OrderDetailService {
     public OrderDetailDTO updateOrderDetail(Long id, OrderDetailDTO detailDTO) throws ResourceNotFoundException;
 
     public List<OrderDetailResponseDTO> findDetailByOrder(Long orderId) throws ResourceNotFoundException;
+
+    public OrderDetailDTO restoreQty(Long productId) throws ResourceNotFoundException;
 }

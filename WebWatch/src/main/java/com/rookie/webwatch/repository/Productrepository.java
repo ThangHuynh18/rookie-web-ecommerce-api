@@ -27,4 +27,11 @@ public interface Productrepository extends JpaRepository<Product, Long>, JpaSpec
     Page<Product> findAllByProductNameContainingAndCategoryAndBrand(String name,Category category, Brand brand, Pageable pageable);
     Page<Product> findAllByProductNameContainingAndCategory(String name, Category category, Pageable pageable);
     Page<Product> findAllByProductNameContainingAndBrand(String name, Brand brand, Pageable pageable);
+
+    Page<Product> findAllByOrderByProductPriceAsc(Pageable pageable);
+    Page<Product> findAllByOrderByProductPriceDesc(Pageable pageable);
+    Page<Product> findAllByOrderByRatingTBDesc(Pageable pageable);
+    Page<Product> findAllByOrderByProductNameAsc(Pageable pageable);
+    Page<Product> findAllByOrderByProductNameDesc(Pageable pageable);
+
 }

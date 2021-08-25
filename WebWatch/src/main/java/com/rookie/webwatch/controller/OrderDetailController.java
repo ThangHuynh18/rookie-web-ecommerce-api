@@ -106,4 +106,19 @@ public class OrderDetailController {
         responseDTO.setSuccessCode(SuccessCode.FIND_ORDER_DETAIL_SUCCESS);
         return ResponseEntity.ok(responseDTO);
     }
+
+    @PutMapping("/odetail/qty/{product_id}")
+    public ResponseEntity<ResponseDTO> restoreQty(@PathVariable(value = "product_id") Long productId) throws UpdateDataFail {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            OrderDetailDTO updateDetail = detailService.restoreQty(productId);
+
+            responseDTO.setData(updateDetail);
+            responseDTO.setSuccessCode(SuccessCode.UPDATE_ORDER_DETAIL_SUCCESS);
+        } catch (Exception e){
+            throw new UpdateDataFail(""+ErrorCode.UPDATE_ORDER_DETAIL_ERROR);
+        }
+
+        return ResponseEntity.ok(responseDTO);
+    }
 }

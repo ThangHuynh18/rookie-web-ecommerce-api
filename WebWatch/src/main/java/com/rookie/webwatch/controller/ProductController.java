@@ -207,4 +207,105 @@ public class ProductController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/pagination/sort/priceasc")
+    public ResponseEntity<Map<String, Object>> getProductsSortByPriceAsc(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "6") int size
+    ) {
+        try {
+            List<Product> products = new ArrayList<Product>();
+            Pageable paging = PageRequest.of(page, size);
+            Page<Product> pagePros = productService.sortProductByPriceAsc(paging);
+
+            products = pagePros.getContent();
+            List<ProductResponseDTO> productDTOS = new ProductResponseDTO().toListDto(products);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("products", productDTOS);
+            response.put("currentPage", pagePros.getNumber());
+            response.put("totalItems", pagePros.getTotalElements());
+            response.put("totalPages", pagePros.getTotalPages());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/pagination/sort/pricedesc")
+    public ResponseEntity<Map<String, Object>> getProductsSortByPriceDesc(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "6") int size
+    ) {
+        try {
+            List<Product> products = new ArrayList<Product>();
+            Pageable paging = PageRequest.of(page, size);
+            Page<Product> pagePros = productService.sortProductByPriceDesc(paging);
+
+            products = pagePros.getContent();
+            List<ProductResponseDTO> productDTOS = new ProductResponseDTO().toListDto(products);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("products", productDTOS);
+            response.put("currentPage", pagePros.getNumber());
+            response.put("totalItems", pagePros.getTotalElements());
+            response.put("totalPages", pagePros.getTotalPages());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/pagination/sort/name")
+    public ResponseEntity<Map<String, Object>> getProductsSortByProductName(
+            @RequestParam String sort,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "6") int size
+    ) {
+        try {
+            List<Product> products = new ArrayList<Product>();
+            Pageable paging = PageRequest.of(page, size);
+            Page<Product> pagePros = productService.sortProductByName(sort, paging);
+
+            products = pagePros.getContent();
+            List<ProductResponseDTO> productDTOS = new ProductResponseDTO().toListDto(products);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("products", productDTOS);
+            response.put("currentPage", pagePros.getNumber());
+            response.put("totalItems", pagePros.getTotalElements());
+            response.put("totalPages", pagePros.getTotalPages());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/pagination/sort/ratingdesc")
+    public ResponseEntity<Map<String, Object>> getProductsSortByRatingDesc(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "6") int size
+    ) {
+        try {
+            List<Product> products = new ArrayList<Product>();
+            Pageable paging = PageRequest.of(page, size);
+            Page<Product> pagePros = productService.sortProductByRatingDesc(paging);
+
+            products = pagePros.getContent();
+            List<ProductResponseDTO> productDTOS = new ProductResponseDTO().toListDto(products);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("products", productDTOS);
+            response.put("currentPage", pagePros.getNumber());
+            response.put("totalItems", pagePros.getTotalElements());
+            response.put("totalPages", pagePros.getTotalPages());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

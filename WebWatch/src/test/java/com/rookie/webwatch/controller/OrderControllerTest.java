@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rookie.webwatch.dto.OrderDTO;
 
+import com.rookie.webwatch.dto.OrderResponseDTO;
 import com.rookie.webwatch.entity.*;
 import com.rookie.webwatch.service.OrderService;
 import org.junit.Test;
@@ -41,7 +42,7 @@ public class OrderControllerTest {
     @MockBean
     OrderService orderService;
 
-    private final List<OrderDTO> orderDTOS = new ArrayList<>();
+    private final List<OrderResponseDTO> orderDTOS = new ArrayList<>();
 
     private String mapToJson(Object obj) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();

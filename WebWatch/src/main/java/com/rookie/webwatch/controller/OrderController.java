@@ -26,7 +26,7 @@ public class OrderController {
         ResponseDTO response = new ResponseDTO();
         List<ResponseDTO> responseDTO = new ArrayList<>();
         try {
-            List<OrderDTO> orderDTOS = orderService.retrieveOrders();
+            List<OrderResponseDTO> orderDTOS = orderService.retrieveOrders();
             List list = Collections.synchronizedList(new ArrayList(orderDTOS));
 
             if (responseDTO.addAll(list) == true) {
@@ -56,7 +56,7 @@ public class OrderController {
     @GetMapping("/user/{user_id}")
     public ResponseEntity<ResponseDTO> findOrderByUser(@PathVariable("user_id") @NotBlank Long userId) throws ResourceNotFoundException {
         ResponseDTO responseDTO = new ResponseDTO();
-        List<OrderDTO> orderDTOS = orderService.findOrderByUser(userId);
+        List<OrderResponseDTO> orderDTOS = orderService.findOrderByUser(userId);
         responseDTO.setData(orderDTOS);
         responseDTO.setSuccessCode(SuccessCode.FIND_ORDER_SUCCESS);
         return ResponseEntity.ok(responseDTO);
@@ -104,6 +104,22 @@ public class OrderController {
             } catch (Exception e){
                 throw new DeleteDataFail(""+ErrorCode.DELETE_ORDER_ERROR);
             }
+
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @PutMapping("/order/status/{order_id}")
+    public ResponseEntity<ResponseDTO> updateStatusOrder(@PathVariable(value = "order_id") Long orderId,
+                                                   @RequestParam String status) throws UpdateDataFail {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            OrderDTO updateOrder = orderService.updateStatusOrder(orderId, status);
+
+            responseDTO.setData(updateOrder);
+            responseDTO.setSuccessCode(SuccessCode.UPDATE_ORDER_SUCCESS);
+        } catch (Exception e){
+            throw new UpdateDataFail(""+ErrorCode.UPDATE_ORDER_ERROR);
+        }
 
         return ResponseEntity.ok(responseDTO);
     }
