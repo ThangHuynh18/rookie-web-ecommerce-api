@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface ProductImageRepository extends JpaRepository<ProductImage, Long> {
     Optional<ProductImage> findByImageLink(String imageLink);
-    Boolean deleteAllByProduct(Product product);
+    void deleteAllByProduct(Product product);
 }

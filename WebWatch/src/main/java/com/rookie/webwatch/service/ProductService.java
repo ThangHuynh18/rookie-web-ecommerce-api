@@ -25,6 +25,8 @@ public interface ProductService {
 
     public ProductDTO updateProduct(Long productId, ProductDTO productDTO) throws ResourceNotFoundException;
 
+    public Optional<ProductDTO> getProductInAdmin(Long productId) throws ResourceNotFoundException;
+
     public List<ProductDTO>sortProduct(PageDTO pageDTO);
 
     public List<ProductDTO> findProductByCate(Long categoryId, PageDTO pageDTO) throws ResourceNotFoundException;

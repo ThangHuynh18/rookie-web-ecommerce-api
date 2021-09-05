@@ -11,10 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 @Service
+@Transactional
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
@@ -114,23 +116,32 @@ public class ProductServiceImpl implements ProductService {
 
         proExist.setCategory(category);
         proExist.setBrand(brand);
+        proExist.setRatingTB(proExist.getRatingTB());
+        proExist.setProductRatings(proExist.getProductRatings());
+
+        imageRepository.deleteAllByProduct(proExist);
 
         proExist = productrepository.save(proExist);
         Product proUpdate = proExist;
 
-        Set<ProductImage> images = (Set<ProductImage>) new ImageDTO().toListEntity(productDTO.getImageDTOS());
-        imageRepository.deleteAllByProduct(proExist);
+        List<ProductImage> images = new ImageDTO().toListEntity(productDTO.getImageDTOS());
         images.forEach(i -> {
             i.setProduct(proUpdate);
-
             imageRepository.save(i);
         });
-        proUpdate.setProductImages(images);
+        //proUpdate.setProductImages(images);
         //proExist.setRatingTB(proExist.getRatingTB());
 
         Product product = new Product();
         product = productrepository.save(proUpdate);
+       // Product product = productrepository.findById(proExist.getProduct_id()).orElseThrow(()-> new ResourceNotFoundException("Product not found for this id"));
         return new ProductDTO().convertToDto(product);
+    }
+
+    @Override
+    public Optional<ProductDTO> getProductInAdmin(Long productId) throws ResourceNotFoundException {
+        Product product = productrepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException(""+ErrorCode.FIND_PRODUCT_ERROR));
+        return Optional.of(new ProductDTO().convertToDto(product));
     }
 
 

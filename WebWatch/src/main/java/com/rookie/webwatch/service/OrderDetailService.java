@@ -1,5 +1,6 @@
 package com.rookie.webwatch.service;
 
+import com.rookie.webwatch.dto.Dashboard;
 import com.rookie.webwatch.dto.OrderDetailDTO;
 
 import com.rookie.webwatch.dto.OrderDetailResponseDTO;
@@ -22,4 +23,8 @@ public interface OrderDetailService {
     public List<OrderDetailResponseDTO> findDetailByOrder(Long orderId) throws ResourceNotFoundException;
 
     public OrderDetailDTO restoreQty(Long productId) throws ResourceNotFoundException;
+
+    public List<Object> getTopProduct();
+
+    public Dashboard getDashboard() throws Exception;
 }

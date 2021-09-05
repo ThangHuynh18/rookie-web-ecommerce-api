@@ -132,7 +132,7 @@ public class ProductController {
             responseDTO.setData(updatePro);
             responseDTO.setSuccessCode(SuccessCode.UPDATE_PRODUCT_SUCCESS);
         } catch (Exception e){
-            throw new UpdateDataFail(""+ ErrorCode.UPDATE_PRODUCT_ERROR);
+            throw new UpdateDataFail(""+ e.getMessage());
         }
 
         return ResponseEntity.ok(responseDTO);
@@ -150,6 +150,20 @@ public class ProductController {
             throw new DeleteDataFail(""+ErrorCode.DELETE_PRODUCT_ERROR);
         }
 
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @GetMapping("/admin/{product_id}")
+    public ResponseEntity<ResponseDTO> getProductInAdmin(@PathVariable("product_id") Long id) throws ResourceNotFoundException {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            Optional<ProductDTO> productDTO = productService.getProductInAdmin(id);
+
+            responseDTO.setData(productDTO);
+            responseDTO.setSuccessCode(SuccessCode.FIND_PRODUCT_SUCCESS);
+        } catch (Exception e){
+            throw new ResourceNotFoundException(""+ErrorCode.FIND_PRODUCT_ERROR);
+        }
         return ResponseEntity.ok(responseDTO);
     }
 
@@ -191,7 +205,7 @@ public class ProductController {
         try {
             List<Product> products = new ArrayList<Product>();
             Pageable paging = PageRequest.of(page, size);
-            Page<Product> pagePros = productService.filterProduct(search, cateId, brandId,paging);
+            Page<Product> pagePros = productService.filterProduct(search, cateId, brandId, paging);
 
             products = pagePros.getContent();
             List<ProductResponseDTO> productDTOS = new ProductResponseDTO().toListDto(products);

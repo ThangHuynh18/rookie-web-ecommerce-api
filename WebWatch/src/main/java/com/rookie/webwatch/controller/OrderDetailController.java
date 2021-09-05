@@ -121,4 +121,24 @@ public class OrderDetailController {
 
         return ResponseEntity.ok(responseDTO);
     }
+
+    @GetMapping("/top/product")
+    public ResponseEntity<ResponseDTO> getTopProduct() {
+        ResponseDTO responseDTO = new ResponseDTO();
+        List<Object> objects = detailService.getTopProduct();
+        responseDTO.setData(objects);
+        responseDTO.setSuccessCode(SuccessCode.GET_TOP_PRODUCT_SUCCESS);
+
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @GetMapping("/dashboard")
+    public ResponseEntity<ResponseDTO> getDashboard() throws Exception {
+        ResponseDTO responseDTO = new ResponseDTO();
+        Dashboard dashboard = detailService.getDashboard();
+        responseDTO.setData(dashboard);
+        responseDTO.setSuccessCode(SuccessCode.GET_DASHBOARD_SUCCESS);
+
+        return ResponseEntity.ok(responseDTO);
+    }
 }
