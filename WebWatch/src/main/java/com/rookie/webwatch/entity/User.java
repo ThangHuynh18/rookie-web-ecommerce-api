@@ -49,6 +49,11 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private Set<ProductRating> ratings;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private Set<PhieuDat> phieuDats;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private Set<PhieuNhap> phieuNhaps;
 
     public User(long user_id, String userName, String userEmail, String userPassword) {
         this.user_id = user_id;
