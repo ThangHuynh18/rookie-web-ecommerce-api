@@ -43,12 +43,12 @@ public class PhieuDatController {
     public ResponseEntity<ResponseDTO> findPD(@PathVariable("dat_id") Long datId) throws ResourceNotFoundException {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            Optional<PhieuDatDTO> phieuDatDTO = phieuDatService.getPhieuDat(datId);
+            Optional<PhieuDatResponseDTO> phieuDatDTO = phieuDatService.getPhieuDat(datId);
 
             responseDTO.setData(phieuDatDTO);
             responseDTO.setSuccessCode(SuccessCode.FIND_PHIEU_DAT_SUCCESS);
         } catch (Exception e){
-            throw new ResourceNotFoundException(""+ErrorCode.FIND_PHIEU_DAT_ERROR);
+            throw new ResourceNotFoundException(e.getMessage()+""+ErrorCode.FIND_PHIEU_DAT_ERROR);
         }
         return ResponseEntity.ok(responseDTO);
     }
@@ -61,7 +61,7 @@ public class PhieuDatController {
             responseDTO.setData(dto);
             responseDTO.setSuccessCode(SuccessCode.ADD_PHIEU_DAT_SUCCESS);
         } catch (Exception e){
-            throw new AddDataFail(""+ErrorCode.ADD_PHIEU_DAT_ERROR);
+            throw new AddDataFail(e.getMessage()+""+ErrorCode.ADD_PHIEU_DAT_ERROR);
         }
 
         return ResponseEntity.ok(responseDTO);
