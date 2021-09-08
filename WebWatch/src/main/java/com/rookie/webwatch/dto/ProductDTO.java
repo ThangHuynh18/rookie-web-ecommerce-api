@@ -29,8 +29,7 @@ public class ProductDTO {
     @NotBlank
     private String productDescription;
 
-    @NotNull
-    @Min(value = 1)
+    @Min(value = 0)
     private long productQty;
     private long category_id;
     private long brand_id;
@@ -88,7 +87,7 @@ public class ProductDTO {
         product.setProductName(productDTO.getProductName());
         product.setProductPrice(productDTO.getProductPrice());
         product.setProductDescription(productDTO.getProductDescription());
-        product.setProductQty(productDTO.getProductQty());
+        //product.setProductQty(productDTO.getProductQty());
 
         //product.setRatingTB(0);
         return product;

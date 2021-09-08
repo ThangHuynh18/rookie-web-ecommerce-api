@@ -12,25 +12,26 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PhieuNhapDTO {
+public class PhieuNhapResponseDTO {
     private long nhapId;
     private LocalDate createDate;
-    private long userId;
-    private long statusId;
+    private String username;
+    private String statusName;
     private long datId;
 
-    public PhieuNhapDTO convertToDto(PhieuNhap phieuNhap) {
-        PhieuNhapDTO nhapDTO = new PhieuNhapDTO();
+    public PhieuNhapResponseDTO convertToDto(PhieuNhap phieuNhap) {
+        PhieuNhapResponseDTO nhapDTO = new PhieuNhapResponseDTO();
         nhapDTO.setNhapId(phieuNhap.getNhapId());
         nhapDTO.setCreateDate(phieuNhap.getCreateDate());
-        nhapDTO.setUserId(phieuNhap.getUser().getUser_id());
+        nhapDTO.setUsername(phieuNhap.getUser().getUserName());
         nhapDTO.setDatId(phieuNhap.getPhieuDat().getDatId());
-        nhapDTO.setStatusId(phieuNhap.getStatus().getStatus_id());
+        nhapDTO.setStatusName(phieuNhap.getStatus().getStatusName());
+        nhapDTO.setDatId(phieuNhap.getPhieuDat().getDatId());
 
         return nhapDTO;
     }
 
-    public PhieuNhap convertToEti(PhieuNhapDTO nhapDTO) {
+    public PhieuNhap convertToEti(PhieuNhapResponseDTO nhapDTO) {
         PhieuNhap nhap = new PhieuNhap();
 
         nhap.setCreateDate(LocalDate.now());
@@ -39,8 +40,8 @@ public class PhieuNhapDTO {
     }
 
 
-    public List<PhieuNhapDTO> toListDto(List<PhieuNhap> listEntity) {
-        List<PhieuNhapDTO> listDto = new ArrayList<>();
+    public List<PhieuNhapResponseDTO> toListDto(List<PhieuNhap> listEntity) {
+        List<PhieuNhapResponseDTO> listDto = new ArrayList<>();
 
         listEntity.forEach(e->{
             listDto.add(this.convertToDto(e));

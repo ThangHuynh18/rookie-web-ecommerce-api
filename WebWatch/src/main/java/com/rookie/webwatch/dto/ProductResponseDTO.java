@@ -27,8 +27,7 @@ public class ProductResponseDTO {
     @NotBlank
     private String productDescription;
 
-    @NotNull
-    @Min(value = 1)
+    @Min(value = 0)
     private long productQty;
     private String categoryName;
     private String brandName;

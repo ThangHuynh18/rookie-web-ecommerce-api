@@ -1,14 +1,12 @@
 package com.rookie.webwatch.service.impl;
 
+
 import com.rookie.webwatch.dto.PhieuNhapDTO;
-import com.rookie.webwatch.entity.PhieuDat;
-import com.rookie.webwatch.entity.PhieuNhap;
-import com.rookie.webwatch.entity.User;
+import com.rookie.webwatch.dto.PhieuNhapResponseDTO;
+import com.rookie.webwatch.entity.*;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 
-import com.rookie.webwatch.repository.PhieuDatRepository;
-import com.rookie.webwatch.repository.PhieuNhapRepository;
-import com.rookie.webwatch.repository.UserRepository;
+import com.rookie.webwatch.repository.*;
 import com.rookie.webwatch.service.PhieuNhapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,11 +28,18 @@ public class PhieuNhapServiceImpl implements PhieuNhapService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private StatusRepository statusRepository;
+
+    @Autowired
+    private Productrepository productrepository;
+
+
     @Override
-    public List<PhieuNhapDTO> retrievePhieuNhaps() {
+    public List<PhieuNhapResponseDTO> retrievePhieuNhaps() {
         List<PhieuNhap> nhaps = nhapRepository.findAll();
 
-        return new PhieuNhapDTO().toListDto(nhaps);
+        return new PhieuNhapResponseDTO().toListDto(nhaps);
     }
 
     @Override
@@ -48,12 +53,16 @@ public class PhieuNhapServiceImpl implements PhieuNhapService {
         User user = userRepository.findById(nhapDTO.getUserId()).orElseThrow(() ->
                 new ResourceNotFoundException("user not found for this id: "+nhapDTO.getUserId()));
 
+        Status status = statusRepository.findById(nhapDTO.getStatusId()).orElseThrow(() ->
+                new ResourceNotFoundException("status not found for this id: "+nhapDTO.getStatusId()));
+
         PhieuDat dat = datRepository.findById(nhapDTO.getDatId()).orElseThrow(() ->
                 new ResourceNotFoundException("phieu dat not found for this id: "+nhapDTO.getDatId()));
 
         PhieuNhap nhap = new PhieuNhapDTO().convertToEti(nhapDTO);
         nhap.setUser(user);
         nhap.setPhieuDat(dat);
+        nhap.setStatus(status);
 
         return new PhieuNhapDTO().convertToDto(nhapRepository.save(nhap));
     }
@@ -73,6 +82,45 @@ public class PhieuNhapServiceImpl implements PhieuNhapService {
 
         PhieuNhap nhap = new PhieuNhap();
         nhap = nhapRepository.save(nhapExist);
+        return new PhieuNhapDTO().convertToDto(nhap);
+    }
+
+    @Override
+    public PhieuNhapDTO updateStatusPN(Long nhapId, String status) throws ResourceNotFoundException {
+        PhieuNhap nhapExist = nhapRepository.findById(nhapId).orElseThrow(() ->
+                new ResourceNotFoundException("phieu nhap not found for this id: "+nhapId));
+
+        if(status.equals("waiting receipt")){
+            Status stt = statusRepository.findAllByStatusName(status);
+            nhapExist.setStatus(stt);
+            Status sttDat = statusRepository.findAllByStatusName("complete");
+            nhapExist.getPhieuDat().setStatus(sttDat);
+            datRepository.save(nhapExist.getPhieuDat());
+        } else if(status.equals("receipted")){
+            Status stt = statusRepository.findAllByStatusName(status);
+            nhapExist.setStatus(stt);
+        }
+        else if(status.equals("cancel")) {
+            Status stt = statusRepository.findAllByStatusName(status);
+            nhapExist.setStatus(stt);
+
+            //Status sttDat = statusRepository.findAllByStatusName("no receipt");
+            nhapExist.getPhieuDat().setStatus(stt);
+            datRepository.save(nhapExist.getPhieuDat());
+
+        } else if(status.equals("complete")) {
+            Status stt = statusRepository.findAllByStatusName(status);
+            nhapExist.setStatus(stt);
+            nhapExist.getCtpNhaps().forEach(i -> {
+                Product product = productrepository.getById(i.getCtpnId().getProductId());
+                product.setProductQty(product.getProductQty() + i.getQtyNhap());
+                productrepository.save(product);
+            });
+        }
+
+        PhieuNhap nhap = new PhieuNhap();
+        nhap = nhapRepository.save(nhapExist);
+
         return new PhieuNhapDTO().convertToDto(nhap);
     }
 }

@@ -77,7 +77,9 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         OrderDetail detail = new OrderDetailDTO().convertToEti(detailDTO);
         detail.setOrder(order);
         detail.setProduct(product);
+
         product.setProductQty(product.getProductQty() - detailDTO.getDetailQty());
+
         productrepository.save(product);
 
         return new OrderDetailDTO().convertToDto(detailRepository.save(detail));

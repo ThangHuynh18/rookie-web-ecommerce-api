@@ -35,7 +35,7 @@ public class Product {
     private String productDescription;
 
     @Column(name = "product_qty")
-    @Min(value = 1)
+    @Min(value = 0)
     private long productQty;
 
     @Column(name = "product_ratingTB")

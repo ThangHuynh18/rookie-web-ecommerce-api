@@ -17,12 +17,14 @@ public class PhieuDatDTO {
     private long datId;
     private LocalDate createDate;
     private long userId;
+    private long statusId;
 
     public PhieuDatDTO convertToDto(PhieuDat phieuDat) {
         PhieuDatDTO phieuDatDTO = new PhieuDatDTO();
         phieuDatDTO.setDatId(phieuDat.getDatId());
         phieuDatDTO.setCreateDate(phieuDat.getCreateDate());
         phieuDatDTO.setUserId(phieuDat.getUser().getUser_id());
+        phieuDatDTO.setStatusId(phieuDat.getStatus().getStatus_id());
 
         return phieuDatDTO;
     }

@@ -61,7 +61,6 @@ public class OrderServiceImpl implements OrderService {
         Order order = new OrderDTO().convertToEti(orderDTO);
         order.setStatus(status);
         order.setUser(user);
-
         return new OrderDTO().convertToDto(orderRepository.save(order));
     }
 
@@ -117,6 +116,7 @@ public class OrderServiceImpl implements OrderService {
         } else if(status.equals("confirmed")){
             Status stt = statusRepository.findAllByStatusName(status);
             orderExist.setStatus(stt);
+
         } else if(status.equals("cancel")) {
             Status stt = statusRepository.findAllByStatusName(status);
             orderExist.setStatus(stt);
@@ -130,8 +130,17 @@ public class OrderServiceImpl implements OrderService {
             orderExist.setStatus(stt);
         }
 
+        //Product product = new Product();
         Order order = new Order();
         order = orderRepository.save(orderExist);
+//        if(order.getStatus().equals("confirmed")){
+//            order.getOrderDetails().forEach(detail -> {
+//                if(detail.getProduct().getProduct_id() == product.getProduct_id()){
+//                    product.setProductQty(product.getProductQty() - detail.getDetailQty());
+//                    productrepository.save(product);
+//                }
+//            });
+//        }
         return new OrderDTO().convertToDto(order);
     }
 }

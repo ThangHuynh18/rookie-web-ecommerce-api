@@ -19,6 +19,7 @@ public class PhieuDatResponseDTO {
     private long datId;
     private LocalDate createDate;
     private String username;
+    private String statusName;
     private List<CTPDatDTO> ctpDatDTOS;
 
 
@@ -27,7 +28,7 @@ public class PhieuDatResponseDTO {
         phieuDatDTO.setDatId(phieuDat.getDatId());
         phieuDatDTO.setCreateDate(phieuDat.getCreateDate());
         phieuDatDTO.setUsername(phieuDat.getUser().getUserName());
-
+        phieuDatDTO.setStatusName(phieuDat.getStatus().getStatusName());
 //        List<CTPDat> ctpDat = datRepository.findAllByCtpdhIdDatId(phieuDat.getDatId());
 //        List<CTPDatDTO> listDto = new ArrayList<>();
 //        ctpDat.forEach(d -> {

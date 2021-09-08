@@ -32,6 +32,11 @@ public class Status {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "status")
     private Set<Order> orders;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "status")
+    private Set<PhieuDat> phieuDats;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "status")
+    private Set<PhieuNhap> phieuNhaps;
 
     public Status(long status_id, long status, String statusName) {
         this.status_id = status_id;

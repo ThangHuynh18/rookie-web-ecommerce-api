@@ -25,7 +25,7 @@ public class PhieuNhapController {
         ResponseDTO response = new ResponseDTO();
         List<ResponseDTO> responseDTO = new ArrayList<>();
         try {
-            List<PhieuNhapDTO> nhapDTOS = nhapService.retrievePhieuNhaps();
+            List<PhieuNhapResponseDTO> nhapDTOS = nhapService.retrievePhieuNhaps();
             List list = Collections.synchronizedList(new ArrayList(nhapDTOS));
 
             if (responseDTO.addAll(list) == true) {
@@ -92,6 +92,22 @@ public class PhieuNhapController {
             responseDTO.setSuccessCode(SuccessCode.DELETE_PHIEU_NHAP_SUCCESS);
         } catch (Exception e){
             throw new DeleteDataFail(""+ErrorCode.DELETE_PHIEU_NHAP_ERROR);
+        }
+
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @PutMapping("/phieu/status/{nhap_id}")
+    public ResponseEntity<ResponseDTO> updateStatusOrder(@PathVariable(value = "nhap_id") Long nhapId,
+                                                         @RequestParam String status) throws UpdateDataFail {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            PhieuNhapDTO update = nhapService.updateStatusPN(nhapId, status);
+
+            responseDTO.setData(update);
+            responseDTO.setSuccessCode(SuccessCode.UPDATE_PHIEU_NHAP_SUCCESS);
+        } catch (Exception e){
+            throw new UpdateDataFail(""+ErrorCode.UPDATE_PHIEU_NHAP_ERROR);
         }
 
         return ResponseEntity.ok(responseDTO);

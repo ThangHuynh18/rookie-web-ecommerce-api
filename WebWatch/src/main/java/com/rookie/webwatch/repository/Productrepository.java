@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -33,5 +34,7 @@ public interface Productrepository extends JpaRepository<Product, Long>, JpaSpec
     Page<Product> findAllByOrderByRatingTBDesc(Pageable pageable);
     Page<Product> findAllByOrderByProductNameAsc(Pageable pageable);
     Page<Product> findAllByOrderByProductNameDesc(Pageable pageable);
+    @Query(value = "select * from product p order by product_id desc ", nativeQuery = true)
+    Page<Product> findAllOrderByProduct_idDesc(Pageable pageable);
 
 }

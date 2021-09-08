@@ -64,6 +64,7 @@ public class ProductServiceImpl implements ProductService {
                 new ResourceNotFoundException(""+ErrorCode.FIND_BRAND_ERROR));
         product.setBrand(brand);
 
+        product.setProductQty(0);
         product.setRatingTB(0);
         try {
             product = productrepository.save(product);
@@ -112,7 +113,7 @@ public class ProductServiceImpl implements ProductService {
         proExist.setProductName(productDTO.getProductName());
         proExist.setProductPrice(productDTO.getProductPrice());
         proExist.setProductDescription(productDTO.getProductDescription());
-        proExist.setProductQty(productDTO.getProductQty());
+        proExist.setProductQty(proExist.getProductQty());
 
         proExist.setCategory(category);
         proExist.setBrand(brand);
@@ -246,7 +247,7 @@ public class ProductServiceImpl implements ProductService {
         Optional<Category> cateExist = categoryRepository.findById(cateId);
 
         if (search == null && cateId == -1 && brandId == -1){
-            pagePros  = productrepository.findAll(paging);
+            pagePros  = productrepository.findAllOrderByProduct_idDesc(paging);
         } else if(search != null && cateId == -1 && brandId == -1){
             pagePros = productrepository.findByProductNameContaining(search, paging);
         } else if(search != null && cateId != -1 && brandId != -1){

@@ -26,7 +26,7 @@ public class PhieuDatController {
         ResponseDTO response = new ResponseDTO();
         List<ResponseDTO> responseDTO = new ArrayList<>();
         try {
-            List<PhieuDatDTO> phieuDatDTOS = phieuDatService.retrievePhieuDats();
+            List<PhieuDatResponseDTO> phieuDatDTOS = phieuDatService.retrievePhieuDats();
             List list = Collections.synchronizedList(new ArrayList(phieuDatDTOS));
 
             if (responseDTO.addAll(list) == true) {
@@ -34,7 +34,7 @@ public class PhieuDatController {
             }
             response.setSuccessCode(SuccessCode.GET_ALL_PHIEU_DAT_SUCCESS);
         } catch (Exception e){
-            throw new GetDataFail(""+ ErrorCode.GET_PHIEU_DAT_ERROR);
+            throw new GetDataFail(e.getMessage()+"===="+ ErrorCode.GET_PHIEU_DAT_ERROR);
         }
         return ResponseEntity.ok(response);
     }
@@ -93,6 +93,22 @@ public class PhieuDatController {
             responseDTO.setSuccessCode(SuccessCode.DELETE_PHIEU_DAT_SUCCESS);
         } catch (Exception e){
             throw new DeleteDataFail(""+ErrorCode.DELETE_PHIEU_DAT_ERROR);
+        }
+
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @PutMapping("/phieu/status/{dat_id}")
+    public ResponseEntity<ResponseDTO> updateStatusOrder(@PathVariable(value = "dat_id") Long datId,
+                                                         @RequestParam String status) throws UpdateDataFail {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            PhieuDatDTO update = phieuDatService.updateStatusPD(datId, status);
+
+            responseDTO.setData(update);
+            responseDTO.setSuccessCode(SuccessCode.UPDATE_PHIEU_DAT_SUCCESS);
+        } catch (Exception e){
+            throw new UpdateDataFail(""+ErrorCode.UPDATE_PHIEU_DAT_ERROR);
         }
 
         return ResponseEntity.ok(responseDTO);

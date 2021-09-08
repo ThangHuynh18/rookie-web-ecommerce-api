@@ -28,6 +28,9 @@ public class PhieuNhap {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status_id")
+    private Status status;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pd_id", referencedColumnName = "pd_id")
