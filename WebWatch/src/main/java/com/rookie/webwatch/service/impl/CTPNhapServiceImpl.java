@@ -2,12 +2,10 @@ package com.rookie.webwatch.service.impl;
 
 import com.rookie.webwatch.dto.CTPDatDTO;
 import com.rookie.webwatch.dto.CTPNhapDTO;
-import com.rookie.webwatch.entity.CTPDat;
-import com.rookie.webwatch.entity.CTPNId;
-import com.rookie.webwatch.entity.CTPNhap;
-import com.rookie.webwatch.entity.Product;
+import com.rookie.webwatch.entity.*;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 import com.rookie.webwatch.repository.CTPNhapRepository;
+import com.rookie.webwatch.repository.PhieuNhapRepository;
 import com.rookie.webwatch.repository.Productrepository;
 import com.rookie.webwatch.service.CTPNhapService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +22,7 @@ public class CTPNhapServiceImpl implements CTPNhapService {
     private CTPNhapRepository nhapRepository;
 
     @Autowired
-    private Productrepository productrepository;
+    private PhieuNhapRepository phieuNhapRepository;
 
     @Override
     public List<CTPNhapDTO> retrieveCTPNs() {
@@ -46,6 +44,8 @@ public class CTPNhapServiceImpl implements CTPNhapService {
 //                new ResourceNotFoundException("product not found for this id"+nhapDTO.getId().getProductId()));
 //        product.setProductQty(product.getProductQty() + nhapDTO.getQtyNhap());
 //        productrepository.save(product);
+        PhieuNhap pn = phieuNhapRepository.getById(nhapDTO.getId().getNhapId());
+        nhap.setPhieuNhap(pn);
 
         return new CTPNhapDTO().convertToDto(nhapRepository.save(nhap));
     }

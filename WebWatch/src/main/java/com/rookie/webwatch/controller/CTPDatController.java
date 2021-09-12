@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -99,6 +100,15 @@ public class CTPDatController {
             throw new DeleteDataFail(""+ErrorCode.DELETE_CT_PHIEU_DAT_ERROR);
         }
 
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @GetMapping("/dat/{datId}")
+    public ResponseEntity<ResponseDTO> findDetailByOrder(@PathVariable("datId") @NotBlank Long datId) throws ResourceNotFoundException {
+        ResponseDTO responseDTO = new ResponseDTO();
+        List<CTPDatResponseDTO> detailDTOS = ctpDatService.findCTByPD(datId);
+        responseDTO.setData(detailDTOS);
+        responseDTO.setSuccessCode(SuccessCode.FIND_CT_PHIEU_DAT_SUCCESS);
         return ResponseEntity.ok(responseDTO);
     }
 }

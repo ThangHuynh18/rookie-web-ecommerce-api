@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface PhieuNhapService {
     public List<PhieuNhapResponseDTO> retrievePhieuNhaps();
 
-    public Optional<PhieuNhapDTO> getPhieuNhap(Long nhapId) throws ResourceNotFoundException;
+    public PhieuNhapResponseDTO getPhieuNhap(Long nhapId) throws ResourceNotFoundException;
 
     public PhieuNhapDTO savePN(PhieuNhapDTO nhapDTO) throws ResourceNotFoundException;
 

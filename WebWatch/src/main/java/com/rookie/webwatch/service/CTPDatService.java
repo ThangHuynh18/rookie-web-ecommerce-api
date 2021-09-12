@@ -1,6 +1,7 @@
 package com.rookie.webwatch.service;
 
 import com.rookie.webwatch.dto.CTPDatDTO;
+import com.rookie.webwatch.dto.CTPDatResponseDTO;
 import com.rookie.webwatch.entity.CTPDHId;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 
@@ -17,4 +18,6 @@ public interface CTPDatService {
     public Boolean deleteCTPD(CTPDHId ctpdhId) throws ResourceNotFoundException;
 
     public CTPDatDTO updateCTPD(CTPDHId ctpdhId, CTPDatDTO ctpDatDTO) throws ResourceNotFoundException;
+
+    public List<CTPDatResponseDTO> findCTByPD(long datId) throws ResourceNotFoundException;
 }

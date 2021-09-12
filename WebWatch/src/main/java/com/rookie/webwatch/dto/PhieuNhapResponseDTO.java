@@ -18,13 +18,15 @@ public class PhieuNhapResponseDTO {
     private String username;
     private String statusName;
     private long datId;
+    private List<CTPNhapResponseDTO> ctpNhapResponseDTOS;
+
 
     public PhieuNhapResponseDTO convertToDto(PhieuNhap phieuNhap) {
         PhieuNhapResponseDTO nhapDTO = new PhieuNhapResponseDTO();
         nhapDTO.setNhapId(phieuNhap.getNhapId());
         nhapDTO.setCreateDate(phieuNhap.getCreateDate());
         nhapDTO.setUsername(phieuNhap.getUser().getUserName());
-        nhapDTO.setDatId(phieuNhap.getPhieuDat().getDatId());
+        //nhapDTO.setDatId(phieuNhap.getPhieuDat().getDatId());
         nhapDTO.setStatusName(phieuNhap.getStatus().getStatusName());
         nhapDTO.setDatId(phieuNhap.getPhieuDat().getDatId());
 

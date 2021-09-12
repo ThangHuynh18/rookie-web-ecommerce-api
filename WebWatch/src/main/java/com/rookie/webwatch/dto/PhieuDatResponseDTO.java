@@ -20,7 +20,7 @@ public class PhieuDatResponseDTO {
     private LocalDate createDate;
     private String username;
     private String statusName;
-    private List<CTPDatDTO> ctpDatDTOS;
+    private List<CTPDatResponseDTO> ctpDatDTOS;
 
 
     public PhieuDatResponseDTO convertToDto(PhieuDat phieuDat) {

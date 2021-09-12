@@ -1,8 +1,7 @@
 package com.rookie.webwatch.service.impl;
 
 
-import com.rookie.webwatch.dto.PhieuNhapDTO;
-import com.rookie.webwatch.dto.PhieuNhapResponseDTO;
+import com.rookie.webwatch.dto.*;
 import com.rookie.webwatch.entity.*;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +34,8 @@ public class PhieuNhapServiceImpl implements PhieuNhapService {
     @Autowired
     private Productrepository productrepository;
 
+    @Autowired
+    private CTPNhapRepository ctpNhapRepository;
 
     @Override
     public List<PhieuNhapResponseDTO> retrievePhieuNhaps() {
@@ -43,9 +45,45 @@ public class PhieuNhapServiceImpl implements PhieuNhapService {
     }
 
     @Override
-    public Optional<PhieuNhapDTO> getPhieuNhap(Long nhapId) throws ResourceNotFoundException {
+    public PhieuNhapResponseDTO getPhieuNhap(Long nhapId) throws ResourceNotFoundException {
         PhieuNhap nhap = nhapRepository.findById(nhapId).orElseThrow(() -> new ResourceNotFoundException("phieu nhap not found for this id: "+nhapId));
-        return Optional.of(new PhieuNhapDTO().convertToDto(nhap));
+
+        PhieuNhapResponseDTO phieuNhapResponseDTO = new PhieuNhapResponseDTO();
+
+        phieuNhapResponseDTO.setNhapId(nhap.getNhapId());
+        phieuNhapResponseDTO.setCreateDate(nhap.getCreateDate());
+        phieuNhapResponseDTO.setUsername(nhap.getUser().getUserName());
+        phieuNhapResponseDTO.setStatusName(nhap.getStatus().getStatusName());
+        phieuNhapResponseDTO.setDatId(nhap.getPhieuDat().getDatId());
+
+        List<CTPNhapResponseDTO> ctpNhapResponseDTOS = new ArrayList<>();
+
+        System.out.println("------------------"+nhap.getCtpNhaps().size());
+        nhap.getCtpNhaps().forEach(d -> {
+            CTPNhapResponseDTO ctpNhapResponseDTO = new CTPNhapResponseDTO();
+
+            Product product = productrepository.getById(d.getCtpnId().getProductId());
+            ctpNhapResponseDTO.setProductName(product.getProductName());
+
+            List<ImageDTO> dtos = new ArrayList<>();
+
+            if(product.getProductImages()!=null){
+                product.getProductImages().forEach(e -> {
+                    dtos.add(new ImageDTO().convertToDto(e));
+                });
+            }
+            ctpNhapResponseDTO.setId(d.getCtpnId());
+            ctpNhapResponseDTO.setImageDTOS(dtos);
+            ctpNhapResponseDTO.setQtyNhap(d.getQtyNhap());
+            ctpNhapResponseDTO.setPriceNhap(d.getPriceNhap());
+
+            ctpNhapResponseDTOS.add(ctpNhapResponseDTO);
+        });
+
+
+        phieuNhapResponseDTO.setCtpNhapResponseDTOS(ctpNhapResponseDTOS);
+
+        return phieuNhapResponseDTO;
     }
 
     @Override
@@ -93,8 +131,8 @@ public class PhieuNhapServiceImpl implements PhieuNhapService {
         if(status.equals("waiting receipt")){
             Status stt = statusRepository.findAllByStatusName(status);
             nhapExist.setStatus(stt);
-            Status sttDat = statusRepository.findAllByStatusName("complete");
-            nhapExist.getPhieuDat().setStatus(sttDat);
+            //Status sttDat = statusRepository.findAllByStatusName("complete");
+            nhapExist.getPhieuDat().setStatus(stt);
             datRepository.save(nhapExist.getPhieuDat());
         } else if(status.equals("receipted")){
             Status stt = statusRepository.findAllByStatusName(status);
@@ -111,11 +149,16 @@ public class PhieuNhapServiceImpl implements PhieuNhapService {
         } else if(status.equals("complete")) {
             Status stt = statusRepository.findAllByStatusName(status);
             nhapExist.setStatus(stt);
-            nhapExist.getCtpNhaps().forEach(i -> {
-                Product product = productrepository.getById(i.getCtpnId().getProductId());
-                product.setProductQty(product.getProductQty() + i.getQtyNhap());
-                productrepository.save(product);
+            List<CTPNhap> ctpNhapList = ctpNhapRepository.findAllByCtpnIdNhapId(nhapId);
+            ctpNhapList.forEach(n -> {
+                Product product2 = productrepository.getById(n.getCtpnId().getProductId());
+                System.out.println("product 2 id ========"+n.getCtpnId().getProductId());
+                product2.setProductQty(product2.getProductQty() + n.getQtyNhap());
+                productrepository.save(product2);
+                System.out.println("sl sau khi add"+product2.getProductQty());
             });
+            nhapExist.getPhieuDat().setStatus(stt);
+            datRepository.save(nhapExist.getPhieuDat());
         }
 
         PhieuNhap nhap = new PhieuNhap();

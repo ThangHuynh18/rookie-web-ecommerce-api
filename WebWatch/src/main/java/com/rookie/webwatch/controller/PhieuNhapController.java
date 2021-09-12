@@ -42,7 +42,7 @@ public class PhieuNhapController {
     public ResponseEntity<ResponseDTO> findPN(@PathVariable("nhap_id") Long nhapId) throws ResourceNotFoundException {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            Optional<PhieuNhapDTO> nhapDTO = nhapService.getPhieuNhap(nhapId);
+            PhieuNhapResponseDTO nhapDTO = nhapService.getPhieuNhap(nhapId);
 
             responseDTO.setData(nhapDTO);
             responseDTO.setSuccessCode(SuccessCode.FIND_PHIEU_NHAP_SUCCESS);

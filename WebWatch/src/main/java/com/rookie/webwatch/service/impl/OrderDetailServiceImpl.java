@@ -3,6 +3,7 @@ package com.rookie.webwatch.service.impl;
 import com.rookie.webwatch.dto.*;
 
 import com.rookie.webwatch.entity.*;
+import com.rookie.webwatch.exception.AddDataFail;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 import com.rookie.webwatch.repository.OrderDetailRepository;
 import com.rookie.webwatch.repository.OrderRepository;
@@ -67,7 +68,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     }
 
     @Override
-    public OrderDetailDTO saveOrderDetail(OrderDetailDTO detailDTO) throws ResourceNotFoundException {
+    public OrderDetailDTO saveOrderDetail(OrderDetailDTO detailDTO) throws ResourceNotFoundException, AddDataFail {
         Order order = orderRepository.findById(detailDTO.getOrder_id()).orElseThrow(() ->
                 new ResourceNotFoundException("order not found for this id: "+detailDTO.getOrder_id()));
 
@@ -75,12 +76,16 @@ public class OrderDetailServiceImpl implements OrderDetailService {
                 new ResourceNotFoundException("product not found for this id: "+detailDTO.getProduct_id()));
 
         OrderDetail detail = new OrderDetailDTO().convertToEti(detailDTO);
-        detail.setOrder(order);
-        detail.setProduct(product);
+        if(detailDTO.getDetailQty() > product.getProductQty()){
+            throw new AddDataFail(""+ErrorCode.ADD_ORDER_DETAIL_ERROR);
+        } else {
+            detail.setOrder(order);
+            detail.setProduct(product);
 
-        product.setProductQty(product.getProductQty() - detailDTO.getDetailQty());
+            product.setProductQty(product.getProductQty() - detailDTO.getDetailQty());
 
-        productrepository.save(product);
+            productrepository.save(product);
+        }
 
         return new OrderDetailDTO().convertToDto(detailRepository.save(detail));
     }

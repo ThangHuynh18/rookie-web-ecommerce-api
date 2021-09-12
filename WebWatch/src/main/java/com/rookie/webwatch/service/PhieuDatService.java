@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface PhieuDatService {
     public List<PhieuDatResponseDTO> retrievePhieuDats();
 
-    public Optional<PhieuDatResponseDTO> getPhieuDat(Long datId) throws ResourceNotFoundException;
+    public PhieuDatResponseDTO getPhieuDat(Long datId) throws ResourceNotFoundException;
 
     public PhieuDatDTO savePD(PhieuDatDTO phieuDatDTO) throws ResourceNotFoundException;
 

@@ -117,7 +117,7 @@ public class ProductController {
             responseDTO.setData(dto);
             responseDTO.setSuccessCode(SuccessCode.ADD_PRODUCT_SUCCESS);
         } catch (Exception e){
-            throw new AddDataFail(""+ErrorCode.ADD_PRODUCT_ERROR);
+            throw new AddDataFail(e.getMessage()+""+ErrorCode.ADD_PRODUCT_ERROR);
         }
 
         return ResponseEntity.ok(responseDTO);

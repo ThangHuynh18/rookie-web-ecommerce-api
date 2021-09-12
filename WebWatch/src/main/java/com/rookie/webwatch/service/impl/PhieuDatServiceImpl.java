@@ -1,15 +1,9 @@
 package com.rookie.webwatch.service.impl;
 
-import com.rookie.webwatch.dto.CTPDatDTO;
-import com.rookie.webwatch.dto.OrderDTO;
-import com.rookie.webwatch.dto.PhieuDatDTO;
-import com.rookie.webwatch.dto.PhieuDatResponseDTO;
+import com.rookie.webwatch.dto.*;
 import com.rookie.webwatch.entity.*;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
-import com.rookie.webwatch.repository.CTPDatRepository;
-import com.rookie.webwatch.repository.PhieuDatRepository;
-import com.rookie.webwatch.repository.StatusRepository;
-import com.rookie.webwatch.repository.UserRepository;
+import com.rookie.webwatch.repository.*;
 import com.rookie.webwatch.service.PhieuDatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +29,9 @@ public class PhieuDatServiceImpl implements PhieuDatService {
     @Autowired
     private StatusRepository statusRepository;
 
+    @Autowired
+    private Productrepository productrepository;
+
     @Override
     public List<PhieuDatResponseDTO> retrievePhieuDats() {
         List<PhieuDat> phieuDats = phieuDatRepository.findAll();
@@ -43,27 +40,90 @@ public class PhieuDatServiceImpl implements PhieuDatService {
     }
 
     @Override
-    public Optional<PhieuDatResponseDTO> getPhieuDat(Long datId) throws ResourceNotFoundException {
+    public PhieuDatResponseDTO getPhieuDat(Long datId) throws ResourceNotFoundException {
         PhieuDat phieuDat = phieuDatRepository.findById(datId).orElseThrow(() -> new ResourceNotFoundException("phieu dat not found for this id: "+datId));
-        List<CTPDat> ctpDat = datRepository.findAllByCtpdhIdDatId(datId);
 
-        List<CTPDatDTO> listDto = new ArrayList<>();
-        ctpDat.forEach(d -> {
-            System.out.println(d.getCtpdhId().getDatId()+"=========");
-            listDto.add(new CTPDatDTO().convertToDto(d));
-        });
 
         PhieuDatResponseDTO phieuDatResponseDTO = new PhieuDatResponseDTO();
-        //phieuDatResponseDTO.convertToDto(phieuDat);
+
         phieuDatResponseDTO.setDatId(phieuDat.getDatId());
         phieuDatResponseDTO.setCreateDate(phieuDat.getCreateDate());
         phieuDatResponseDTO.setUsername(phieuDat.getUser().getUserName());
         phieuDatResponseDTO.setStatusName(phieuDat.getStatus().getStatusName());
-        phieuDatResponseDTO.setCtpDatDTOS(listDto);
 
-        System.out.println(phieuDatResponseDTO.getCtpDatDTOS().size());
 
-        return Optional.of(phieuDatResponseDTO);
+
+        List<CTPDatResponseDTO> ctpDatResponseDTOS = new ArrayList<>();
+        
+        phieuDat.getCtpDats().forEach(d -> {
+            CTPDatResponseDTO ctpDatResponseDTO = new CTPDatResponseDTO();
+            
+            Product product = productrepository.getById(d.getCtpdhId().getProductId());
+            ctpDatResponseDTO.setProductName(product.getProductName());
+
+            List<ImageDTO> dtos = new ArrayList<>();
+
+            if(product.getProductImages()!=null){
+                product.getProductImages().forEach(e -> {
+                    dtos.add(new ImageDTO().convertToDto(e));
+                });
+            }
+            ctpDatResponseDTO.setId(d.getCtpdhId());
+            ctpDatResponseDTO.setImageDTOS(dtos);
+            ctpDatResponseDTO.setQtyDat(d.getQtyDat());
+            ctpDatResponseDTO.setPriceDat(d.getPriceDat());
+
+            ctpDatResponseDTOS.add(ctpDatResponseDTO);
+        });
+
+
+        phieuDatResponseDTO.setCtpDatDTOS(ctpDatResponseDTOS);
+
+//        CTPDatResponseDTO ctpDatResponseDTO = new CTPDatResponseDTO().convertToDto(datRepository.findByCtpdhIdDatId(datId));
+//        List<CTPDatResponseDTO> ctpDatResponseDTOS = new CTPDatResponseDTO().toListDto(ctpDat);
+//
+//        Product product = productrepository.getById(ctpDatResponseDTO.getId().getProductId());
+//
+//
+//        ctpDatResponseDTO.setProductName(product.getProductName());
+//
+//        List<ImageDTO> dtos = new ArrayList<>();
+//
+//        if(product.getProductImages()!=null){
+//            product.getProductImages().forEach(e -> {
+//                dtos.add(new ImageDTO().convertToDto(e));
+//            });
+//        }
+//        ctpDatResponseDTO.setImageDTOS(dtos);
+        
+        
+//        CTPDat ct = datRepository.findByCtpdhIdDatId(datId);
+//        ctpDatResponseDTO.setQtyDat(ct.getQtyDat());
+//        ctpDatResponseDTO.setPriceDat(ct.getPriceDat());
+//
+//        System.out.println(ctpDatResponseDTO.getProductName()+"gia, so luong ===="+ctpDatResponseDTO.getImageDTOS());
+//
+//        List<CTPDatResponseDTO> listDto = new ArrayList<>();
+//        ctpDat.forEach(d -> {
+//
+//            System.out.println(d.getCtpdhId().getDatId()+"=========");
+//            listDto.add(new CTPDatResponseDTO().convertToDto(d));
+//        });
+//        listDto.forEach(l -> {
+//            l.setImageDTOS(dtos);
+//            l.setProductName(product.getProductName());
+//        });
+//        PhieuDatResponseDTO phieuDatResponseDTO = new PhieuDatResponseDTO();
+//        //phieuDatResponseDTO.convertToDto(phieuDat);
+//        phieuDatResponseDTO.setDatId(phieuDat.getDatId());
+//        phieuDatResponseDTO.setCreateDate(phieuDat.getCreateDate());
+//        phieuDatResponseDTO.setUsername(phieuDat.getUser().getUserName());
+//        phieuDatResponseDTO.setStatusName(phieuDat.getStatus().getStatusName());
+//        phieuDatResponseDTO.setCtpDatDTOS(listDto);
+//
+
+
+        return phieuDatResponseDTO;
     }
 
     @Override
@@ -106,7 +166,7 @@ public class PhieuDatServiceImpl implements PhieuDatService {
         if(status.equals("waiting confirm")){
             Status stt = statusRepository.findAllByStatusName(status);
             datExist.setStatus(stt);
-        } else if(status.equals("confirmed")){
+        } else if(status.equals("waiting receipt")){
             Status stt = statusRepository.findAllByStatusName(status);
             datExist.setStatus(stt);
         } else if(status.equals("no receipt")){

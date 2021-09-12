@@ -43,7 +43,7 @@ public class PhieuDatController {
     public ResponseEntity<ResponseDTO> findPD(@PathVariable("dat_id") Long datId) throws ResourceNotFoundException {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            Optional<PhieuDatResponseDTO> phieuDatDTO = phieuDatService.getPhieuDat(datId);
+            PhieuDatResponseDTO phieuDatDTO = phieuDatService.getPhieuDat(datId);
 
             responseDTO.setData(phieuDatDTO);
             responseDTO.setSuccessCode(SuccessCode.FIND_PHIEU_DAT_SUCCESS);

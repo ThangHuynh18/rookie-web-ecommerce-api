@@ -4,6 +4,7 @@ import com.rookie.webwatch.dto.Dashboard;
 import com.rookie.webwatch.dto.OrderDetailDTO;
 
 import com.rookie.webwatch.dto.OrderDetailResponseDTO;
+import com.rookie.webwatch.exception.AddDataFail;
 import com.rookie.webwatch.exception.ResourceNotFoundException;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface OrderDetailService {
 
     public Optional<OrderDetailDTO> getOrderDetail(Long detailId) throws ResourceNotFoundException;
 
-    public OrderDetailDTO saveOrderDetail(OrderDetailDTO detailDTO) throws ResourceNotFoundException;
+    public OrderDetailDTO saveOrderDetail(OrderDetailDTO detailDTO) throws ResourceNotFoundException, AddDataFail;
 
     public Boolean deleteOrderDetail(Long detailId) throws ResourceNotFoundException;
 
